@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pancek Trackday - V7 Profile Edition</title>
+    <title>Pancek Trackday - V8 Precision Edition</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <style>
         body, html { margin: 0; padding: 0; width: 100%; height: 100%; font-family: 'Arial', sans-serif; background-color: #1a1a1a; color: #f0f0f0; overflow: hidden; }
@@ -33,6 +33,14 @@
         .btn-submit { background-color: #ff4500; color: white; cursor: pointer; font-weight: bold; transition: 0.2s;}
         .btn-submit:hover { background-color: #ff6a00; }
         .hidden { display: none !important; }
+
+        /* UKRYWANIE STRZAŁEK W POLACH NUMERYCZNYCH (Żeby wyglądało czysto) */
+        input[type="number"]::-webkit-inner-spin-button, 
+        input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+        input[type="number"] { -moz-appearance: textfield; }
+
+        /* FORMATOWANIE POLA DATY (Kalendarz) */
+        input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(1); cursor: pointer; }
 
         .leaflet-popup-content-wrapper { background: #2a2a2a; color: #f0f0f0; border: 2px solid #ff4500; border-radius: 8px; }
         .leaflet-popup-tip { background: #ff4500; }
@@ -130,8 +138,8 @@
             <p style="color: #aaa; font-size: 13px; margin-bottom: 2px;">Link do awatara (URL):</p>
             <input type="text" id="settingsAvatar" placeholder="https://link.jpg">
             
-            <p style="color: #aaa; font-size: 13px; margin-bottom: 2px; margin-top: 10px;">Wiek:</p>
-            <input type="number" id="settingsAge" placeholder="Np. 28">
+            <p style="color: #aaa; font-size: 13px; margin-bottom: 2px; margin-top: 10px;">Data urodzenia:</p>
+            <input type="date" id="settingsDob">
             
             <p style="color: #aaa; font-size: 13px; margin-bottom: 2px; margin-top: 10px;">Miejscowość:</p>
             <input type="text" id="settingsCity" placeholder="Skąd nadajesz?">
@@ -220,11 +228,10 @@
             userMenu.classList.remove('active'); 
             document.getElementById('settingsModal').classList.add('active'); 
             document.getElementById('settingsAvatar').value = auth.currentUser.photoURL || '';
-            // Pobierz aktualne dane z Firestore
             const docSnap = await getDoc(doc(db, "uzytkownicy", window.currentUserAlias));
             if(docSnap.exists()) {
                 const data = docSnap.data();
-                document.getElementById('settingsAge').value = data.wiek || '';
+                document.getElementById('settingsDob').value = data.dataUrodzenia || '';
                 document.getElementById('settingsCity').value = data.miejscowosc || '';
                 document.getElementById('settingsDesc').value = data.opis || '';
             }
@@ -238,22 +245,20 @@
             window.cancelEdit(); 
         };
 
-        // Zamykanie modali na tło
         const modals = ['garageModal', 'umaCardModal', 'settingsModal', 'userProfileModal'];
         modals.forEach(m => document.getElementById(m).addEventListener('click', (e) => { if(e.target.id === m) window.closeModals(); }));
 
-        // --- ZAPIS USTAWIEŃ PROFILU (Auth + Firestore) ---
+        // --- ZAPIS USTAWIEŃ PROFILU (Teraz z Datą Urodzenia) ---
         window.saveSettings = async () => {
             const url = document.getElementById('settingsAvatar').value;
-            const age = document.getElementById('settingsAge').value;
+            const dob = document.getElementById('settingsDob').value;
             const city = document.getElementById('settingsCity').value;
             const desc = document.getElementById('settingsDesc').value;
             
             try { 
                 if(url !== auth.currentUser.photoURL) await updateProfile(auth.currentUser, { photoURL: url }); 
-                // Zapisz resztę do bazy
                 await setDoc(doc(db, "uzytkownicy", window.currentUserAlias), {
-                    wiek: age, miejscowosc: city, opis: desc, avatar: url
+                    dataUrodzenia: dob, miejscowosc: city, opis: desc, avatar: url
                 }, { merge: true });
                 
                 alert("Profil zaktualizowany!"); 
@@ -284,7 +289,21 @@
                     document.getElementById('pubProfileAvatar').innerHTML = "";
                     document.getElementById('pubProfileAvatar').style.backgroundImage = `url('${data.avatar}')`;
                 }
-                document.getElementById('pubProfileAge').innerText = data.wiek || "Nie podano";
+                
+                // Obliczanie wieku z daty urodzenia
+                if(data.dataUrodzenia) {
+                    const birthDate = new Date(data.dataUrodzenia);
+                    const today = new Date();
+                    let age = today.getFullYear() - birthDate.getFullYear();
+                    const m = today.getMonth() - birthDate.getMonth();
+                    if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+                        age--;
+                    }
+                    document.getElementById('pubProfileAge').innerText = age + " lat";
+                } else {
+                    document.getElementById('pubProfileAge').innerText = "Nie podano";
+                }
+
                 document.getElementById('pubProfileCity').innerText = data.miejscowosc || "Nie podano";
                 document.getElementById('pubProfileDesc').innerText = data.opis || "Ten kierowca woli przemawiać czynami na torze.";
             } else {
@@ -294,7 +313,7 @@
             }
         };
 
-        // --- GARAŻ (Skrócony w komentarzach, logika ta sama) ---
+        // --- GARAŻ (Skrócony) ---
         window.saveNewCar = async () => { /*...*/ const editId = document.getElementById('editCarId').value; const name = document.getElementById('newCarName').value; const photo = document.getElementById('newCarPhoto').value || "https://via.placeholder.com/400x250/222/ff4500?text=Brak+Zdjecia"; const engine = document.getElementById('newCarEngine').value || "Nieznany"; const accel = document.getElementById('newCarAccel').value || "? s"; const tires = document.getElementById('newCarTires').value || "Drogowe"; if(!name) return alert("Podaj chociaż nazwę fury!"); if(editId) { await updateDoc(doc(db, "fury", editId), { name: name, photo: photo, engine: engine, accel: accel, tires: tires }); window.cancelEdit(); } else { await addDoc(collection(db, "fury"), { driver: window.currentUserAlias, name: name, photo: photo, engine: engine, accel: accel, tires: tires }); document.getElementById('newCarName').value = ''; document.getElementById('newCarPhoto').value = ''; document.getElementById('newCarEngine').value = ''; document.getElementById('newCarAccel').value = ''; document.getElementById('newCarTires').value = ''; } await loadMyGarage(); };
         window.triggerEditCar = (id, name, photo, engine, accel, tires) => { document.getElementById('editCarId').value = id; document.getElementById('newCarName').value = name; document.getElementById('newCarPhoto').value = photo; document.getElementById('newCarEngine').value = engine; document.getElementById('newCarAccel').value = accel; document.getElementById('newCarTires').value = tires; document.getElementById('garageFormTitle').innerText = "Edytuj furę:"; document.getElementById('saveCarBtn').innerText = "Zapisz Zmiany"; document.getElementById('saveCarBtn').style.backgroundColor = "#27ae60"; document.getElementById('cancelEditBtn').classList.remove('hidden'); };
         window.cancelEdit = () => { document.getElementById('editCarId').value = ""; document.getElementById('newCarName').value = ''; document.getElementById('newCarPhoto').value = ''; document.getElementById('newCarEngine').value = ''; document.getElementById('newCarAccel').value = ''; document.getElementById('newCarTires').value = ''; document.getElementById('garageFormTitle').innerText = "Dodaj nową furę:"; document.getElementById('saveCarBtn').innerText = "Dodaj do garażu!"; document.getElementById('saveCarBtn').style.backgroundColor = "#ff4500"; document.getElementById('cancelEditBtn').classList.add('hidden'); };
@@ -312,7 +331,18 @@
                 if(window.myCars.length === 0) carSelectHTML += `<option value="" disabled selected>Brak aut!</option>`;
                 else { window.myCars.forEach(car => { carSelectHTML += `<option value="${car}">${car}</option>`; }); }
                 carSelectHTML += `</select>`;
-                const popupHTML = `<div style="text-align:center;"><h2>${tor.nazwa}</h2><table><thead><tr><th>Kierowca</th><th>Fura</th><th>Czas</th></tr></thead><tbody id="table-${tor.nazwa.replace(/\s+/g, '')}"><tr><td colspan='3'>Ładowanie...</td></tr></tbody></table><hr>${carSelectHTML}<input type="text" id="time-${tor.nazwa.replace(/\s+/g, '')}" placeholder="Czas"><button onclick="window.saveTime('${tor.nazwa}')" class="btn-submit">Zapisz</button></div>`;
+                
+                // TUTA ZMIANA - Pola Numerowe MM : SS . MS
+                const safeId = tor.nazwa.replace(/\s+/g, '');
+                const timeInputHTML = `
+                    <div style="display: flex; gap: 5px; align-items: center; justify-content: center; margin: 10px 0;">
+                        <input type="number" id="timeM-${safeId}" placeholder="Min" min="0" max="99" style="width: 30%; text-align: center;"> :
+                        <input type="number" id="timeS-${safeId}" placeholder="Sek" min="0" max="59" style="width: 30%; text-align: center;"> .
+                        <input type="number" id="timeMS-${safeId}" placeholder="MS" min="0" max="999" style="width: 35%; text-align: center;">
+                    </div>
+                `;
+
+                const popupHTML = `<div style="text-align:center;"><h2>${tor.nazwa}</h2><table><thead><tr><th>Kierowca</th><th>Fura</th><th>Czas</th></tr></thead><tbody id="table-${safeId}"><tr><td colspan='3'>Ładowanie...</td></tr></tbody></table><hr>${carSelectHTML}${timeInputHTML}<button onclick="window.saveTime('${tor.nazwa}')" class="btn-submit">Zapisz</button></div>`;
                 marker.bindPopup(popupHTML).openPopup();
                 window.loadLeaderboard(tor.nazwa);
             });
@@ -329,7 +359,6 @@
                 const data = doc.data(); 
                 const safeCar = data.car.replace(/'/g, "\\'"); 
                 
-                // ANTY-GRIEFING FRONTENDOWY: Guziki edycji tylko dla właściciela czasu
                 let actionBtns = "";
                 if(data.driver === window.currentUserAlias) {
                     actionBtns = `<br>
@@ -345,16 +374,31 @@
             });
         };
 
-        // EDYCJA CZASU Z POZIOMU TABELI
+        // EDYCJA CZASU Z WALIDACJĄ REGEX
         window.editLapTime = async (docId, oldTime, trackName) => {
-            const newTime = prompt("Podaj nowy, lepszy czas:", oldTime);
+            let valid = false;
+            let newTime = oldTime;
+            while(!valid) {
+                newTime = prompt("Podaj nowy czas w formacie MM:SS.MS (np. 01:45.336):", newTime);
+                if(newTime === null) return; // Użytkownik kliknął Anuluj
+                
+                // Sprawdza czy format to Liczby:Liczby.Liczby
+                const regex = /^\d{1,2}:\d{2}[\.\:]\d{1,3}$/;
+                if(regex.test(newTime)) {
+                    valid = true;
+                    // Wymusza format z kropką przed MS
+                    newTime = newTime.replace(/:(\d{1,3})$/, '.$1');
+                } else {
+                    alert("Zły format! Wpisz czas okrążenia np. 01:45.336 (Zero liter!)");
+                }
+            }
+            
             if(newTime && newTime !== oldTime) {
                 await updateDoc(doc(db, "czasy", docId), { time: newTime });
                 window.loadLeaderboard(trackName);
             }
         };
 
-        // USUWANIE CZASU Z POZIOMU TABELI
         window.deleteLapTime = async (docId, trackName) => {
             if(confirm("Czy na pewno chcesz usunąć ten wynik z tabeli?")) {
                 await deleteDoc(doc(db, "czasy", docId));
@@ -363,10 +407,25 @@
         };
 
         window.saveTime = async (trackName) => {
-            const safeId = trackName.replace(/\s+/g, ''); const car = document.getElementById(`carSelect-${safeId}`)?.value; const time = document.getElementById(`time-${safeId}`).value;
-            if(!car || !time) return alert("Wypełnij dane!");
-            await addDoc(collection(db, "czasy"), { driver: window.currentUserAlias, car: car, track: trackName, time: time });
-            document.getElementById(`time-${safeId}`).value = ''; window.loadLeaderboard(trackName); 
+            const safeId = trackName.replace(/\s+/g, ''); 
+            const car = document.getElementById(`carSelect-${safeId}`)?.value; 
+            
+            const m = document.getElementById(`timeM-${safeId}`).value;
+            const s = document.getElementById(`timeS-${safeId}`).value;
+            const ms = document.getElementById(`timeMS-${safeId}`).value;
+
+            if(!car) return alert("Musisz najpierw dodać auto w Garażu!");
+            if(!m && !s && !ms) return alert("Wpisz czas!");
+
+            // Automatyczne formatowanie do MM:SS.MS i dodawanie zer
+            const formattedTime = `${(m||'0').toString().padStart(2, '0')}:${(s||'0').toString().padStart(2, '0')}.${(ms||'0').toString().padStart(3, '0')}`;
+
+            await addDoc(collection(db, "czasy"), { driver: window.currentUserAlias, car: car, track: trackName, time: formattedTime });
+            
+            document.getElementById(`timeM-${safeId}`).value = '';
+            document.getElementById(`timeS-${safeId}`).value = '';
+            document.getElementById(`timeMS-${safeId}`).value = '';
+            window.loadLeaderboard(trackName); 
         };
 
         // --- AUTH ---
