@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pancek Trackday - Garage Edition</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        body, html { margin: 0; padding: 0; width: 100%; height: 100%; font-family: 'Arial', sans-serif; background-color: #1a1a1a; color: #f0f0f0; overflow: hidden; }
+        
+        /* EKRAN LOGOWANIA */
+        #authOverlay { position: absolute; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(26,26,26,0.95); z-index: 5000; display: flex; justify-content: center; align-items: center; }
+        .auth-box { background: #2a2a2a; padding: 40px; border-radius: 10px; border-top: 5px solid #ff4500; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.8); width: 300px; }
+        
+        #map { width: 100vw; height: 100vh; position: absolute; top: 0; left: 0; z-index: 1; }
+        
+        /* LEWITUJĄCE ELEMENTY UI */
+        .floating-header { position: absolute; top: 20px; left: 50%; transform: translateX(-50%); z-index: 1000; background: rgba(42, 42, 42, 0.9); padding: 10px 40px; border-radius: 8px; border-bottom: 4px solid #ff4500; box-shadow: 0 4px 15px rgba(0,0,0,0.5); text-align: center; pointer-events: none; }
+        .floating-header h1 { margin: 0; color: #ff4500; letter-spacing: 2px; font-size: 24px; }
+        
+        /* PANEL UŻYTKOWNIKA (Prawy Górny Róg) */
+        .user-widget { position: absolute; top: 20px; right: 20px; z-index: 1000; display: flex; align-items: center; gap: 15px; background: rgba(42, 42, 42, 0.9); padding: 10px 20px; border-radius: 50px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); border: 2px solid #555; }
+        .greeting { font-weight: bold; color: #fff; font-size: 16px; }
+        .greeting span { color: #ff4500; }
+        
+        /* Ikona i Dropdown */
+        .user-avatar { width: 40px; height: 40px; border-radius: 50%; background: #ff4500; display: flex; justify-content: center; align-items: center; font-weight: bold; font-size: 20px; cursor: pointer; border: 2px solid #fff; transition: 0.2s; }
+        .user-avatar:hover { transform: scale(1.1); }
+        .dropdown-menu { position: absolute; top: 70px; right: 20px; background: #2a2a2a; border-radius: 8px; border: 1px solid #555; box-shadow: 0 5px 15px rgba(0,0,0,0.8); width: 200px; display: none; flex-direction: column; overflow: hidden; z-index: 1001; }
+        .dropdown-menu.active { display: flex; }
+        .dropdown-item { padding: 12px 20px; color: #fff; cursor: pointer; border-bottom: 1px solid #444; font-weight: bold; transition: 0.2s; }
+        .dropdown-item:hover { background: #ff4500; }
+        .dropdown-item:last-child { border-bottom: none; }
+
+        /* WSPÓLNE ELEMENTY */
+        input, button, select { width: 100%; padding: 10px; margin: 8px 0; border-radius: 5px; border: none; box-sizing: border-box; }
+        input, select { background-color: #444; color: white; border: 1px solid #555; }
+        .btn-submit { background-color: #ff4500; color: white; cursor: pointer; font-weight: bold; transition: 0.2s;}
+        .btn-submit:hover { background-color: #ff6a00; }
+        .hidden { display: none !important; }
+
+        /* POPUPY MAPY */
+        .leaflet-popup-content-wrapper { background: #2a2a2a; color: #f0f0f0; border: 2px solid #ff4500; border-radius: 8px; }
+        .leaflet-popup-tip { background: #ff4500; }
+        .leaflet-popup-content { margin: 15px; width: 340px !important; }
+        .track-info { font-size: 13px; text-align: left; background: #222; padding: 12px; border-radius: 6px; margin: 15px 0; border-left: 3px solid #ff4500; }
+        table { width: 100%; border-collapse: collapse; margin: 10px 0; background: #333; font-size: 14px; }
+        th, td { border: 1px solid #555; padding: 6px; text-align: center; }
+        th { background-color: #ff4500; color: white; }
+        
+        /* KLIKALNE NAZWY AUT W TABELI */
+        .car-link { color: #3498db; text-decoration: none; font-weight: bold; cursor: pointer; }
+        .car-link:hover { color: #5dade2; text-decoration: underline; }
+
+        /* MODALE (Garaż i Karta Uma Musume) */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.85); z-index: 4000; display: none; justify-content: center; align-items: center; }
+        .modal-overlay.active { display: flex; }
+        .modal-content { background: #2a2a2a; padding: 25px; border-radius: 12px; border-top: 5px solid #ff4500; width: 90%; max-width: 500px; max-height: 90vh; overflow-y: auto; position: relative; box-shadow: 0 10px 30px rgba(0,0,0,0.8); }
+        .close-modal { position: absolute; top: 10px; right: 15px; font-size: 24px; color: #aaa; cursor: pointer; }
+        .close-modal:hover { color: #fff; }
+
+        /* KARTA UMA MUSUME (Styl) */
+        .uma-card { background: #111; border-radius: 10px; overflow: hidden; border: 2px solid #ff4500; }
+        .uma-photo { width: 100%; height: 250px; background-color: #333; background-size: cover; background-position: center; border-bottom: 4px solid #ff4500; }
+        .uma-stats { padding: 20px; }
+        .uma-title { font-size: 24px; color: #ff4500; margin: 0 0 5px 0; text-transform: uppercase; text-align: center; }
+        .uma-owner { text-align: center; color: #888; font-size: 14px; margin-bottom: 20px; }
+        .stat-row { display: flex; justify-content: space-between; border-bottom: 1px solid #333; padding: 8px 0; }
+        .stat-label { color: #aaa; font-weight: bold; }
+        .stat-value { color: #fff; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <div id="authOverlay">
+        <div class="auth-box">
+            <h1 style="color: #ff4500; margin-top: 0;">🏁 Pit Lane</h1>
+            <input type="email" id="email" placeholder="Twój email">
+            <input type="password" id="password" placeholder="Hasło">
+            <button id="loginBtn" class="btn-submit">Odpal silnik</button>
+        </div>
+    </div>
+
+    <div id="map"></div>
+
+    <div id="appUI" class="hidden">
+        <div class="floating-header">
+            <h1>🏁 PANCEK TRACKDAY 🏁</h1>
+        </div>
+
+        <div class="user-widget">
+            <div class="greeting">Hej <span id="userAlias">Kierowca</span>!</div>
+            <div class="user-avatar" id="avatarBtn">P</div> 
+        </div>
+
+        <div class="dropdown-menu" id="userMenu">
+            <div class="dropdown-item" onclick="openGarage()">🚗 Mój Garaż (Fury)</div>
+            <div class="dropdown-item" id="radioBtnToggle">🎵 Włącz Audio</div>
+            <div class="dropdown-item" id="logoutBtn" style="color: #e74c3c;">🚪 Wyloguj</div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="garageModal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModals()">×</span>
+            <h2 style="color: #ff4500; margin-top: 0;">🚗 Twój Garaż</h2>
+            
+            <div style="background: #222; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+                <h3 style="margin-top: 0; font-size: 16px;">Dodaj nową furę:</h3>
+                <input type="text" id="newCarName" placeholder="Nazwa fury (np. Gruz E36)">
+                <input type="text" id="newCarPhoto" placeholder="Link do zdjęcia (URL, np. z Discorda)">
+                <input type="text" id="newCarEngine" placeholder="Silnik / Pojemność (np. 2.8 R6)">
+                <input type="text" id="newCarAccel" placeholder="0-100 km/h (np. 6.5s)">
+                <input type="text" id="newCarTires" placeholder="Opony (np. Semi-Slick)">
+                <button onclick="saveNewCar()" class="btn-submit">Dodaj do garażu!</button>
+            </div>
+
+            <h3 style="margin-top: 0; border-bottom: 1px solid #555; padding-bottom: 5px;">Twoje maszyny:</h3>
+            <ul id="myCarsList" style="list-style: none; padding: 0; margin: 0; color: #aaa;">
+                <li>Ładowanie garażu...</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="umaCardModal">
+        <div class="modal-content" style="padding: 0; border: none; background: transparent;">
+            <span class="close-modal" onclick="closeModals()" style="color: #fff; text-shadow: 0 0 5px #000; z-index: 10;">×</span>
+            <div class="uma-card" id="umaCardContent">
+                </div>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
+        import { getFirestore, collection, addDoc, getDocs, query, where, orderBy } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
+
+        // ==========================================
+        // TUTAJ WKLEJ SWÓJ KOD firebaseConfig
+        // ==========================================
+        const firebaseConfig = {
+            apiKey: "AIzaSyBzQ0BiOaLPagjDrGKRorGliVNzsWgVEZI",
+            authDomain: "pancek-trackday.firebaseapp.com",
+            projectId: "pancek-trackday",
+            storageBucket: "pancek-trackday.firebasestorage.app",
+            messagingSenderId: "259254559037",
+            appId: "1:259254559037:web:be2b584673d77ec6312554"
+        };
+        // ==========================================
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // Globalne zmienne, żeby popupy Leaflet mogły z nich korzystać
+        window.myCars = []; 
+        window.currentUserAlias = "";
+
+        // --- MAPA ---
+        const darkMap = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png');
+        const satelliteMap = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}');
+        const map = L.map('map', { zoomControl: false, layers: [darkMap] }).setView([51.8, 20.5], 7);
+        L.control.zoom({ position: 'topleft' }).addTo(map);
+        L.control.layers({ "Tryb Nocny": darkMap, "Satelita": satelliteMap }, null, {position: 'bottomleft'}).addTo(map);
+
+        const tory = [
+            { nazwa: "Autodrom Bemowo", lat: 52.265, lng: 20.912, opis: "Najbliżej i bezpiecznie", cena: "Nieznana", kontakt: "sekretariat@automobilklubpolski.pl" },
+            { nazwa: "Tor Modlin", lat: 52.444, lng: 20.648, opis: "Wąsko, ale z uwagą można pojechać nawet daily carem", cena: "Nieznana, ponoć tanio", kontakt: "+48 22 100 27 00" },
+            { nazwa: "Autodrom Słomczyn", lat: 51.905, lng: 20.842, opis: "Szeroko i bezpiecznie", cena: "Trackday: 400 zł", kontakt: "+48 605 453 971" },
+            { nazwa: "Autodrom Jastrząb", lat: 51.246, lng: 20.942, opis: "Dalej ale bezpiecznie", cena: "Nieznana", kontakt: "+48 694 427 709" },
+            { nazwa: "Tor Kielce", lat: 50.963, lng: 20.457, opis: "Historyczny tor z odcinkiem leśnym", cena: "", kontakt: "" },
+            { nazwa: "Tor Ułęż Moto Park", lat: 51.624, lng: 22.094, opis: "Lotnisko pod większe prędkości", cena: "500 zł/h", kontakt: "" },
+            { nazwa: "TOR ŁÓDŹ", lat: 51.849, lng: 19.539, opis: "Najmniejszy obiekt", cena: "", kontakt: "" }
+        ];
+
+        // --- MENU UŻYTKOWNIKA ---
+        const avatarBtn = document.getElementById('avatarBtn');
+        const userMenu = document.getElementById('userMenu');
+        avatarBtn.addEventListener('click', () => userMenu.classList.toggle('active'));
+        
+        // Zamykanie menu po kliknięciu gdzie indziej
+        document.addEventListener('click', (e) => {
+            if(!avatarBtn.contains(e.target) && !userMenu.contains(e.target)) userMenu.classList.remove('active');
+        });
+
+        // --- GARAŻ (LOGIKA) ---
+        window.openGarage = async () => {
+            userMenu.classList.remove('active');
+            document.getElementById('garageModal').classList.add('active');
+            await loadMyGarage();
+        };
+
+        window.closeModals = () => {
+            document.getElementById('garageModal').classList.remove('active');
+            document.getElementById('umaCardModal').classList.remove('active');
+        };
+
+        window.saveNewCar = async () => {
+            const name = document.getElementById('newCarName').value;
+            const photo = document.getElementById('newCarPhoto').value || "https://via.placeholder.com/400x250/222/ff4500?text=Brak+Zdjecia";
+            const engine = document.getElementById('newCarEngine').value || "Nieznany";
+            const accel = document.getElementById('newCarAccel').value || "? s";
+            const tires = document.getElementById('newCarTires').value || "Drogowe";
+
+            if(!name) return alert("Podaj chociaż nazwę fury!");
+
+            await addDoc(collection(db, "fury"), {
+                driver: window.currentUserAlias,
+                name: name, photo: photo, engine: engine, accel: accel, tires: tires
+            });
+            
+            document.getElementById('newCarName').value = '';
+            document.getElementById('newCarPhoto').value = '';
+            document.getElementById('newCarEngine').value = '';
+            document.getElementById('newCarAccel').value = '';
+            document.getElementById('newCarTires').value = '';
+            
+            await loadMyGarage(); // Odśwież listę
+        };
+
+        async function loadMyGarage() {
+            const q = query(collection(db, "fury"), where("driver", "==", window.currentUserAlias));
+            const snapshot = await getDocs(q);
+            const list = document.getElementById('myCarsList');
+            
+            window.myCars = []; // Aktualizujemy globalną listę
+            list.innerHTML = "";
+            
+            if(snapshot.empty) {
+                list.innerHTML = "Brak aut. Dodaj swoją pierwszą furę wyżej!";
+                return;
+            }
+
+            snapshot.forEach(doc => {
+                const data = doc.data();
+                window.myCars.push(data.name);
+                list.innerHTML += `<li style="padding: 10px; background: #333; margin-bottom: 5px; border-radius: 5px; border-left: 3px solid #1db954;"><b>${data.name}</b> (${data.engine})</li>`;
+            });
+        }
+
+        // --- KARTA UMA MUSUME (Pobieranie i wyświetlanie) ---
+        window.showCarCard = async (carName, driverName) => {
+            document.getElementById('umaCardModal').classList.add('active');
+            const cardContent = document.getElementById('umaCardContent');
+            cardContent.innerHTML = `<div style="padding: 40px; text-align: center;">Ładowanie danych telemetrycznych... ⚙️</div>`;
+
+            // Szukamy fury w bazie
+            const q = query(collection(db, "fury"), where("driver", "==", driverName), where("name", "==", carName));
+            const snapshot = await getDocs(q);
+
+            if(snapshot.empty) {
+                cardContent.innerHTML = `<div style="padding: 40px; text-align: center;">Kierowca nie uzupełnił specyfikacji tej maszyny w swoim Garażu. 😢</div>`;
+                return;
+            }
+
+            // Mamy auto! Rysujemy kartę
+            const carData = snapshot.docs[0].data();
+            cardContent.innerHTML = `
+                <div class="uma-photo" style="background-image: url('${carData.photo}');"></div>
+                <div class="uma-stats">
+                    <h2 class="uma-title">${carData.name}</h2>
+                    <div class="uma-owner">Kierowca: <b>${carData.driver.toUpperCase()}</b></div>
+                    <div class="stat-row"><span class="stat-label">SILNIK:</span><span class="stat-value">${carData.engine}</span></div>
+                    <div class="stat-row"><span class="stat-label">0-100 km/h:</span><span class="stat-value">${carData.accel}</span></div>
+                    <div class="stat-row"><span class="stat-label">OPONY:</span><span class="stat-value" style="color: #1db954;">${carData.tires}</span></div>
+                </div>
+            `;
+        };
+
+        // --- LOGIKA DYMKÓW MAPY Z DROPDOWNEM AUT ---
+        tory.forEach(tor => {
+            const marker = L.marker([tor.lat, tor.lng]).addTo(map);
+            
+            marker.on('click', () => {
+                let infoSekcja = '';
+                if(tor.opis || tor.cena || tor.kontakt) {
+                    infoSekcja = `<div class="track-info">`;
+                    if(tor.opis) infoSekcja += `<div><b>ℹ️ OPIS:</b> ${tor.opis}</div>`;
+                    if(tor.cena) infoSekcja += `<div><b>💲 CENA:</b> ${tor.cena}</div>`;
+                    if(tor.kontakt) infoSekcja += `<div><b>📞 KONTAKT:</b> ${tor.kontakt}</div>`;
+                    infoSekcja += `</div>`;
+                }
+
+                // Generowanie <select> na podstawie myCars (Garażu użytkownika)
+                let carSelectHTML = `<select id="carSelect-${tor.nazwa.replace(/\s+/g, '')}" style="width:100%;">`;
+                if(window.myCars.length === 0) {
+                    carSelectHTML += `<option value="" disabled selected>Brak aut! Dodaj w Menu -> Garaż</option>`;
+                } else {
+                    window.myCars.forEach(car => {
+                        carSelectHTML += `<option value="${car}">${car}</option>`;
+                    });
+                }
+                carSelectHTML += `</select>`;
+
+                const popupHTML = `
+                    <div style="text-align: center;">
+                        <h2 style="margin: 0 0 5px 0; color: #ff4500; font-size: 20px;">${tor.nazwa}</h2>
+                        ${infoSekcja}
+                        <table>
+                            <thead><tr><th>Kierowca</th><th>Fura</th><th>Czas</th></tr></thead>
+                            <tbody id="table-${tor.nazwa.replace(/\s+/g, '')}"><tr><td colspan='3'>Ładowanie...</td></tr></tbody>
+                        </table>
+                        <hr style="border-color: #444; margin-top: 15px;">
+                        ${carSelectHTML}
+                        <input type="text" id="time-${tor.nazwa.replace(/\s+/g, '')}" placeholder="Czas (np. 1:45.00)" style="width:100%;">
+                        <button onclick="window.saveTime('${tor.nazwa}')" class="btn-submit" style="width:100%; padding:8px;">Zapisz wynik</button>
+                    </div>
+                `;
+                marker.bindPopup(popupHTML).openPopup();
+                window.loadLeaderboard(tor.nazwa);
+            });
+        });
+
+        // --- ZAPIS I ODCZYT WYNIKÓW ---
+        window.loadLeaderboard = async (trackName) => {
+            const safeId = trackName.replace(/\s+/g, '');
+            const tbody = document.getElementById(`table-${safeId}`);
+            if(!tbody) return;
+
+            const q = query(collection(db, "czasy"), where("track", "==", trackName), orderBy("time", "asc"));
+            const querySnapshot = await getDocs(q);
+            
+            tbody.innerHTML = "";
+            if (querySnapshot.empty) {
+                tbody.innerHTML = "<tr><td colspan='3' style='color:#aaa;'>Brak wyników. Zostaw tu gumę jako pierwszy!</td></tr>";
+                return;
+            }
+
+            querySnapshot.forEach((doc) => {
+                const data = doc.data();
+                // NAZWA AUTA JEST TERAZ LINKIEM DO KARTY UMA MUSUME
+                tbody.innerHTML += `
+                    <tr>
+                        <td><b>${data.driver.toUpperCase()}</b></td>
+                        <td><span class="car-link" onclick="window.showCarCard('${data.car}', '${data.driver}')">${data.car}</span></td>
+                        <td style="color: #1db954;"><b>${data.time}</b></td>
+                    </tr>`;
+            });
+        };
+
+        window.saveTime = async (trackName) => {
+            const safeId = trackName.replace(/\s+/g, '');
+            const carSelect = document.getElementById(`carSelect-${safeId}`);
+            const car = carSelect ? carSelect.value : null;
+            const time = document.getElementById(`time-${safeId}`).value;
+            
+            if(!car) return alert("Musisz najpierw dodać auto w Garażu (Menu prawy górny róg)!");
+            if(!time) return alert("Wpisz czas okrążenia!");
+
+            await addDoc(collection(db, "czasy"), {
+                driver: window.currentUserAlias, car: car, track: trackName, time: time
+            });
+            
+            document.getElementById(`time-${safeId}`).value = '';
+            window.loadLeaderboard(trackName); 
+        };
+
+        // --- LOGOWANIE I START ---
+        document.getElementById('loginBtn').addEventListener('click', async () => {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            if(!email || !password) return alert("Wpisz dane!");
+            try { await signInWithEmailAndPassword(auth, email, password); } 
+            catch (e) {
+                if (e.code === 'auth/invalid-credential' || e.code === 'auth/user-not-found') {
+                    await createUserWithEmailAndPassword(auth, email, password);
+                } else { alert("Błąd: " + e.message); }
+            }
+        });
+
+        document.getElementById('logoutBtn').addEventListener('click', () => {
+            userMenu.classList.remove('active');
+            signOut(auth);
+        });
+
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                window.currentUserAlias = user.email.split('@')[0];
+                document.getElementById('userAlias').innerText = window.currentUserAlias.toUpperCase();
+                document.getElementById('avatarBtn').innerText = window.currentUserAlias.charAt(0).toUpperCase();
+                
+                document.getElementById('authOverlay').classList.add('hidden');
+                document.getElementById('appUI').classList.remove('hidden');
+                map.invalidateSize(); 
+
+                // Od razu w tle ładujemy auta użytkownika, by były gotowe w dymkach
+                await loadMyGarage();
+            } else {
+                document.getElementById('authOverlay').classList.remove('hidden');
+                document.getElementById('appUI').classList.add('hidden');
+            }
+        });
+
+        // --- RADIO (Przeniesione do menu dropdown) ---
+        let isRadioPlaying = false;
+        document.getElementById('radioBtnToggle').addEventListener('click', (e) => {
+            let rc = document.getElementById('radioContainer');
+            if (!rc) {
+                rc = document.createElement('div');
+                rc.id = 'radioContainer';
+                rc.style.position = 'absolute'; rc.style.left = '-9999px';
+                document.body.appendChild(rc);
+            }
+            if (!isRadioPlaying) {
+                rc.innerHTML = `<iframe width="300" height="300" src="https://www.youtube.com/embed/8UC6AQyRoc8?autoplay=1&loop=1&playlist=8UC6AQyRoc8" allow="autoplay; encrypted-media"></iframe>`;
+                e.target.innerHTML = "🔇 Wyłącz Audio"; 
+                e.target.style.color = "#e74c3c";
+                isRadioPlaying = true;
+            } else {
+                rc.innerHTML = "";
+                e.target.innerHTML = "🎵 Włącz Audio"; 
+                e.target.style.color = "#fff";
+                isRadioPlaying = false;
+            }
+            userMenu.classList.remove('active'); // Zamyka menu po kliknięciu
+        });
+    </script>
+</body>
+</html>
