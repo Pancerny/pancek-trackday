@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pancek Trackday - SSR Gacha Edition V3</title>
+    <title>Pancek Trackday - V7 Profile Edition</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <style>
         body, html { margin: 0; padding: 0; width: 100%; height: 100%; font-family: 'Arial', sans-serif; background-color: #1a1a1a; color: #f0f0f0; overflow: hidden; }
@@ -28,8 +28,8 @@
         .dropdown-item:hover { background: #ff4500; }
         .dropdown-item:last-child { border-bottom: none; }
 
-        input, button, select { width: 100%; padding: 10px; margin: 8px 0; border-radius: 5px; border: none; box-sizing: border-box; }
-        input, select { background-color: #444; color: white; border: 1px solid #555; }
+        input, button, select, textarea { width: 100%; padding: 10px; margin: 8px 0; border-radius: 5px; border: none; box-sizing: border-box; font-family: 'Arial', sans-serif;}
+        input, select, textarea { background-color: #444; color: white; border: 1px solid #555; }
         .btn-submit { background-color: #ff4500; color: white; cursor: pointer; font-weight: bold; transition: 0.2s;}
         .btn-submit:hover { background-color: #ff6a00; }
         .hidden { display: none !important; }
@@ -39,16 +39,16 @@
         .leaflet-popup-content { margin: 15px; width: 340px !important; }
         .track-info { font-size: 13px; text-align: left; background: #222; padding: 12px; border-radius: 6px; margin: 15px 0; border-left: 3px solid #ff4500; }
         table { width: 100%; border-collapse: collapse; margin: 10px 0; background: #333; font-size: 14px; }
-        th, td { border: 1px solid #555; padding: 6px; text-align: center; }
+        th, td { border: 1px solid #555; padding: 6px; text-align: center; vertical-align: middle; }
         th { background-color: #ff4500; color: white; }
         
-        .car-link { color: #3498db; text-decoration: none; font-weight: bold; cursor: pointer; }
-        .car-link:hover { color: #5dade2; text-decoration: underline; }
+        .car-link, .user-link { color: #3498db; text-decoration: none; font-weight: bold; cursor: pointer; transition: 0.2s; }
+        .user-link { color: #e67e22; }
+        .car-link:hover, .user-link:hover { color: #fff; text-decoration: underline; }
 
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.85); z-index: 4000; display: none; justify-content: center; align-items: center; cursor: pointer;}
         .modal-overlay.active { display: flex; }
         
-        /* Zmodyfikowany max-width i usunięte sztywne szerokości, żeby pasek się nie pojawiał */
         .modal-content { background: #2a2a2a; padding: 25px; border-radius: 12px; border-top: 5px solid #ff4500; width: 90%; max-width: 550px; max-height: 90vh; overflow-y: auto; overflow-x: hidden; position: relative; box-shadow: 0 10px 30px rgba(0,0,0,0.8); cursor: default; }
         .close-modal { position: absolute; top: 10px; right: 15px; font-size: 24px; color: #aaa; cursor: pointer; z-index: 100; }
         .close-modal:hover { color: #fff; }
@@ -59,10 +59,12 @@
         .btn-edit { background: #f39c12; } .btn-edit:hover { background: #d68910; }
         .btn-del { background: #e74c3c; } .btn-del:hover { background: #c0392b; }
 
-        /* Kartowe statystyki */
-        .stat-row { display: flex; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.2); padding: 5px 0; }
+        .stat-row { display: flex; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.2); padding: 5px 0; margin-top: 5px;}
         .stat-label { color: #ccc; font-weight: bold; font-size: 13px; text-shadow: 1px 1px 2px #000; }
         .stat-value { color: #fff; font-weight: bold; font-size: 14px; text-shadow: 1px 1px 2px #000; }
+
+        /* Profil publiczny */
+        .profile-avatar-large { width: 120px; height: 120px; border-radius: 50%; border: 4px solid #ff4500; margin: 0 auto 15px auto; background-color: #333; background-size: cover; background-position: center; display: flex; justify-content: center; align-items: center; font-size: 40px; font-weight: bold; color: #fff;}
     </style>
     <script src="https://www.youtube.com/iframe_api"></script>
 </head>
@@ -124,9 +126,36 @@
         <div class="modal-content">
             <span class="close-modal" onclick="closeModals()">×</span>
             <h2 style="color: #ff4500; margin-top: 0;">⚙️ Ustawienia Profilu</h2>
-            <p style="color: #aaa; font-size: 14px;">Zmień awatar (wklej link do obrazka):</p>
-            <input type="text" id="avatarUrlInput" placeholder="https://link-do-obrazka.jpg">
-            <button onclick="saveAvatar()" class="btn-submit">Zapisz Awatar</button>
+            
+            <p style="color: #aaa; font-size: 13px; margin-bottom: 2px;">Link do awatara (URL):</p>
+            <input type="text" id="settingsAvatar" placeholder="https://link.jpg">
+            
+            <p style="color: #aaa; font-size: 13px; margin-bottom: 2px; margin-top: 10px;">Wiek:</p>
+            <input type="number" id="settingsAge" placeholder="Np. 28">
+            
+            <p style="color: #aaa; font-size: 13px; margin-bottom: 2px; margin-top: 10px;">Miejscowość:</p>
+            <input type="text" id="settingsCity" placeholder="Skąd nadajesz?">
+            
+            <p style="color: #aaa; font-size: 13px; margin-bottom: 2px; margin-top: 10px;">Krótki opis / O sobie:</p>
+            <textarea id="settingsDesc" rows="3" placeholder="Napisz coś o sobie..."></textarea>
+            
+            <button onclick="saveSettings()" class="btn-submit" style="margin-top: 15px;">Zapisz Profil</button>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="userProfileModal">
+        <div class="modal-content" style="text-align: center;">
+            <span class="close-modal" onclick="closeModals()">×</span>
+            <div id="pubProfileAvatar" class="profile-avatar-large">?</div>
+            <h1 id="pubProfileAlias" style="color: #ff4500; margin: 0 0 15px 0; text-transform: uppercase;">KIEROWCA</h1>
+            
+            <div class="stat-row"><span class="stat-label">WIEK:</span><span class="stat-value" id="pubProfileAge">-</span></div>
+            <div class="stat-row"><span class="stat-label">MIEJSCOWOŚĆ:</span><span class="stat-value" id="pubProfileCity">-</span></div>
+            
+            <div style="margin-top: 20px; text-align: left; background: #1a1a1a; padding: 15px; border-radius: 8px; border-left: 3px solid #ff4500;">
+                <b style="color: #aaa; font-size: 12px; display: block; margin-bottom: 5px;">O KIEROWCY:</b>
+                <span id="pubProfileDesc" style="font-size: 14px; color: #fff; line-height: 1.4;">Brak opisu.</span>
+            </div>
         </div>
     </div>
 
@@ -140,7 +169,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
         import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, sendEmailVerification, sendPasswordResetEmail, updateProfile } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
-        import { getFirestore, collection, addDoc, getDocs, query, where, orderBy, deleteDoc, doc, updateDoc } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, getDocs, query, where, orderBy, deleteDoc, doc, updateDoc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
 
         // ==========================================
         // TUTAJ WKLEJ SWÓJ KOD firebaseConfig
@@ -179,29 +208,58 @@
             { nazwa: "TOR ŁÓDŹ", lat: 51.849, lng: 19.539, opis: "Najmniejszy", cena: "", kontakt: "" }
         ];
 
-        // --- MENU ---
+        // --- MENU I MODALE ---
         const avatarBtn = document.getElementById('avatarBtn');
         const userMenu = document.getElementById('userMenu');
         avatarBtn.addEventListener('click', () => userMenu.classList.toggle('active'));
-        document.addEventListener('click', (e) => {
-            if(!avatarBtn.contains(e.target) && !userMenu.contains(e.target)) userMenu.classList.remove('active');
-        });
+        document.addEventListener('click', (e) => { if(!avatarBtn.contains(e.target) && !userMenu.contains(e.target)) userMenu.classList.remove('active'); });
 
         window.openGarage = async () => { userMenu.classList.remove('active'); document.getElementById('garageModal').classList.add('active'); await loadMyGarage(); };
-        window.openSettings = () => { userMenu.classList.remove('active'); document.getElementById('settingsModal').classList.add('active'); };
+        
+        window.openSettings = async () => { 
+            userMenu.classList.remove('active'); 
+            document.getElementById('settingsModal').classList.add('active'); 
+            document.getElementById('settingsAvatar').value = auth.currentUser.photoURL || '';
+            // Pobierz aktualne dane z Firestore
+            const docSnap = await getDoc(doc(db, "uzytkownicy", window.currentUserAlias));
+            if(docSnap.exists()) {
+                const data = docSnap.data();
+                document.getElementById('settingsAge').value = data.wiek || '';
+                document.getElementById('settingsCity').value = data.miejscowosc || '';
+                document.getElementById('settingsDesc').value = data.opis || '';
+            }
+        };
         
         window.closeModals = () => { 
             document.getElementById('garageModal').classList.remove('active'); 
             document.getElementById('umaCardModal').classList.remove('active'); 
             document.getElementById('settingsModal').classList.remove('active'); 
+            document.getElementById('userProfileModal').classList.remove('active');
             window.cancelEdit(); 
         };
 
-        window.saveAvatar = async () => {
-            const url = document.getElementById('avatarUrlInput').value;
-            if(!url) return alert("Podaj link URL!");
-            try { await updateProfile(auth.currentUser, { photoURL: url }); alert("Awatar zaktualizowany!"); updateAvatarUI(auth.currentUser); window.closeModals(); } 
-            catch(e) { alert("Błąd: " + e.message); }
+        // Zamykanie modali na tło
+        const modals = ['garageModal', 'umaCardModal', 'settingsModal', 'userProfileModal'];
+        modals.forEach(m => document.getElementById(m).addEventListener('click', (e) => { if(e.target.id === m) window.closeModals(); }));
+
+        // --- ZAPIS USTAWIEŃ PROFILU (Auth + Firestore) ---
+        window.saveSettings = async () => {
+            const url = document.getElementById('settingsAvatar').value;
+            const age = document.getElementById('settingsAge').value;
+            const city = document.getElementById('settingsCity').value;
+            const desc = document.getElementById('settingsDesc').value;
+            
+            try { 
+                if(url !== auth.currentUser.photoURL) await updateProfile(auth.currentUser, { photoURL: url }); 
+                // Zapisz resztę do bazy
+                await setDoc(doc(db, "uzytkownicy", window.currentUserAlias), {
+                    wiek: age, miejscowosc: city, opis: desc, avatar: url
+                }, { merge: true });
+                
+                alert("Profil zaktualizowany!"); 
+                updateAvatarUI(auth.currentUser); 
+                window.closeModals(); 
+            } catch(e) { alert("Błąd: " + e.message); }
         };
 
         function updateAvatarUI(user) {
@@ -209,110 +267,44 @@
             else avatarBtn.innerText = window.currentUserAlias.charAt(0).toUpperCase();
         }
 
-        // --- GARAŻ: DODAWANIE / EDYCJA / USUWANIE ---
-        window.saveNewCar = async () => {
-            const editId = document.getElementById('editCarId').value;
-            const name = document.getElementById('newCarName').value;
-            const photo = document.getElementById('newCarPhoto').value || "https://via.placeholder.com/400x250/222/ff4500?text=Brak+Zdjecia";
-            const engine = document.getElementById('newCarEngine').value || "Nieznany";
-            const accel = document.getElementById('newCarAccel').value || "? s";
-            const tires = document.getElementById('newCarTires').value || "Drogowe";
+        // --- PROFIL PUBLICZNY KIEROWCY ---
+        window.showUserProfile = async (driverAlias) => {
+            document.getElementById('userProfileModal').classList.add('active');
+            document.getElementById('pubProfileAlias').innerText = driverAlias;
+            document.getElementById('pubProfileAvatar').innerHTML = driverAlias.charAt(0).toUpperCase();
+            document.getElementById('pubProfileAvatar').style.backgroundImage = 'none';
+            document.getElementById('pubProfileAge').innerText = "Ładowanie...";
+            document.getElementById('pubProfileCity').innerText = "Ładowanie...";
+            document.getElementById('pubProfileDesc').innerText = "Ładowanie...";
 
-            if(!name) return alert("Podaj chociaż nazwę fury!");
-
-            if(editId) {
-                await updateDoc(doc(db, "fury", editId), { name: name, photo: photo, engine: engine, accel: accel, tires: tires });
-                window.cancelEdit();
+            const docSnap = await getDoc(doc(db, "uzytkownicy", driverAlias));
+            if(docSnap.exists()) {
+                const data = docSnap.data();
+                if(data.avatar) {
+                    document.getElementById('pubProfileAvatar').innerHTML = "";
+                    document.getElementById('pubProfileAvatar').style.backgroundImage = `url('${data.avatar}')`;
+                }
+                document.getElementById('pubProfileAge').innerText = data.wiek || "Nie podano";
+                document.getElementById('pubProfileCity').innerText = data.miejscowosc || "Nie podano";
+                document.getElementById('pubProfileDesc').innerText = data.opis || "Ten kierowca woli przemawiać czynami na torze.";
             } else {
-                await addDoc(collection(db, "fury"), { driver: window.currentUserAlias, name: name, photo: photo, engine: engine, accel: accel, tires: tires });
-                document.getElementById('newCarName').value = ''; document.getElementById('newCarPhoto').value = ''; document.getElementById('newCarEngine').value = ''; document.getElementById('newCarAccel').value = ''; document.getElementById('newCarTires').value = '';
-            }
-            await loadMyGarage(); 
-        };
-
-        window.triggerEditCar = (id, name, photo, engine, accel, tires) => {
-            document.getElementById('editCarId').value = id;
-            document.getElementById('newCarName').value = name;
-            document.getElementById('newCarPhoto').value = photo;
-            document.getElementById('newCarEngine').value = engine;
-            document.getElementById('newCarAccel').value = accel;
-            document.getElementById('newCarTires').value = tires;
-            document.getElementById('garageFormTitle').innerText = "Edytuj furę:";
-            document.getElementById('saveCarBtn').innerText = "Zapisz Zmiany";
-            document.getElementById('saveCarBtn').style.backgroundColor = "#27ae60";
-            document.getElementById('cancelEditBtn').classList.remove('hidden');
-        };
-
-        window.cancelEdit = () => {
-            document.getElementById('editCarId').value = "";
-            document.getElementById('newCarName').value = ''; document.getElementById('newCarPhoto').value = ''; document.getElementById('newCarEngine').value = ''; document.getElementById('newCarAccel').value = ''; document.getElementById('newCarTires').value = '';
-            document.getElementById('garageFormTitle').innerText = "Dodaj nową furę:";
-            document.getElementById('saveCarBtn').innerText = "Dodaj do garażu!";
-            document.getElementById('saveCarBtn').style.backgroundColor = "#ff4500";
-            document.getElementById('cancelEditBtn').classList.add('hidden');
-        };
-
-        window.deleteCar = async (docId) => {
-            if(confirm("Na pewno chcesz zezłomować?")) {
-                await deleteDoc(doc(db, "fury", docId));
-                await loadMyGarage();
+                document.getElementById('pubProfileAge').innerText = "Nie podano";
+                document.getElementById('pubProfileCity').innerText = "Nie podano";
+                document.getElementById('pubProfileDesc').innerText = "Konto założone, ale garaż jeszcze zamknięty.";
             }
         };
 
-        async function loadMyGarage() {
-            const q = query(collection(db, "fury"), where("driver", "==", window.currentUserAlias));
-            const snapshot = await getDocs(q);
-            const list = document.getElementById('myCarsList');
-            window.myCars = []; 
-            list.innerHTML = "";
-            if(snapshot.empty) { list.innerHTML = "Brak aut."; return; }
-            snapshot.forEach(doc => {
-                const data = doc.data();
-                window.myCars.push(data.name);
-                const safeName = data.name.replace(/'/g, "\\'"); const safePhoto = data.photo.replace(/'/g, "\\'"); const safeEngine = data.engine.replace(/'/g, "\\'"); const safeAccel = data.accel.replace(/'/g, "\\'"); const safeTires = data.tires.replace(/'/g, "\\'");
-                list.innerHTML += `<li class="garage-item"><div><b>${data.name}</b></div><div class="garage-item-btns"><button class="btn-view" onclick="window.showCarCard('${safeName}', '${window.currentUserAlias}')">Karta</button><button class="btn-edit" onclick="window.triggerEditCar('${doc.id}', '${safeName}', '${safePhoto}', '${safeEngine}', '${safeAccel}', '${safeTires}')">✏️</button><button class="btn-del" onclick="window.deleteCar('${doc.id}')">❌</button></div></li>`;
-            });
-        }
+        // --- GARAŻ (Skrócony w komentarzach, logika ta sama) ---
+        window.saveNewCar = async () => { /*...*/ const editId = document.getElementById('editCarId').value; const name = document.getElementById('newCarName').value; const photo = document.getElementById('newCarPhoto').value || "https://via.placeholder.com/400x250/222/ff4500?text=Brak+Zdjecia"; const engine = document.getElementById('newCarEngine').value || "Nieznany"; const accel = document.getElementById('newCarAccel').value || "? s"; const tires = document.getElementById('newCarTires').value || "Drogowe"; if(!name) return alert("Podaj chociaż nazwę fury!"); if(editId) { await updateDoc(doc(db, "fury", editId), { name: name, photo: photo, engine: engine, accel: accel, tires: tires }); window.cancelEdit(); } else { await addDoc(collection(db, "fury"), { driver: window.currentUserAlias, name: name, photo: photo, engine: engine, accel: accel, tires: tires }); document.getElementById('newCarName').value = ''; document.getElementById('newCarPhoto').value = ''; document.getElementById('newCarEngine').value = ''; document.getElementById('newCarAccel').value = ''; document.getElementById('newCarTires').value = ''; } await loadMyGarage(); };
+        window.triggerEditCar = (id, name, photo, engine, accel, tires) => { document.getElementById('editCarId').value = id; document.getElementById('newCarName').value = name; document.getElementById('newCarPhoto').value = photo; document.getElementById('newCarEngine').value = engine; document.getElementById('newCarAccel').value = accel; document.getElementById('newCarTires').value = tires; document.getElementById('garageFormTitle').innerText = "Edytuj furę:"; document.getElementById('saveCarBtn').innerText = "Zapisz Zmiany"; document.getElementById('saveCarBtn').style.backgroundColor = "#27ae60"; document.getElementById('cancelEditBtn').classList.remove('hidden'); };
+        window.cancelEdit = () => { document.getElementById('editCarId').value = ""; document.getElementById('newCarName').value = ''; document.getElementById('newCarPhoto').value = ''; document.getElementById('newCarEngine').value = ''; document.getElementById('newCarAccel').value = ''; document.getElementById('newCarTires').value = ''; document.getElementById('garageFormTitle').innerText = "Dodaj nową furę:"; document.getElementById('saveCarBtn').innerText = "Dodaj do garażu!"; document.getElementById('saveCarBtn').style.backgroundColor = "#ff4500"; document.getElementById('cancelEditBtn').classList.add('hidden'); };
+        window.deleteCar = async (docId) => { if(confirm("Na pewno chcesz zezłomować?")) { await deleteDoc(doc(db, "fury", docId)); await loadMyGarage(); } };
+        async function loadMyGarage() { const q = query(collection(db, "fury"), where("driver", "==", window.currentUserAlias)); const snapshot = await getDocs(q); const list = document.getElementById('myCarsList'); window.myCars = []; list.innerHTML = ""; if(snapshot.empty) { list.innerHTML = "Brak aut."; return; } snapshot.forEach(doc => { const data = doc.data(); window.myCars.push(data.name); const safeName = data.name.replace(/'/g, "\\'"); const safePhoto = data.photo.replace(/'/g, "\\'"); const safeEngine = data.engine.replace(/'/g, "\\'"); const safeAccel = data.accel.replace(/'/g, "\\'"); const safeTires = data.tires.replace(/'/g, "\\'"); list.innerHTML += `<li class="garage-item"><div><b>${data.name}</b></div><div class="garage-item-btns"><button class="btn-view" onclick="window.showCarCard('${safeName}', '${window.currentUserAlias}')">Karta</button><button class="btn-edit" onclick="window.triggerEditCar('${doc.id}', '${safeName}', '${safePhoto}', '${safeEngine}', '${safeAccel}', '${safeTires}')">✏️</button><button class="btn-del" onclick="window.deleteCar('${doc.id}')">❌</button></div></li>`; }); }
 
-        // --- SSR GACHA KARTA UMA MUSUME ---
-        window.showCarCard = async (carName, driverName) => {
-            document.getElementById('umaCardModal').classList.add('active');
-            const cardContent = document.getElementById('umaCardContent');
-            cardContent.innerHTML = `<div style="padding: 40px; text-align: center; background: #222; border-radius: 10px; color: white;">Ładowanie...</div>`;
+        // --- KARTA UMA MUSUME ---
+        window.showCarCard = async (carName, driverName) => { document.getElementById('umaCardModal').classList.add('active'); const cardContent = document.getElementById('umaCardContent'); cardContent.innerHTML = `<div style="padding: 40px; text-align: center; background: #222; border-radius: 10px; color: white;">Ładowanie...</div>`; const q = query(collection(db, "fury"), where("driver", "==", driverName), where("name", "==", carName)); const snapshot = await getDocs(q); if(snapshot.empty) { cardContent.innerHTML = `<div style="padding: 40px; text-align: center; background: #222; border-radius: 10px; color: white;">Brak danych.</div>`; return; } const carData = snapshot.docs[0].data(); cardContent.innerHTML = `<div style="position: relative; width: 100%; max-width: 340px; height: 500px; margin: auto; background: #000; border-radius: 18px; overflow: hidden; box-shadow: 0 0 20px rgba(255, 69, 0, 0.6);"><span onclick="window.closeModals()" style="position: absolute; top: 12px; right: 18px; font-size: 32px; color: #fff; cursor: pointer; z-index: 10; text-shadow: 2px 2px 4px #000; font-weight: bold;">×</span><div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-image: url('${carData.photo}'); background-size: cover; background-position: center; z-index: 1;"></div><div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-image: url('https://pbs.twimg.com/media/GxszfaMawAE5j4G.png'); background-size: 100% 100%; z-index: 2; pointer-events: none;"></div><div style="position: absolute; bottom: 0; left: 0; width: 100%; height: 150px; background: linear-gradient(to top, rgba(0,0,0,1) 5%, rgba(0,0,0,0.7) 40%, transparent); z-index: 3; display: flex; flex-direction: column; justify-content: flex-end; padding: 12px; box-sizing: border-box;"><h2 style="font-size: 20px; color: #ffeb3b; margin: 0 0 2px 0; text-transform: uppercase; text-align: center; text-shadow: 2px 2px 4px #000;">${carData.name}</h2><div style="text-align: center; color: #fff; font-size: 12px; margin-bottom: 8px; text-shadow: 1px 1px 3px #000;">WŁAŚCICIEL: <b>${carData.driver.toUpperCase()}</b></div><div class="stat-row"><span class="stat-label">SILNIK:</span><span class="stat-value">${carData.engine}</span></div><div class="stat-row"><span class="stat-label">0-100 km/h:</span><span class="stat-value">${carData.accel}</span></div><div class="stat-row"><span class="stat-label">OPONY:</span><span class="stat-value" style="color: #4cd137;">${carData.tires}</span></div></div></div>`; };
 
-            const q = query(collection(db, "fury"), where("driver", "==", driverName), where("name", "==", carName));
-            const snapshot = await getDocs(q);
-            if(snapshot.empty) { cardContent.innerHTML = `<div style="padding: 40px; text-align: center; background: #222; border-radius: 10px; color: white;">Brak danych.</div>`; return; }
-            const carData = snapshot.docs[0].data();
-            
-            cardContent.innerHTML = `
-                <div style="position: relative; width: 100%; max-width: 340px; height: 500px; margin: auto; background: #000; border-radius: 18px; overflow: hidden; box-shadow: 0 0 20px rgba(255, 69, 0, 0.6);">
-                    
-                    <span onclick="window.closeModals()" style="position: absolute; top: 12px; right: 18px; font-size: 32px; color: #fff; cursor: pointer; z-index: 10; text-shadow: 2px 2px 4px #000; font-weight: bold;">×</span>
-
-                    <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-image: url('${carData.photo}'); background-size: cover; background-position: center; z-index: 1;"></div>
-                    
-                    <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-image: url('https://pbs.twimg.com/media/GxszfaMawAE5j4G.png'); background-size: 100% 100%; z-index: 2; pointer-events: none;"></div>
-                    
-                    <div style="position: absolute; bottom: 0; left: 0; width: 100%; height: 150px; background: linear-gradient(to top, rgba(0,0,0,1) 5%, rgba(0,0,0,0.7) 40%, transparent); z-index: 3; display: flex; flex-direction: column; justify-content: flex-end; padding: 12px; box-sizing: border-box;">
-                        
-                        <h2 style="font-size: 20px; color: #ffeb3b; margin: 0 0 2px 0; text-transform: uppercase; text-align: center; text-shadow: 2px 2px 4px #000;">${carData.name}</h2>
-                        <div style="text-align: center; color: #fff; font-size: 12px; margin-bottom: 8px; text-shadow: 1px 1px 3px #000;">WŁAŚCICIEL: <b>${carData.driver.toUpperCase()}</b></div>
-                        
-                        <div class="stat-row"><span class="stat-label">SILNIK:</span><span class="stat-value">${carData.engine}</span></div>
-                        <div class="stat-row"><span class="stat-label">0-100 km/h:</span><span class="stat-value">${carData.accel}</span></div>
-                        <div class="stat-row"><span class="stat-label">OPONY:</span><span class="stat-value" style="color: #4cd137;">${carData.tires}</span></div>
-                    </div>
-                </div>
-            `;
-        };
-
-        // --- Zamykanie modali po kliknięciu na tło ---
-        document.getElementById('garageModal').addEventListener('click', (e) => { if(e.target === document.getElementById('garageModal')) window.closeModals(); });
-        document.getElementById('umaCardModal').addEventListener('click', (e) => { if(e.target === document.getElementById('umaCardModal')) window.closeModals(); });
-        document.getElementById('settingsModal').addEventListener('click', (e) => { if(e.target === document.getElementById('settingsModal')) window.closeModals(); });
-
-        // --- MAPA ---
+        // --- MAPA I ZARZĄDZANIE CZASAMI ---
         tory.forEach(tor => {
             const marker = L.marker([tor.lat, tor.lng]).addTo(map);
             marker.on('click', () => {
@@ -332,7 +324,42 @@
             const q = query(collection(db, "czasy"), where("track", "==", trackName), orderBy("time", "asc"));
             const snapshot = await getDocs(q); tbody.innerHTML = "";
             if (snapshot.empty) { tbody.innerHTML = "<tr><td colspan='3'>Brak.</td></tr>"; return; }
-            snapshot.forEach((doc) => { const data = doc.data(); const safeCar = data.car.replace(/'/g, "\\'"); tbody.innerHTML += `<tr><td><b>${data.driver.toUpperCase()}</b></td><td><span class="car-link" onclick="window.showCarCard('${safeCar}', '${data.driver}')">${data.car}</span></td><td style="color:#1db954;"><b>${data.time}</b></td></tr>`; });
+            
+            snapshot.forEach((doc) => { 
+                const data = doc.data(); 
+                const safeCar = data.car.replace(/'/g, "\\'"); 
+                
+                // ANTY-GRIEFING FRONTENDOWY: Guziki edycji tylko dla właściciela czasu
+                let actionBtns = "";
+                if(data.driver === window.currentUserAlias) {
+                    actionBtns = `<br>
+                        <span onclick="window.editLapTime('${doc.id}', '${data.time}', '${trackName}')" style="cursor:pointer; font-size:12px; margin-right:5px;" title="Edytuj Czas">✏️</span> 
+                        <span onclick="window.deleteLapTime('${doc.id}', '${trackName}')" style="cursor:pointer; font-size:12px;" title="Usuń Czas">❌</span>`;
+                }
+
+                tbody.innerHTML += `<tr>
+                    <td><span class="user-link" onclick="window.showUserProfile('${data.driver}')">${data.driver.toUpperCase()}</span></td>
+                    <td><span class="car-link" onclick="window.showCarCard('${safeCar}', '${data.driver}')">${data.car}</span></td>
+                    <td><b style="color:#1db954;">${data.time}</b>${actionBtns}</td>
+                </tr>`; 
+            });
+        };
+
+        // EDYCJA CZASU Z POZIOMU TABELI
+        window.editLapTime = async (docId, oldTime, trackName) => {
+            const newTime = prompt("Podaj nowy, lepszy czas:", oldTime);
+            if(newTime && newTime !== oldTime) {
+                await updateDoc(doc(db, "czasy", docId), { time: newTime });
+                window.loadLeaderboard(trackName);
+            }
+        };
+
+        // USUWANIE CZASU Z POZIOMU TABELI
+        window.deleteLapTime = async (docId, trackName) => {
+            if(confirm("Czy na pewno chcesz usunąć ten wynik z tabeli?")) {
+                await deleteDoc(doc(db, "czasy", docId));
+                window.loadLeaderboard(trackName);
+            }
         };
 
         window.saveTime = async (trackName) => {
@@ -359,35 +386,8 @@
     
     <script>
         window.ytPlayer; window.isRadioPlaying = false;
-        function onYouTubeIframeAPIReady() { 
-            window.ytPlayer = new YT.Player('youtubePlayer', { 
-                height: '10', 
-                width: '10', 
-                playerVars: { 
-                    'autoplay': 0, 
-                    'loop': 1, 
-                    'listType': 'playlist', 
-                    // TWOJA PLAYLISTA ZNAJDUJE SIĘ DOKŁADNIE TUTAJ:
-                    'list': 'PLaiHO9TIt9j4IGPwZHyDHFSEnde5S83pp' 
-                }, 
-                events: { 
-                    'onReady': function(event) { event.target.setVolume(15); } 
-                } 
-            }); 
-        }
-        document.getElementById('radioBtnToggle').addEventListener('click', (e) => { 
-            if(!window.ytPlayer) return; 
-            if (!window.isRadioPlaying) { 
-                window.ytPlayer.playVideo(); 
-                e.target.innerHTML = "🔇 Wyłącz Audio"; 
-                window.isRadioPlaying = true; 
-            } else { 
-                window.ytPlayer.pauseVideo(); 
-                e.target.innerHTML = "🎵 Włącz Audio"; 
-                window.isRadioPlaying = false; 
-            } 
-            document.getElementById('userMenu').classList.remove('active'); 
-        });
+        function onYouTubeIframeAPIReady() { window.ytPlayer = new YT.Player('youtubePlayer', { height: '10', width: '10', playerVars: { 'autoplay': 0, 'loop': 1, 'listType': 'playlist', 'list': 'PLaiHO9TIt9j4IGPwZHyDHFSEnde5S83pp' }, events: { 'onReady': function(event) { event.target.setVolume(15); } } }); }
+        document.getElementById('radioBtnToggle').addEventListener('click', (e) => { if(!window.ytPlayer) return; if (!window.isRadioPlaying) { window.ytPlayer.playVideo(); e.target.innerHTML = "🔇 Wyłącz Audio"; window.isRadioPlaying = true; } else { window.ytPlayer.pauseVideo(); e.target.innerHTML = "🎵 Włącz Audio"; window.isRadioPlaying = false; } document.getElementById('userMenu').classList.remove('active'); });
     </script>
 </body>
 </html>
