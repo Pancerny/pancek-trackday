@@ -8,59 +8,30 @@
     <style>
         body, html { margin: 0; padding: 0; width: 100%; height: 100%; font-family: 'Arial', sans-serif; background-color: #1a1a1a; color: #f0f0f0; overflow: hidden; }
         
-        /* ==========================================
-           STYLIZACJA LOGOWANIA (DISCORD STYLE) - NOWE
-           ========================================== */
-        #authOverlay { position: absolute; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 5000; display: flex; justify-content: center; align-items: center; cursor: default;
-            /* Dynamiczne tło za kartą logowania */
-            background: linear-gradient(135deg, #202225 0%, #1a1a1a 50%, #ff4500 100%);
-        }
-        
+        /* LOGOWANIE (DISCORD STYLE) */
+        #authOverlay { position: absolute; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 5000; display: flex; justify-content: center; align-items: center; cursor: default; background: linear-gradient(135deg, #202225 0%, #1a1a1a 50%, #ff4500 100%); }
         .auth-card { display: flex; width: 780px; height: 450px; background: #2f3136; border-radius: 12px; overflow: hidden; box-shadow: 0 15px 50px rgba(0,0,0,0.9); border: 2px solid #555; transition: 0.3s; }
-        
-        /* Lewy panel - Formularz */
         .auth-card-form { flex: 1 1 55%; padding: 40px; display: flex; flex-direction: column; justify-content: center; align-items: center; border-right: 2px solid #444; }
-        
-        /* Prawy panel - Obrazek Daitaku Helios */
-        .auth-card-image { flex: 1 1 45%; background-color: #202225; background-size: cover; background-position: center; position: relative;
-            /* !!! TUTAJ WKLEJ LINK DO HOSTOWANEGO ZDJĘCIA HELIOS !!! */
-            background-image: url('helios.jpg'); 
-        }
-        
-        /* Nakładka na obrazek, żeby pasował do stylu */
-        .auth-card-image::after { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(88, 101, 242, 0.1); /* Blurple tint */ }
-
+        .auth-card-image { flex: 1 1 45%; background-color: #202225; background-size: cover; background-position: center; position: relative; background-image: url('helios.jpg'); /* Zmień na swój link jeśli potrzebujesz */ }
+        .auth-card-image::after { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(88, 101, 242, 0.1); }
         .auth-card h1 { color: #fff; margin: 0 0 10px 0; font-size: 26px; text-transform: none; text-shadow: none; font-weight: bold; }
         .auth-card p { color: #b9bbbe; margin: 0 0 25px 0; font-size: 16px; text-align: center; }
-
-        /* Styl inputów w logowaniu (Discord style) */
         .auth-card input { background-color: #202225; border: 1px solid rgba(0,0,0,0.3); color: #dcddde; border-radius: 5px; padding: 12px; margin: 8px 0; font-size: 14px; transition: 0.2s; width: 100%; box-sizing: border-box; }
         .auth-card input:focus { border-color: #5865F2; outline: none; }
-        
-        /* Styl przycisku logowania (Discord blurple + Twoja nazwa) */
         .btn-auth-submit { background-color: #5865F2; color: white; cursor: pointer; font-weight: bold; font-size: 16px; border: none; border-radius: 5px; padding: 12px; width: 100%; margin-top: 20px; transition: 0.2s; text-transform: uppercase; letter-spacing: 1px; }
         .btn-auth-submit:hover { background-color: #4752C4; }
-
         #forgotPwdBtn { color: #00aff4; text-decoration: none; font-size: 12px; margin-top: 10px; display: block; transition: 0.2s;}
         #forgotPwdBtn:hover { text-decoration: underline; }
 
-        /* ==========================================
-           RESTA ELEMENTÓW UI (BEZ ZMIAN LUB DROBNE)
-           ========================================== */
+        /* UI STRONY */
         #map { width: 100vw; height: 100vh; position: absolute; top: 0; left: 0; z-index: 1; }
-        
         .floating-header { position: absolute; top: 20px; left: 50%; transform: translateX(-50%); z-index: 1000; background: rgba(42, 42, 42, 0.9); padding: 15px 40px; border-radius: 8px; border-bottom: 4px solid #ff4500; box-shadow: 0 4px 15px rgba(0,0,0,0.5); text-align: center; pointer-events: none; display: flex; align-items: center; gap: 20px; }
-        
-        /* NAZWA W BANERZE (BEZ PANCEK, POWIĘKSZONA) */
         .floating-header h1 { margin: 0; color: #ff4500; letter-spacing: 4px; font-size: 32px; font-weight: bold; text-shadow: 2px 2px 4px #000; }
-        
-        /* POWIĘKSZONA OGURI CAP W BANERZE (Z 40px na 70px) */
         .floating-header img { height: 70px; width: auto; object-fit: contain; }
         
         .user-widget { position: absolute; top: 20px; right: 20px; z-index: 1000; display: flex; align-items: center; gap: 15px; background: rgba(42, 42, 42, 0.9); padding: 10px 20px; border-radius: 50px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); border: 2px solid #555; }
         .greeting { font-weight: bold; color: #fff; font-size: 16px; }
         .greeting span { color: #ff4500; }
-        
         .user-avatar { width: 45px; height: 45px; border-radius: 50%; background: #ff4500; display: flex; justify-content: center; align-items: center; font-weight: bold; font-size: 22px; cursor: pointer; border: 2px solid #fff; transition: 0.2s; overflow: hidden; }
         .user-avatar:hover { transform: scale(1.1); }
         .dropdown-menu { position: absolute; top: 80px; right: 20px; background: #2a2a2a; border-radius: 8px; border: 1px solid #555; box-shadow: 0 5px 15px rgba(0,0,0,0.8); width: 220px; display: none; flex-direction: column; overflow: hidden; z-index: 1001; }
@@ -70,8 +41,7 @@
         .dropdown-item:last-child { border-bottom: none; }
 
         input, button, select, textarea { width: 100%; padding: 10px; margin: 8px 0; border-radius: 5px; border: none; box-sizing: border-box; font-family: 'Arial', sans-serif;}
-        /* Inputy wewnątrz aplikacji (nie w logowaniu) */
-        #appUI input, #appUI select, #appUI textarea { background-color: #444; color: white; border: 1px solid #555; font-size: 14px; }
+        #appUI input, #appUI select, #appUI textarea, .modal-content input, .modal-content select, .modal-content textarea { background-color: #444; color: white; border: 1px solid #555; font-size: 14px; }
         .btn-submit { background-color: #ff4500; color: white; cursor: pointer; font-weight: bold; transition: 0.2s; text-transform: uppercase; font-size: 14px;}
         .btn-submit:hover { background-color: #ff6a00; }
         .hidden { display: none !important; }
@@ -80,9 +50,13 @@
         input[type="number"] { -moz-appearance: textfield; }
         input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(1); cursor: pointer; }
 
-        .leaflet-popup-content-wrapper { background: #2a2a2a; color: #f0f0f0; border: 2px solid #ff4500; border-radius: 8px; }
+        /* DYMKI MAPY (LEAFLET) */
+        .leaflet-popup-content-wrapper { background: #2a2a2a; color: #f0f0f0; border: 2px solid #ff4500; border-radius: 8px; overflow: hidden; }
         .leaflet-popup-tip { background: #ff4500; }
-        .leaflet-popup-content { margin: 15px; width: 340px !important; }
+        .leaflet-popup-content { margin: 0 !important; width: 360px !important; }
+        .track-img-header { width: 100%; height: 120px; background-size: cover; background-position: center; border-bottom: 2px solid #ff4500; }
+        .popup-inner-pad { padding: 15px; }
+        
         .track-info { font-size: 13px; text-align: left; background: #222; padding: 12px; border-radius: 6px; margin: 15px 0; border-left: 3px solid #ff4500; }
         table { width: 100%; border-collapse: collapse; margin: 10px 0; background: #333; font-size: 14px; }
         th, td { border: 1px solid #555; padding: 6px; text-align: center; vertical-align: middle; }
@@ -91,16 +65,17 @@
         .car-link, .user-link { color: #3498db; text-decoration: none; font-weight: bold; cursor: pointer; transition: 0.2s; }
         .user-link { color: #e67e22; }
         .car-link:hover, .user-link:hover { color: #fff; text-decoration: underline; }
+        .admin-badge { background-color: #e74c3c; color: white; font-size: 10px; padding: 2px 4px; border-radius: 3px; margin-left: 5px; font-weight: bold; text-transform: uppercase; border: 1px solid #c0392b;}
 
+        /* MODALE */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.85); z-index: 4000; display: none; justify-content: center; align-items: center; cursor: pointer;}
         .modal-overlay.active { display: flex; }
-        
         .modal-content { background: #2a2a2a; padding: 25px; border-radius: 12px; border-top: 5px solid #ff4500; width: 90%; max-width: 550px; max-height: 90vh; overflow-y: auto; overflow-x: hidden; position: relative; box-shadow: 0 10px 30px rgba(0,0,0,0.8); cursor: default; }
         .close-modal { position: absolute; top: 10px; right: 15px; font-size: 24px; color: #aaa; cursor: pointer; z-index: 100; }
         .close-modal:hover { color: #fff; }
 
-        .garage-item { display: flex; justify-content: space-between; align-items: center; padding: 10px; background: #333; margin-bottom: 5px; border-radius: 5px; border-left: 3px solid #1db954; }
-        .garage-item-btns button { padding: 5px 8px; margin-left: 5px; border: none; border-radius: 3px; cursor: pointer; color: white; font-weight: bold; width: auto; font-size: 12px; }
+        .list-item { display: flex; justify-content: space-between; align-items: center; padding: 10px; background: #333; margin-bottom: 5px; border-radius: 5px; border-left: 3px solid #1db954; }
+        .list-item-btns button { padding: 5px 8px; margin-left: 5px; border: none; border-radius: 3px; cursor: pointer; color: white; font-weight: bold; width: auto; font-size: 12px; }
         .btn-view { background: #3498db; } .btn-view:hover { background: #2980b9; }
         .btn-edit { background: #f39c12; } .btn-edit:hover { background: #d68910; }
         .btn-del { background: #e74c3c; } .btn-del:hover { background: #c0392b; }
@@ -108,8 +83,8 @@
         .stat-row { display: flex; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.2); padding: 5px 0; margin-top: 5px;}
         .stat-label { color: #ccc; font-weight: bold; font-size: 13px; text-shadow: 1px 1px 2px #000; }
         .stat-value { color: #fff; font-weight: bold; font-size: 14px; text-shadow: 1px 1px 2px #000; }
-
         .profile-avatar-large { width: 120px; height: 120px; border-radius: 50%; border: 4px solid #ff4500; margin: 0 auto 15px auto; background-color: #333; background-size: cover; background-position: center; display: flex; justify-content: center; align-items: center; font-size: 40px; font-weight: bold; color: #fff;}
+        .user-list-avatar { width: 40px; height: 40px; border-radius: 50%; background-size: cover; background-position: center; background-color: #555; display: inline-block; vertical-align: middle; margin-right: 10px; }
     </style>
     <script src="https://www.youtube.com/iframe_api"></script>
 </head>
@@ -120,15 +95,11 @@
             <div class="auth-card-form">
                 <h1>Zaloguj się</h1>
                 <p>Trackday - Zmierz się z nami na torze!</p>
-                
                 <input type="email" id="email" placeholder="Adres e-mail">
                 <input type="password" id="password" placeholder="Hasło">
-                
                 <button id="loginBtn" class="btn-auth-submit">rura!🏎️</button>
-                
                 <a href="#" id="forgotPwdBtn">Zapomniałeś hasła?</a>
             </div>
-            
             <div class="auth-card-image"></div>
         </div>
     </div>
@@ -137,17 +108,19 @@
 
     <div id="appUI" class="hidden">
         <div class="floating-header">
-            <img src="oguri.gif">
+            <img src="https://media.tenor.com/-lfKiysaO2oAAAAj/uma-musume-chibi.gif">
             <h1>TRACKDAY</h1>
-            <img src="oguri.gif" style="transform: scaleX(-1);">
+            <img src="https://media.tenor.com/-lfKiysaO2oAAAAj/uma-musume-chibi.gif" style="transform: scaleX(-1);">
         </div>
         <div class="user-widget">
             <div class="greeting">Hej <span id="userAlias">Kierowca</span>!</div>
             <div class="user-avatar" id="avatarBtn">P</div> 
         </div>
         <div class="dropdown-menu" id="userMenu">
-            <div class="dropdown-item" onclick="openGarage()">🚗 Mój Garaż (Fury)</div>
-            <div class="dropdown-item" onclick="openSettings()">⚙️ Ustawienia Profilu</div>
+            <div class="dropdown-item" onclick="openGarage()">🚗 Garaż</div>
+            <div class="dropdown-item" onclick="openSettings()">⚙️ Profil</div>
+            <div class="dropdown-item" onclick="openAllCarsList()">📋 Lista Fur</div>
+            <div class="dropdown-item" onclick="openUsersList()">👥 Lista Użytkowników</div>
             <div class="dropdown-item" id="radioBtnToggle">🔇 Wyłącz Audio</div>
             <div class="dropdown-item" id="logoutBtn" style="color: #e74c3c;">🚪 Wyloguj</div>
         </div>
@@ -163,15 +136,31 @@
                 <h3 id="garageFormTitle" style="margin-top: 0; font-size: 16px;">Dodaj nową furę:</h3>
                 <input type="hidden" id="editCarId" value="">
                 <input type="text" id="newCarName" placeholder="Nazwa fury (np. Gruz E36)">
-                <input type="text" id="newCarPhoto" placeholder="Link do zdjęcia (URL, np. z Discorda)">
-                <input type="text" id="newCarEngine" placeholder="Silnik / Pojemność (np. 2.8 R6)">
-                <input type="text" id="newCarAccel" placeholder="0-100 km/h (np. 6.5s)">
+                <input type="text" id="newCarPhoto" placeholder="Link do zdjęcia">
+                <input type="text" id="newCarEngine" placeholder="Silnik / Pojemność">
+                <input type="text" id="newCarAccel" placeholder="0-100 km/h">
                 <input type="text" id="newCarTires" placeholder="Opony (np. Semi-Slick)">
                 <button id="saveCarBtn" onclick="saveNewCar()" class="btn-submit">Dodaj do garażu!</button>
                 <button id="cancelEditBtn" onclick="cancelEdit()" class="btn-submit hidden" style="background: #555; margin-top: 5px;">Anuluj Edycję</button>
             </div>
             <h3 style="margin-top: 0; border-bottom: 1px solid #555; padding-bottom: 5px;">Twoje maszyny:</h3>
             <ul id="myCarsList" style="list-style: none; padding: 0; margin: 0; color: #aaa;"><li>Ładowanie...</li></ul>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="allCarsModal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModals()">×</span>
+            <h2 style="color: #ff4500; margin-top: 0;">📋 Lista Wszystkich Fur</h2>
+            <ul id="allCarsListRender" style="list-style: none; padding: 0; margin: 0; color: #aaa;"><li>Ładowanie...</li></ul>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="usersListModal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModals()">×</span>
+            <h2 style="color: #ff4500; margin-top: 0;">👥 Lista Użytkowników</h2>
+            <ul id="usersListRender" style="list-style: none; padding: 0; margin: 0; color: #aaa;"><li>Ładowanie...</li></ul>
         </div>
     </div>
 
@@ -195,7 +184,8 @@
         <div class="modal-content" style="text-align: center;">
             <span class="close-modal" onclick="closeModals()">×</span>
             <div id="pubProfileAvatar" class="profile-avatar-large">?</div>
-            <h1 id="pubProfileAlias" style="color: #ff4500; margin: 0 0 15px 0; text-transform: uppercase;">KIEROWCA</h1>
+            <h1 id="pubProfileAlias" style="color: #ff4500; margin: 0 0 5px 0; text-transform: uppercase;">KIEROWCA</h1>
+            <div id="pubProfileAdminBadge" style="margin-bottom: 15px; display:none;"><span class="admin-badge" style="font-size: 14px; padding: 4px 8px;">ADMINISTRATOR</span></div>
             <div class="stat-row"><span class="stat-label">WIEK:</span><span class="stat-value" id="pubProfileAge">-</span></div>
             <div class="stat-row"><span class="stat-label">MIEJSCOWOŚĆ:</span><span class="stat-value" id="pubProfileCity">-</span></div>
             <div style="margin-top: 20px; text-align: left; background: #1a1a1a; padding: 15px; border-radius: 8px; border-left: 3px solid #ff4500;">
@@ -244,14 +234,15 @@
         L.control.zoom({ position: 'topleft' }).addTo(map);
         L.control.layers({ "Tryb Nocny": darkMap, "Satelita": satelliteMap }, null, {position: 'bottomleft'}).addTo(map);
 
+        // BAZA TORÓW (Dodano pole 'foto' z placeholderem - możesz tu wklejać swoje linki np. 'modlin.jpg')
         const tory = [
-            { nazwa: "Autodrom Bemowo", lat: 52.265, lng: 20.912, opis: "Najbliżej i bezpiecznie", cena: "Nieznana", kontakt: "sekretariat@automobilklubpolski.pl" },
-            { nazwa: "Tor Modlin", lat: 52.444, lng: 20.648, opis: "Wąsko,daily carem", cena: "Nieznana", kontakt: "+48 22 100 27 00" },
-            { nazwa: "Autodrom Słomczyn", lat: 51.905, lng: 20.842, opis: "Szeroko", cena: "400 zł", kontakt: "+48 605 453 971" },
-            { nazwa: "Autodrom Jastrząb", lat: 51.246, lng: 20.942, opis: "Dalej", cena: "Nieznana", kontakt: "+48 694 427 709" },
-            { nazwa: "Tor Kielce", lat: 50.963, lng: 20.457, opis: "Historyczny", cena: "", kontakt: "" },
-            { nazwa: "Tor Ułęż Moto Park", lat: 51.624, lng: 22.094, opis: "Lotnisko", cena: "500 zł/h", kontakt: "" },
-            { nazwa: "TOR ŁÓDŹ", lat: 51.849, lng: 19.539, opis: "Najmniejszy", cena: "", kontakt: "" }
+            { nazwa: "Autodrom Bemowo", lat: 52.265, lng: 20.912, opis: "Najbliżej i bezpiecznie", cena: "Nieznana", kontakt: "sekretariat@automobilklubpolski.pl", foto: "https://via.placeholder.com/360x120/222/ff4500?text=Mapa+Bemowo" },
+            { nazwa: "Tor Modlin", lat: 52.444, lng: 20.648, opis: "Wąsko, daily carem z uwagą", cena: "Nieznana", kontakt: "+48 22 100 27 00", foto: "https://via.placeholder.com/360x120/222/ff4500?text=Mapa+Modlin" },
+            { nazwa: "Autodrom Słomczyn", lat: 51.905, lng: 20.842, opis: "Szeroko", cena: "400 zł", kontakt: "+48 605 453 971", foto: "https://via.placeholder.com/360x120/222/ff4500?text=Mapa+Slomczyn" },
+            { nazwa: "Autodrom Jastrząb", lat: 51.246, lng: 20.942, opis: "Dalej", cena: "Nieznana", kontakt: "+48 694 427 709", foto: "https://via.placeholder.com/360x120/222/ff4500?text=Mapa+Jastrzab" },
+            { nazwa: "Tor Kielce", lat: 50.963, lng: 20.457, opis: "Historyczny", cena: "", kontakt: "", foto: "https://via.placeholder.com/360x120/222/ff4500?text=Mapa+Kielce" },
+            { nazwa: "Tor Ułęż Moto Park", lat: 51.624, lng: 22.094, opis: "Lotnisko", cena: "500 zł/h", kontakt: "", foto: "https://via.placeholder.com/360x120/222/ff4500?text=Mapa+Ulez" },
+            { nazwa: "TOR ŁÓDŹ", lat: 51.849, lng: 19.539, opis: "Najmniejszy", cena: "", kontakt: "", foto: "https://via.placeholder.com/360x120/222/ff4500?text=Mapa+Lodz" }
         ];
 
         // --- MENU I MODALE ---
@@ -262,40 +253,140 @@
 
         window.openGarage = async () => { userMenu.classList.remove('active'); document.getElementById('garageModal').classList.add('active'); await loadMyGarage(); };
         window.openSettings = async () => { userMenu.classList.remove('active'); document.getElementById('settingsModal').classList.add('active'); document.getElementById('settingsAvatar').value = auth.currentUser.photoURL || ''; const docSnap = await getDoc(doc(db, "uzytkownicy", window.currentUserAlias)); if(docSnap.exists()) { const data = docSnap.data(); document.getElementById('settingsDob').value = data.dataUrodzenia || ''; document.getElementById('settingsCity').value = data.miejscowosc || ''; document.getElementById('settingsDesc').value = data.opis || ''; } };
-        window.closeModals = () => { document.getElementById('garageModal').classList.remove('active'); document.getElementById('umaCardModal').classList.remove('active'); document.getElementById('settingsModal').classList.remove('active'); document.getElementById('userProfileModal').classList.remove('active'); window.cancelEdit(); };
-        const modals = ['garageModal', 'umaCardModal', 'settingsModal', 'userProfileModal'];
+        
+        window.closeModals = () => { document.getElementById('garageModal').classList.remove('active'); document.getElementById('umaCardModal').classList.remove('active'); document.getElementById('settingsModal').classList.remove('active'); document.getElementById('userProfileModal').classList.remove('active'); document.getElementById('allCarsModal').classList.remove('active'); document.getElementById('usersListModal').classList.remove('active'); window.cancelEdit(); };
+        const modals = ['garageModal', 'umaCardModal', 'settingsModal', 'userProfileModal', 'allCarsModal', 'usersListModal'];
         modals.forEach(m => document.getElementById(m).addEventListener('click', (e) => { if(e.target.id === m) window.closeModals(); }));
 
-        // --- USTAWIEINA ---
+        // --- USTAWIENIA PROFILU ---
         window.saveSettings = async () => { const url = document.getElementById('settingsAvatar').value; const dob = document.getElementById('settingsDob').value; const city = document.getElementById('settingsCity').value; const desc = document.getElementById('settingsDesc').value; try { if(url !== auth.currentUser.photoURL) await updateProfile(auth.currentUser, { photoURL: url }); await setDoc(doc(db, "uzytkownicy", window.currentUserAlias), { dataUrodzenia: dob, miejscowosc: city, opis: desc, avatar: url }, { merge: true }); alert("Profil zaktualizowany!"); updateAvatarUI(auth.currentUser); window.closeModals(); } catch(e) { alert("Błąd: " + e.message); } };
         function updateAvatarUI(user) { if(user.photoURL) avatarBtn.innerHTML = `<img src="${user.photoURL}" style="width:100%; height:100%; border-radius:50%; object-fit:cover;">`; else avatarBtn.innerText = window.currentUserAlias.charAt(0).toUpperCase(); }
 
         // --- PROFIL PUBLICZNY ---
-        window.showUserProfile = async (driverAlias) => { document.getElementById('userProfileModal').classList.add('active'); document.getElementById('pubProfileAlias').innerText = driverAlias; document.getElementById('pubProfileAvatar').innerHTML = driverAlias.charAt(0).toUpperCase(); document.getElementById('pubProfileAvatar').style.backgroundImage = 'none'; document.getElementById('pubProfileAge').innerText = "Ładowanie..."; document.getElementById('pubProfileCity').innerText = "Ładowanie..."; document.getElementById('pubProfileDesc').innerText = "Ładowanie..."; const docSnap = await getDoc(doc(db, "uzytkownicy", driverAlias)); if(docSnap.exists()) { const data = docSnap.data(); if(data.avatar) { document.getElementById('pubProfileAvatar').innerHTML = ""; document.getElementById('pubProfileAvatar').style.backgroundImage = `url('${data.avatar}')`; } if(data.dataUrodzenia) { const birthDate = new Date(data.dataUrodzenia); const today = new Date(); let age = today.getFullYear() - birthDate.getFullYear(); const m = today.getMonth() - birthDate.getMonth(); if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) { age--; } document.getElementById('pubProfileAge').innerText = age + " lat"; } else { document.getElementById('pubProfileAge').innerText = "Nie podano"; } document.getElementById('pubProfileCity').innerText = data.miejscowosc || "Nie podano"; document.getElementById('pubProfileDesc').innerText = data.opis || "Ten kierowca woli przemawiać czynami na torze."; } else { document.getElementById('pubProfileAge').innerText = "Nie podano"; document.getElementById('pubProfileCity').innerText = "Nie podano"; document.getElementById('pubProfileDesc').innerText = "Konto założone, ale garaż jeszcze zamknięty."; } };
+        window.showUserProfile = async (driverAlias) => { 
+            document.getElementById('userProfileModal').classList.add('active'); 
+            document.getElementById('pubProfileAlias').innerText = driverAlias; 
+            document.getElementById('pubProfileAvatar').innerHTML = driverAlias.charAt(0).toUpperCase(); 
+            document.getElementById('pubProfileAvatar').style.backgroundImage = 'none'; 
+            document.getElementById('pubProfileAge').innerText = "Ładowanie..."; 
+            document.getElementById('pubProfileCity').innerText = "Ładowanie..."; 
+            document.getElementById('pubProfileDesc').innerText = "Ładowanie..."; 
+            
+            // ODZNAKA ADMINA W PROFILU
+            const adminBadge = document.getElementById('pubProfileAdminBadge');
+            if(driverAlias.toLowerCase() === 'pancerny') { adminBadge.style.display = 'block'; } else { adminBadge.style.display = 'none'; }
 
-        // --- GARAŻ (Skrócony) ---
-        window.saveNewCar = async () => { /*...*/ const editId = document.getElementById('editCarId').value; const name = document.getElementById('newCarName').value; const photo = document.getElementById('newCarPhoto').value || "https://via.placeholder.com/400x250/222/ff4500?text=Brak+Zdjecia"; const engine = document.getElementById('newCarEngine').value || "Nieznany"; const accel = document.getElementById('newCarAccel').value || "? s"; const tires = document.getElementById('newCarTires').value || "Drogowe"; if(!name) return alert("Podaj chociaż nazwę fury!"); if(editId) { await updateDoc(doc(db, "fury", editId), { name: name, photo: photo, engine: engine, accel: accel, tires: tires }); window.cancelEdit(); } else { await addDoc(collection(db, "fury"), { driver: window.currentUserAlias, name: name, photo: photo, engine: engine, accel: accel, tires: tires }); document.getElementById('newCarName').value = ''; document.getElementById('newCarPhoto').value = ''; document.getElementById('newCarEngine').value = ''; document.getElementById('newCarAccel').value = ''; document.getElementById('newCarTires').value = ''; } await loadMyGarage(); };
+            const docSnap = await getDoc(doc(db, "uzytkownicy", driverAlias)); 
+            if(docSnap.exists()) { 
+                const data = docSnap.data(); 
+                if(data.avatar) { document.getElementById('pubProfileAvatar').innerHTML = ""; document.getElementById('pubProfileAvatar').style.backgroundImage = `url('${data.avatar}')`; } 
+                if(data.dataUrodzenia) { const birthDate = new Date(data.dataUrodzenia); const today = new Date(); let age = today.getFullYear() - birthDate.getFullYear(); const m = today.getMonth() - birthDate.getMonth(); if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) { age--; } document.getElementById('pubProfileAge').innerText = age + " lat"; } else { document.getElementById('pubProfileAge').innerText = "Nie podano"; } 
+                document.getElementById('pubProfileCity').innerText = data.miejscowosc || "Nie podano"; 
+                document.getElementById('pubProfileDesc').innerText = data.opis || "Ten kierowca woli przemawiać czynami na torze."; 
+            } else { document.getElementById('pubProfileAge').innerText = "Nie podano"; document.getElementById('pubProfileCity').innerText = "Nie podano"; document.getElementById('pubProfileDesc').innerText = "Konto założone, ale garaż jeszcze zamknięty."; } 
+        };
+
+        // --- LISTA UŻYTKOWNIKÓW ---
+        window.openUsersList = async () => {
+            userMenu.classList.remove('active'); document.getElementById('usersListModal').classList.add('active');
+            const list = document.getElementById('usersListRender'); list.innerHTML = "Ładowanie...";
+            const snapshot = await getDocs(collection(db, "uzytkownicy"));
+            list.innerHTML = "";
+            if(snapshot.empty) { list.innerHTML = "Brak graczy."; return; }
+            snapshot.forEach(doc => {
+                const data = doc.data();
+                const alias = doc.id;
+                let bgImage = data.avatar ? `background-image: url('${data.avatar}')` : '';
+                let adminTag = alias.toLowerCase() === 'pancerny' ? `<span class="admin-badge">ADMIN</span>` : '';
+                list.innerHTML += `
+                    <li class="list-item" style="cursor:pointer;" onclick="window.showUserProfile('${alias}')">
+                        <div style="display:flex; align-items:center;">
+                            <div class="user-list-avatar" style="${bgImage}">${data.avatar ? '' : alias.charAt(0).toUpperCase()}</div>
+                            <div><b style="color:#fff; font-size:16px;">${alias.toUpperCase()}</b> ${adminTag}<br><span style="font-size:12px; color:#aaa;">${data.miejscowosc || 'Nieznane Miasto'}</span></div>
+                        </div>
+                    </li>`;
+            });
+        };
+
+        // --- LISTA WSZYSTKICH FUR ---
+        window.openAllCarsList = async () => {
+            userMenu.classList.remove('active'); document.getElementById('allCarsModal').classList.add('active');
+            const list = document.getElementById('allCarsListRender'); list.innerHTML = "Ładowanie...";
+            const snapshot = await getDocs(collection(db, "fury"));
+            list.innerHTML = "";
+            if(snapshot.empty) { list.innerHTML = "Brak aut w bazie."; return; }
+            snapshot.forEach(doc => {
+                const data = doc.data();
+                const safeName = data.name.replace(/'/g, "\\'"); const safePhoto = data.photo.replace(/'/g, "\\'"); const safeEngine = data.engine.replace(/'/g, "\\'"); const safeAccel = data.accel.replace(/'/g, "\\'"); const safeTires = data.tires.replace(/'/g, "\\'");
+                
+                let actionBtns = `<button class="btn-view" onclick="window.showCarCard('${safeName}', '${data.driver}')">👁️ Karta</button>`;
+                // Jeśli to auto zalogowanego użytkownika, daj opcje edycji z poziomu globalnej listy
+                if(data.driver === window.currentUserAlias) {
+                    actionBtns += `<button class="btn-edit" onclick="window.closeModals(); window.openGarage(); setTimeout(()=>window.triggerEditCar('${doc.id}', '${safeName}', '${safePhoto}', '${safeEngine}', '${safeAccel}', '${safeTires}'), 500)">✏️</button>
+                                   <button class="btn-del" onclick="window.deleteCar('${doc.id}'); document.getElementById('allCarsModal').classList.remove('active');">❌</button>`;
+                }
+                list.innerHTML += `<li class="list-item"><div><b style="color:#ff4500;">[${data.driver.toUpperCase()}]</b> <b>${data.name}</b> <span style="font-size:12px; color:#888;">(${data.engine})</span></div><div class="list-item-btns">${actionBtns}</div></li>`;
+            });
+        };
+
+        // --- GARAŻ (WŁASNY) ---
+        window.saveNewCar = async () => { const editId = document.getElementById('editCarId').value; const name = document.getElementById('newCarName').value; const photo = document.getElementById('newCarPhoto').value || "https://via.placeholder.com/400x250/222/ff4500?text=Brak+Zdjecia"; const engine = document.getElementById('newCarEngine').value || "Nieznany"; const accel = document.getElementById('newCarAccel').value || "? s"; const tires = document.getElementById('newCarTires').value || "Drogowe"; if(!name) return alert("Podaj chociaż nazwę fury!"); if(editId) { await updateDoc(doc(db, "fury", editId), { name: name, photo: photo, engine: engine, accel: accel, tires: tires }); window.cancelEdit(); } else { await addDoc(collection(db, "fury"), { driver: window.currentUserAlias, name: name, photo: photo, engine: engine, accel: accel, tires: tires }); document.getElementById('newCarName').value = ''; document.getElementById('newCarPhoto').value = ''; document.getElementById('newCarEngine').value = ''; document.getElementById('newCarAccel').value = ''; document.getElementById('newCarTires').value = ''; } await loadMyGarage(); };
         window.triggerEditCar = (id, name, photo, engine, accel, tires) => { document.getElementById('editCarId').value = id; document.getElementById('newCarName').value = name; document.getElementById('newCarPhoto').value = photo; document.getElementById('newCarEngine').value = engine; document.getElementById('newCarAccel').value = accel; document.getElementById('newCarTires').value = tires; document.getElementById('garageFormTitle').innerText = "Edytuj furę:"; document.getElementById('saveCarBtn').innerText = "Zapisz Zmiany"; document.getElementById('saveCarBtn').style.backgroundColor = "#27ae60"; document.getElementById('cancelEditBtn').classList.remove('hidden'); };
         window.cancelEdit = () => { document.getElementById('editCarId').value = ""; document.getElementById('newCarName').value = ''; document.getElementById('newCarPhoto').value = ''; document.getElementById('newCarEngine').value = ''; document.getElementById('newCarAccel').value = ''; document.getElementById('newCarTires').value = ''; document.getElementById('garageFormTitle').innerText = "Dodaj nową furę:"; document.getElementById('saveCarBtn').innerText = "Dodaj do garażu!"; document.getElementById('saveCarBtn').style.backgroundColor = "#ff4500"; document.getElementById('cancelEditBtn').classList.add('hidden'); };
         window.deleteCar = async (docId) => { if(confirm("Na pewno chcesz zezłomować?")) { await deleteDoc(doc(db, "fury", docId)); await loadMyGarage(); } };
-        async function loadMyGarage() { const q = query(collection(db, "fury"), where("driver", "==", window.currentUserAlias)); const snapshot = await getDocs(q); const list = document.getElementById('myCarsList'); window.myCars = []; list.innerHTML = ""; if(snapshot.empty) { list.innerHTML = "Brak aut."; return; } snapshot.forEach(doc => { const data = doc.data(); window.myCars.push(data.name); const safeName = data.name.replace(/'/g, "\\'"); const safePhoto = data.photo.replace(/'/g, "\\'"); const safeEngine = data.engine.replace(/'/g, "\\'"); const safeAccel = data.accel.replace(/'/g, "\\'"); const safeTires = data.tires.replace(/'/g, "\\'"); list.innerHTML += `<li class="garage-item"><div><b>${data.name}</b></div><div class="garage-item-btns"><button class="btn-view" onclick="window.showCarCard('${safeName}', '${window.currentUserAlias}')">Karta</button><button class="btn-edit" onclick="window.triggerEditCar('${doc.id}', '${safeName}', '${safePhoto}', '${safeEngine}', '${safeAccel}', '${safeTires}')">✏️</button><button class="btn-del" onclick="window.deleteCar('${doc.id}')">❌</button></div></li>`; }); }
+        async function loadMyGarage() { const q = query(collection(db, "fury"), where("driver", "==", window.currentUserAlias)); const snapshot = await getDocs(q); const list = document.getElementById('myCarsList'); window.myCars = []; list.innerHTML = ""; if(snapshot.empty) { list.innerHTML = "Brak aut."; return; } snapshot.forEach(doc => { const data = doc.data(); window.myCars.push(data.name); const safeName = data.name.replace(/'/g, "\\'"); const safePhoto = data.photo.replace(/'/g, "\\'"); const safeEngine = data.engine.replace(/'/g, "\\'"); const safeAccel = data.accel.replace(/'/g, "\\'"); const safeTires = data.tires.replace(/'/g, "\\'"); list.innerHTML += `<li class="list-item"><div><b>${data.name}</b></div><div class="list-item-btns"><button class="btn-view" onclick="window.showCarCard('${safeName}', '${window.currentUserAlias}')">Karta</button><button class="btn-edit" onclick="window.triggerEditCar('${doc.id}', '${safeName}', '${safePhoto}', '${safeEngine}', '${safeAccel}', '${safeTires}')">✏️</button><button class="btn-del" onclick="window.deleteCar('${doc.id}')">❌</button></div></li>`; }); }
 
         // --- KARTA UMA MUSUME ---
         window.showCarCard = async (carName, driverName) => { document.getElementById('umaCardModal').classList.add('active'); const cardContent = document.getElementById('umaCardContent'); cardContent.innerHTML = `<div style="padding: 40px; text-align: center; background: #222; border-radius: 10px; color: white;">Ładowanie...</div>`; const q = query(collection(db, "fury"), where("driver", "==", driverName), where("name", "==", carName)); const snapshot = await getDocs(q); if(snapshot.empty) { cardContent.innerHTML = `<div style="padding: 40px; text-align: center; background: #222; border-radius: 10px; color: white;">Brak danych.</div>`; return; } const carData = snapshot.docs[0].data(); cardContent.innerHTML = `<div style="position: relative; width: 100%; max-width: 340px; height: 500px; margin: auto; background: #000; border-radius: 18px; overflow: hidden; box-shadow: 0 0 20px rgba(255, 69, 0, 0.6);"><span onclick="window.closeModals()" style="position: absolute; top: 12px; right: 18px; font-size: 32px; color: #fff; cursor: pointer; z-index: 10; text-shadow: 2px 2px 4px #000; font-weight: bold;">×</span><div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-image: url('${carData.photo}'); background-size: cover; background-position: center; z-index: 1;"></div><div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-image: url('https://pbs.twimg.com/media/GxszfaMawAE5j4G.png'); background-size: 100% 100%; z-index: 2; pointer-events: none;"></div><div style="position: absolute; bottom: 0; left: 0; width: 100%; height: 150px; background: linear-gradient(to top, rgba(0,0,0,1) 5%, rgba(0,0,0,0.7) 40%, transparent); z-index: 3; display: flex; flex-direction: column; justify-content: flex-end; padding: 12px; box-sizing: border-box;"><h2 style="font-size: 20px; color: #ffeb3b; margin: 0 0 2px 0; text-transform: uppercase; text-align: center; text-shadow: 2px 2px 4px #000;">${carData.name}</h2><div style="text-align: center; color: #fff; font-size: 12px; margin-bottom: 8px; text-shadow: 1px 1px 3px #000;">WŁAŚCICIEL: <b>${carData.driver.toUpperCase()}</b></div><div class="stat-row"><span class="stat-label">SILNIK:</span><span class="stat-value">${carData.engine}</span></div><div class="stat-row"><span class="stat-label">0-100 km/h:</span><span class="stat-value">${carData.accel}</span></div><div class="stat-row"><span class="stat-label">OPONY:</span><span class="stat-value" style="color: #4cd137;">${carData.tires}</span></div></div></div>`; };
 
-        // --- MAPA I ZARZĄDZANIE CZASAMI ---
-        tory.forEach(tor => { const marker = L.marker([tor.lat, tor.lng]).addTo(map); marker.on('click', () => { let carSelectHTML = `<select id="carSelect-${tor.nazwa.replace(/\s+/g, '')}" style="width:100%;">`; if(window.myCars.length === 0) carSelectHTML += `<option value="" disabled selected>Brak aut!</option>`; else { window.myCars.forEach(car => { carSelectHTML += `<option value="${car}">${car}</option>`; }); } const safeId = tor.nazwa.replace(/\s+/g, ''); const timeInputHTML = `<div style="display: flex; gap: 5px; align-items: center; justify-content: center; margin: 10px 0;"><input type="number" id="timeM-${safeId}" placeholder="Min" min="0" max="99" style="width: 30%; text-align: center;"> : <input type="number" id="timeS-${safeId}" placeholder="Sek" min="0" max="59" style="width: 30%; text-align: center;"> . <input type="number" id="timeMS-${safeId}" placeholder="MS" min="0" max="999" style="width: 35%; text-align: center;"></div>`; const popupHTML = `<div style="text-align:center;"><h2>${tor.nazwa}</h2><table><thead><tr><th>Kierowca</th><th>Fura</th><th>Czas</th></tr></thead><tbody id="table-${safeId}"><tr><td colspan='3'>Ładowanie...</td></tr></tbody></table><hr>${carSelectHTML}${timeInputHTML}<button onclick="window.saveTime('${tor.nazwa}')" class="btn-submit">Zapisz</button></div>`; marker.bindPopup(popupHTML).openPopup(); window.loadLeaderboard(tor.nazwa); }); });
-        window.loadLeaderboard = async (trackName) => { const safeId = trackName.replace(/\s+/g, ''); const tbody = document.getElementById(`table-${safeId}`); if(!tbody) return; const q = query(collection(db, "czasy"), where("track", "==", trackName), orderBy("time", "asc")); const snapshot = await getDocs(q); tbody.innerHTML = ""; if (snapshot.empty) { tbody.innerHTML = "<tr><td colspan='3'>Brak.</td></tr>"; return; } snapshot.forEach((doc) => { const data = doc.data(); const safeCar = data.car.replace(/'/g, "\\'"); let actionBtns = ""; if(data.driver === window.currentUserAlias) { actionBtns = `<br><span onclick="window.editLapTime('${doc.id}', '${data.time}', '${trackName}')" style="cursor:pointer; font-size:12px; margin-right:5px;" title="Edytuj Czas">✏️</span> <span onclick="window.deleteLapTime('${doc.id}', '${trackName}')" style="cursor:pointer; font-size:12px;" title="Usuń Czas">❌</span>`; } tbody.innerHTML += `<tr><td><span class="user-link" onclick="window.showUserProfile('${data.driver}')">${data.driver.toUpperCase()}</span></td><td><span class="car-link" onclick="window.showCarCard('${safeCar}', '${data.driver}')">${data.car}</span></td><td><b style="color:#1db954;">${data.time}</b>${actionBtns}</td></tr>`; }); };
-        window.editLapTime = async (docId, oldTime, trackName) => { let valid = false; let newTime = oldTime; while(!valid) { newTime = prompt("Podaj nowy czas w formacie MM:SS.MS (np. 01:45.336):", newTime); if(newTime === null) return; const regex = /^\d{1,2}:\d{2}[\.\:]\d{1,3}$/; if(regex.test(newTime)) { valid = true; newTime = newTime.replace(/:(\d{1,3})$/, '.$1'); } else { alert("Zły format! Wpisz czas okrążenia np. 01:45.336 (Zero liter!)"); } } if(newTime && newTime !== oldTime) { await updateDoc(doc(db, "czasy", docId), { time: newTime }); window.loadLeaderboard(trackName); } };
-        window.deleteLapTime = async (docId, trackName) => { if(confirm("Czy na pewno chcesz usunąć ten wynik z tabeli?")) { await deleteDoc(doc(db, "czasy", docId)); window.loadLeaderboard(trackName); } };
-        window.saveTime = async (trackName) => { const safeId = trackName.replace(/\s+/g, ''); const car = document.getElementById(`carSelect-${safeId}`)?.value; const m = document.getElementById(`timeM-${safeId}`).value; const s = document.getElementById(`timeS-${safeId}`).value; const ms = document.getElementById(`timeMS-${safeId}`).value; if(!car) return alert("Musisz najpierw dodać auto w Garażu!"); if(!m && !s && !ms) return alert("Wpisz czas!"); const formattedTime = `${(m||'0').toString().padStart(2, '0')}:${(s||'0').toString().padStart(2, '0')}.${(ms||'0').toString().padStart(3, '0')}`; await addDoc(collection(db, "czasy"), { driver: window.currentUserAlias, car: car, track: trackName, time: formattedTime }); document.getElementById(`timeM-${safeId}`).value = ''; document.getElementById(`timeS-${safeId}`).value = ''; document.getElementById(`timeMS-${safeId}`).value = ''; window.loadLeaderboard(trackName); };
+        // --- MAPA I ZARZĄDZANIE CZASAMI (Z NAPRAWIONYM BUGIEM ZNIKAJĄCYCH DYMKÓW!) ---
+        tory.forEach(tor => { 
+            const marker = L.marker([tor.lat, tor.lng]).addTo(map); 
+            const safeId = tor.nazwa.replace(/\s+/g, '');
+            
+            // Tworzymy pustą ramkę dymka z miejscem na kod, żeby Leaflet się nie gubił
+            marker.bindPopup(`<div id="popup-content-${safeId}">Ładowanie...</div>`, { minWidth: 360 });
+            
+            // Dopiero po otwarciu dymka, wstrzykujemy tam kod z dropdownami
+            marker.on('popupopen', () => { 
+                let carSelectHTML = `<select id="carSelect-${safeId}" style="width:100%;">`; 
+                if(window.myCars.length === 0) carSelectHTML += `<option value="" disabled selected>Brak aut!</option>`; 
+                else { window.myCars.forEach(car => { carSelectHTML += `<option value="${car}">${car}</option>`; }); } 
+                carSelectHTML += `</select>`;
+
+                const timeInputHTML = `<div style="display: flex; gap: 5px; align-items: center; justify-content: center; margin: 10px 0;"><input type="number" id="timeM-${safeId}" placeholder="Min" min="0" max="99" style="width: 30%; text-align: center;"> : <input type="number" id="timeS-${safeId}" placeholder="Sek" min="0" max="59" style="width: 30%; text-align: center;"> . <input type="number" id="timeMS-${safeId}" placeholder="MS" min="0" max="999" style="width: 35%; text-align: center;"></div>`; 
+                
+                // Dodane zdjęcie toru na samej górze
+                let trackImgHTML = tor.foto ? `<div class="track-img-header" style="background-image: url('${tor.foto}');"></div>` : '';
+
+                const fullHTML = `
+                    ${trackImgHTML}
+                    <div class="popup-inner-pad">
+                        <h2 style="text-align:center; margin-top:0;">${tor.nazwa}</h2>
+                        <table><thead><tr><th>Kierowca</th><th>Fura</th><th>Czas</th></tr></thead><tbody id="table-${safeId}"><tr><td colspan='3'>Ładowanie...</td></tr></tbody></table>
+                        <hr style="border-color:#444; margin:15px 0;">
+                        ${carSelectHTML}
+                        ${timeInputHTML}
+                        <button onclick="window.saveTime('${tor.nazwa}')" class="btn-submit">Zapisz wynik</button>
+                    </div>`; 
+
+                document.getElementById(`popup-content-${safeId}`).innerHTML = fullHTML;
+                window.loadLeaderboard(tor.nazwa); 
+            }); 
+        });
+
+        window.loadLeaderboard = async (trackName) => { const safeId = trackName.replace(/\s+/g, ''); const tbody = document.getElementById(`table-${safeId}`); if(!tbody) return; const q = query(collection(db, "czasy"), where("track", "==", trackName), orderBy("time", "asc")); const snapshot = await getDocs(q); tbody.innerHTML = ""; if (snapshot.empty) { tbody.innerHTML = "<tr><td colspan='3'>Brak czasów. Bądź pierwszy!</td></tr>"; return; } snapshot.forEach((doc) => { const data = doc.data(); const safeCar = data.car.replace(/'/g, "\\'"); 
+            let adminTag = data.driver.toLowerCase() === 'pancerny' ? `<span class="admin-badge">ADMIN</span>` : '';
+            let actionBtns = ""; if(data.driver === window.currentUserAlias) { actionBtns = `<br><span onclick="window.editLapTime('${doc.id}', '${data.time}', '${trackName}')" style="cursor:pointer; font-size:12px; margin-right:5px;" title="Edytuj">✏️</span> <span onclick="window.deleteLapTime('${doc.id}', '${trackName}')" style="cursor:pointer; font-size:12px;" title="Usuń">❌</span>`; } 
+            tbody.innerHTML += `<tr><td><span class="user-link" onclick="window.showUserProfile('${data.driver}')">${data.driver.toUpperCase()}</span><br>${adminTag}</td><td><span class="car-link" onclick="window.showCarCard('${safeCar}', '${data.driver}')">${data.car}</span></td><td><b style="color:#1db954;">${data.time}</b>${actionBtns}</td></tr>`; 
+        }); };
+        
+        window.editLapTime = async (docId, oldTime, trackName) => { let valid = false; let newTime = oldTime; while(!valid) { newTime = prompt("Podaj nowy czas w formacie MM:SS.MS (np. 01:45.336):", newTime); if(newTime === null) return; const regex = /^\d{1,2}:\d{2}[\.\:]\d{1,3}$/; if(regex.test(newTime)) { valid = true; newTime = newTime.replace(/:(\d{1,3})$/, '.$1'); } else { alert("Zły format! Wpisz czas okrążenia np. 01:45.336"); } } if(newTime && newTime !== oldTime) { await updateDoc(doc(db, "czasy", docId), { time: newTime }); window.loadLeaderboard(trackName); } };
+        window.deleteLapTime = async (docId, trackName) => { if(confirm("Usunąć ten wynik?")) { await deleteDoc(doc(db, "czasy", docId)); window.loadLeaderboard(trackName); } };
+        window.saveTime = async (trackName) => { const safeId = trackName.replace(/\s+/g, ''); const car = document.getElementById(`carSelect-${safeId}`)?.value; const m = document.getElementById(`timeM-${safeId}`).value; const s = document.getElementById(`timeS-${safeId}`).value; const ms = document.getElementById(`timeMS-${safeId}`).value; if(!car) return alert("Wybierz auto z Garażu!"); if(!m && !s && !ms) return alert("Wpisz czas!"); const formattedTime = `${(m||'0').toString().padStart(2, '0')}:${(s||'0').toString().padStart(2, '0')}.${(ms||'0').toString().padStart(3, '0')}`; await addDoc(collection(db, "czasy"), { driver: window.currentUserAlias, car: car, track: trackName, time: formattedTime }); document.getElementById(`timeM-${safeId}`).value = ''; document.getElementById(`timeS-${safeId}`).value = ''; document.getElementById(`timeMS-${safeId}`).value = ''; window.loadLeaderboard(trackName); };
 
         // --- AUTH ---
-        document.getElementById('loginBtn').addEventListener('click', async () => { const e = document.getElementById('email').value; const p = document.getElementById('password').value;
-            if(!e || !p) return alert("Wpisz dane!");
-            try { const user = await signInWithEmailAndPassword(auth, e, p); if(!user.user.emailVerified) { alert("Weryfikuj mail!"); signOut(auth); } }
-            catch (err) { try { const user = await createUserWithEmailAndPassword(auth, e, p); await sendEmailVerification(user.user); alert("Konto założone! Sprawdź mail (też spam)!"); signOut(auth); } catch(err2) { alert(err2.message); } }
-        });
+        document.getElementById('loginBtn').addEventListener('click', async () => { const e = document.getElementById('email').value; const p = document.getElementById('password').value; if(!e || !p) return alert("Wpisz dane!"); try { const user = await signInWithEmailAndPassword(auth, e, p); if(!user.user.emailVerified) { alert("Potwierdź e-mail!"); signOut(auth); } } catch (err) { try { const user = await createUserWithEmailAndPassword(auth, e, p); await sendEmailVerification(user.user); alert("Konto założone! Sprawdź mail."); signOut(auth); } catch(err2) { alert(err2.message); } } });
         document.getElementById('forgotPwdBtn').addEventListener('click', async (e) => { e.preventDefault(); const em = document.getElementById('email').value; if(!em) return alert("Wpisz mail!"); try { await sendPasswordResetEmail(auth, em); alert("Wysłano link!"); } catch(x) { alert(x.message); } });
         document.getElementById('logoutBtn').addEventListener('click', () => { signOut(auth); });
 
