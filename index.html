@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pancek Trackday - Ultimate Edition</title>
+    <title>Pancek Trackday - SSR Gacha Edition</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <style>
         body, html { margin: 0; padding: 0; width: 100%; height: 100%; font-family: 'Arial', sans-serif; background-color: #1a1a1a; color: #f0f0f0; overflow: hidden; }
@@ -47,23 +47,20 @@
 
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.85); z-index: 4000; display: none; justify-content: center; align-items: center; }
         .modal-overlay.active { display: flex; }
-        .modal-content { background: #2a2a2a; padding: 25px; border-radius: 12px; border-top: 5px solid #ff4500; width: 90%; max-width: 500px; max-height: 90vh; overflow-y: auto; position: relative; box-shadow: 0 10px 30px rgba(0,0,0,0.8); }
-        .close-modal { position: absolute; top: 10px; right: 15px; font-size: 24px; color: #aaa; cursor: pointer; }
+        .modal-content { background: #2a2a2a; padding: 25px; border-radius: 12px; border-top: 5px solid #ff4500; width: 90%; max-width: 550px; max-height: 90vh; overflow-y: auto; position: relative; box-shadow: 0 10px 30px rgba(0,0,0,0.8); }
+        .close-modal { position: absolute; top: 10px; right: 15px; font-size: 24px; color: #aaa; cursor: pointer; z-index: 100; }
         .close-modal:hover { color: #fff; }
 
-        .uma-card { background: #111; border-radius: 10px; overflow: hidden; border: 2px solid #ff4500; }
-        .uma-photo { width: 100%; height: 250px; background-color: #333; background-size: cover; background-position: center; border-bottom: 4px solid #ff4500; }
-        .uma-stats { padding: 20px; }
-        .uma-title { font-size: 24px; color: #ff4500; margin: 0 0 5px 0; text-transform: uppercase; text-align: center; }
-        .uma-owner { text-align: center; color: #888; font-size: 14px; margin-bottom: 20px; }
-        .stat-row { display: flex; justify-content: space-between; border-bottom: 1px solid #333; padding: 8px 0; }
-        .stat-label { color: #aaa; font-weight: bold; }
-        .stat-value { color: #fff; font-weight: bold; }
-
         .garage-item { display: flex; justify-content: space-between; align-items: center; padding: 10px; background: #333; margin-bottom: 5px; border-radius: 5px; border-left: 3px solid #1db954; }
-        .garage-item-btns button { padding: 5px 10px; margin-left: 5px; border: none; border-radius: 3px; cursor: pointer; color: white; font-weight: bold; width: auto; }
+        .garage-item-btns button { padding: 5px 8px; margin-left: 5px; border: none; border-radius: 3px; cursor: pointer; color: white; font-weight: bold; width: auto; font-size: 12px; }
         .btn-view { background: #3498db; } .btn-view:hover { background: #2980b9; }
+        .btn-edit { background: #f39c12; } .btn-edit:hover { background: #d68910; }
         .btn-del { background: #e74c3c; } .btn-del:hover { background: #c0392b; }
+
+        /* NOWY STYL KARTY UMA MUSUME */
+        .stat-row { display: flex; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.2); padding: 5px 0; }
+        .stat-label { color: #ccc; font-weight: bold; font-size: 13px; text-shadow: 1px 1px 2px #000; }
+        .stat-value { color: #fff; font-weight: bold; font-size: 14px; text-shadow: 1px 1px 2px #000; }
     </style>
     <script src="https://www.youtube.com/iframe_api"></script>
 </head>
@@ -111,13 +108,16 @@
             <h2 style="color: #ff4500; margin-top: 0;">🚗 Twój Garaż</h2>
             
             <div style="background: #222; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
-                <h3 style="margin-top: 0; font-size: 16px;">Dodaj nową furę:</h3>
+                <h3 id="garageFormTitle" style="margin-top: 0; font-size: 16px;">Dodaj nową furę:</h3>
+                <input type="hidden" id="editCarId" value="">
+                
                 <input type="text" id="newCarName" placeholder="Nazwa fury (np. Gruz E36)">
                 <input type="text" id="newCarPhoto" placeholder="Link do zdjęcia (URL, np. z Discorda)">
                 <input type="text" id="newCarEngine" placeholder="Silnik / Pojemność (np. 2.8 R6)">
                 <input type="text" id="newCarAccel" placeholder="0-100 km/h (np. 6.5s)">
                 <input type="text" id="newCarTires" placeholder="Opony (np. Semi-Slick)">
-                <button onclick="saveNewCar()" class="btn-submit">Dodaj do garażu!</button>
+                <button id="saveCarBtn" onclick="saveNewCar()" class="btn-submit">Dodaj do garażu!</button>
+                <button id="cancelEditBtn" onclick="cancelEdit()" class="btn-submit hidden" style="background: #555; margin-top: 5px;">Anuluj Edycję</button>
             </div>
 
             <h3 style="margin-top: 0; border-bottom: 1px solid #555; padding-bottom: 5px;">Twoje maszyny:</h3>
@@ -138,9 +138,9 @@
     </div>
 
     <div class="modal-overlay" id="umaCardModal">
-        <div class="modal-content" style="padding: 0; border: none; background: transparent;">
-            <span class="close-modal" onclick="closeModals()" style="color: #fff; text-shadow: 0 0 5px #000; z-index: 10;">×</span>
-            <div class="uma-card" id="umaCardContent"></div>
+        <div class="modal-content" style="padding: 0; border: none; background: transparent; width: 340px;">
+            <span class="close-modal" onclick="closeModals()" style="color: #fff; text-shadow: 0 0 5px #000; right: -20px; top: -20px;">×</span>
+            <div id="umaCardContent"></div>
         </div>
     </div>
 
@@ -148,7 +148,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
         import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, sendEmailVerification, sendPasswordResetEmail, updateProfile } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
-        import { getFirestore, collection, addDoc, getDocs, query, where, orderBy, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, getDocs, query, where, orderBy, deleteDoc, doc, updateDoc } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
 
         // ==========================================
         // TUTAJ WKLEJ SWÓJ KOD firebaseConfig
@@ -170,10 +170,11 @@
         window.myCars = []; 
         window.currentUserAlias = "";
 
-        // --- MAPA ---
+        // --- MAPA (SATELITA DOMYŚLNIE) ---
         const darkMap = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png');
         const satelliteMap = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}');
-        const map = L.map('map', { zoomControl: false, layers: [darkMap] }).setView([51.8, 20.5], 7);
+        // Ustawienie domyślnej warstwy na satelliteMap
+        const map = L.map('map', { zoomControl: false, layers: [satelliteMap] }).setView([51.8, 20.5], 7);
         L.control.zoom({ position: 'topleft' }).addTo(map);
         L.control.layers({ "Tryb Nocny": darkMap, "Satelita": satelliteMap }, null, {position: 'bottomleft'}).addTo(map);
 
@@ -187,7 +188,7 @@
             { nazwa: "TOR ŁÓDŹ", lat: 51.849, lng: 19.539, opis: "Najmniejszy obiekt", cena: "", kontakt: "" }
         ];
 
-        // --- MENU UŻYTKOWNIKA ---
+        // --- MENU ---
         const avatarBtn = document.getElementById('avatarBtn');
         const userMenu = document.getElementById('userMenu');
         avatarBtn.addEventListener('click', () => userMenu.classList.toggle('active'));
@@ -197,30 +198,23 @@
 
         window.openGarage = async () => { userMenu.classList.remove('active'); document.getElementById('garageModal').classList.add('active'); await loadMyGarage(); };
         window.openSettings = () => { userMenu.classList.remove('active'); document.getElementById('settingsModal').classList.add('active'); };
-        window.closeModals = () => { document.getElementById('garageModal').classList.remove('active'); document.getElementById('umaCardModal').classList.remove('active'); document.getElementById('settingsModal').classList.remove('active'); };
+        window.closeModals = () => { document.getElementById('garageModal').classList.remove('active'); document.getElementById('umaCardModal').classList.remove('active'); document.getElementById('settingsModal').classList.remove('active'); window.cancelEdit(); };
 
-        // --- USTAWIENIA PROFILU (AWATAR) ---
         window.saveAvatar = async () => {
             const url = document.getElementById('avatarUrlInput').value;
             if(!url) return alert("Podaj link URL do obrazka!");
-            try {
-                await updateProfile(auth.currentUser, { photoURL: url });
-                alert("Awatar zaktualizowany!");
-                updateAvatarUI(auth.currentUser);
-                window.closeModals();
-            } catch(e) { alert("Błąd: " + e.message); }
+            try { await updateProfile(auth.currentUser, { photoURL: url }); alert("Awatar zaktualizowany!"); updateAvatarUI(auth.currentUser); window.closeModals(); } 
+            catch(e) { alert("Błąd: " + e.message); }
         };
 
         function updateAvatarUI(user) {
-            if(user.photoURL) {
-                avatarBtn.innerHTML = `<img src="${user.photoURL}" style="width:100%; height:100%; border-radius:50%; object-fit:cover;">`;
-            } else {
-                avatarBtn.innerText = window.currentUserAlias.charAt(0).toUpperCase();
-            }
+            if(user.photoURL) avatarBtn.innerHTML = `<img src="${user.photoURL}" style="width:100%; height:100%; border-radius:50%; object-fit:cover;">`;
+            else avatarBtn.innerText = window.currentUserAlias.charAt(0).toUpperCase();
         }
 
-        // --- GARAŻ (LOGIKA + USUWANIE) ---
+        // --- GARAŻ: DODAWANIE / EDYCJA / USUWANIE ---
         window.saveNewCar = async () => {
+            const editId = document.getElementById('editCarId').value;
             const name = document.getElementById('newCarName').value;
             const photo = document.getElementById('newCarPhoto').value || "https://via.placeholder.com/400x250/222/ff4500?text=Brak+Zdjecia";
             const engine = document.getElementById('newCarEngine').value || "Nieznany";
@@ -228,14 +222,45 @@
             const tires = document.getElementById('newCarTires').value || "Drogowe";
 
             if(!name) return alert("Podaj chociaż nazwę fury!");
-            await addDoc(collection(db, "fury"), { driver: window.currentUserAlias, name: name, photo: photo, engine: engine, accel: accel, tires: tires });
-            
-            document.getElementById('newCarName').value = ''; document.getElementById('newCarPhoto').value = ''; document.getElementById('newCarEngine').value = ''; document.getElementById('newCarAccel').value = ''; document.getElementById('newCarTires').value = '';
+
+            if(editId) {
+                // Tryb Edycji
+                await updateDoc(doc(db, "fury", editId), { name: name, photo: photo, engine: engine, accel: accel, tires: tires });
+                window.cancelEdit();
+            } else {
+                // Nowe auto
+                await addDoc(collection(db, "fury"), { driver: window.currentUserAlias, name: name, photo: photo, engine: engine, accel: accel, tires: tires });
+                document.getElementById('newCarName').value = ''; document.getElementById('newCarPhoto').value = ''; document.getElementById('newCarEngine').value = ''; document.getElementById('newCarAccel').value = ''; document.getElementById('newCarTires').value = '';
+            }
             await loadMyGarage(); 
         };
 
+        window.triggerEditCar = (id, name, photo, engine, accel, tires) => {
+            document.getElementById('editCarId').value = id;
+            document.getElementById('newCarName').value = name;
+            document.getElementById('newCarPhoto').value = photo;
+            document.getElementById('newCarEngine').value = engine;
+            document.getElementById('newCarAccel').value = accel;
+            document.getElementById('newCarTires').value = tires;
+            
+            document.getElementById('garageFormTitle').innerText = "Edytuj furę:";
+            document.getElementById('saveCarBtn').innerText = "Zapisz Zmiany";
+            document.getElementById('saveCarBtn').style.backgroundColor = "#27ae60";
+            document.getElementById('cancelEditBtn').classList.remove('hidden');
+        };
+
+        window.cancelEdit = () => {
+            document.getElementById('editCarId').value = "";
+            document.getElementById('newCarName').value = ''; document.getElementById('newCarPhoto').value = ''; document.getElementById('newCarEngine').value = ''; document.getElementById('newCarAccel').value = ''; document.getElementById('newCarTires').value = '';
+            
+            document.getElementById('garageFormTitle').innerText = "Dodaj nową furę:";
+            document.getElementById('saveCarBtn').innerText = "Dodaj do garażu!";
+            document.getElementById('saveCarBtn').style.backgroundColor = "#ff4500";
+            document.getElementById('cancelEditBtn').classList.add('hidden');
+        };
+
         window.deleteCar = async (docId) => {
-            if(confirm("Na pewno chcesz zezłomować tę furę?")) {
+            if(confirm("Na pewno chcesz zezłomować tę furę? (Zniknie z Garażu, ale czasy z tabeli zostaną na wieki!)")) {
                 await deleteDoc(doc(db, "fury", docId));
                 await loadMyGarage();
             }
@@ -253,37 +278,55 @@
             snapshot.forEach(doc => {
                 const data = doc.data();
                 window.myCars.push(data.name);
+                // Używamy replace dla cudzysłowów, żeby się nie krzaczyło w funkcji onclick
+                const safeName = data.name.replace(/'/g, "\\'");
+                const safePhoto = data.photo.replace(/'/g, "\\'");
+                const safeEngine = data.engine.replace(/'/g, "\\'");
+                const safeAccel = data.accel.replace(/'/g, "\\'");
+                const safeTires = data.tires.replace(/'/g, "\\'");
+
                 list.innerHTML += `
                     <li class="garage-item">
-                        <div><b>${data.name}</b> <span style="font-size:12px; color:#888;">(${data.engine})</span></div>
+                        <div style="flex-grow: 1;"><b>${data.name}</b> <span style="font-size:12px; color:#888;">(${data.engine})</span></div>
                         <div class="garage-item-btns">
-                            <button class="btn-view" onclick="window.showCarCard('${data.name}', '${window.currentUserAlias}')">👁️ Karta</button>
+                            <button class="btn-view" onclick="window.showCarCard('${safeName}', '${window.currentUserAlias}')">👁️ Karta</button>
+                            <button class="btn-edit" onclick="window.triggerEditCar('${doc.id}', '${safeName}', '${safePhoto}', '${safeEngine}', '${safeAccel}', '${safeTires}')">✏️ Edytuj</button>
                             <button class="btn-del" onclick="window.deleteCar('${doc.id}')">❌ Usuń</button>
                         </div>
                     </li>`;
             });
         }
 
-        // --- KARTA UMA MUSUME ---
+        // --- SSR GACHA KARTA UMA MUSUME ---
         window.showCarCard = async (carName, driverName) => {
             document.getElementById('umaCardModal').classList.add('active');
             const cardContent = document.getElementById('umaCardContent');
-            cardContent.innerHTML = `<div style="padding: 40px; text-align: center;">Ładowanie danych...</div>`;
+            cardContent.innerHTML = `<div style="padding: 40px; text-align: center; background: #222; border-radius: 10px;">Ładowanie danych... ⚙️</div>`;
 
             const q = query(collection(db, "fury"), where("driver", "==", driverName), where("name", "==", carName));
             const snapshot = await getDocs(q);
 
-            if(snapshot.empty) { cardContent.innerHTML = `<div style="padding: 40px; text-align: center;">Kierowca nie uzupełnił specyfikacji.</div>`; return; }
+            if(snapshot.empty) { cardContent.innerHTML = `<div style="padding: 40px; text-align: center; background: #222; border-radius: 10px;">Brak danych w garażu. 😢</div>`; return; }
 
             const carData = snapshot.docs[0].data();
+            
+            // Magiczna karta złożona z warstw
             cardContent.innerHTML = `
-                <div class="uma-photo" style="background-image: url('${carData.photo}');"></div>
-                <div class="uma-stats">
-                    <h2 class="uma-title">${carData.name}</h2>
-                    <div class="uma-owner">Kierowca: <b>${carData.driver.toUpperCase()}</b></div>
-                    <div class="stat-row"><span class="stat-label">SILNIK:</span><span class="stat-value">${carData.engine}</span></div>
-                    <div class="stat-row"><span class="stat-label">0-100 km/h:</span><span class="stat-value">${carData.accel}</span></div>
-                    <div class="stat-row"><span class="stat-label">OPONY:</span><span class="stat-value" style="color: #1db954;">${carData.tires}</span></div>
+                <div style="position: relative; width: 340px; height: 500px; margin: auto; background: #000; border-radius: 18px; overflow: hidden; box-shadow: 0 0 20px rgba(255, 69, 0, 0.6);">
+                    
+                    <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-image: url('${carData.photo}'); background-size: cover; background-position: center; z-index: 1;"></div>
+                    
+                    <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-image: url('https://pbs.twimg.com/media/GxszfaMawAE5j4G.png'); background-size: 100% 100%; z-index: 2; pointer-events: none;"></div>
+                    
+                    <div style="position: absolute; bottom: 0; left: 0; width: 100%; height: 200px; background: linear-gradient(to top, rgba(0,0,0,1) 10%, rgba(0,0,0,0.8) 50%, transparent); z-index: 3; display: flex; flex-direction: column; justify-content: flex-end; padding: 20px; box-sizing: border-box;">
+                        
+                        <h2 style="font-size: 22px; color: #ffeb3b; margin: 0 0 2px 0; text-transform: uppercase; text-align: center; text-shadow: 2px 2px 4px #000;">${carData.name}</h2>
+                        <div style="text-align: center; color: #fff; font-size: 13px; margin-bottom: 15px; text-shadow: 1px 1px 3px #000;">WŁAŚCICIEL: <b>${carData.driver.toUpperCase()}</b></div>
+                        
+                        <div class="stat-row"><span class="stat-label">SILNIK:</span><span class="stat-value">${carData.engine}</span></div>
+                        <div class="stat-row"><span class="stat-label">0-100 km/h:</span><span class="stat-value">${carData.accel}</span></div>
+                        <div class="stat-row"><span class="stat-label">OPONY:</span><span class="stat-value" style="color: #4cd137;">${carData.tires}</span></div>
+                    </div>
                 </div>
             `;
         };
@@ -334,7 +377,8 @@
 
             querySnapshot.forEach((doc) => {
                 const data = doc.data();
-                tbody.innerHTML += `<tr><td><b>${data.driver.toUpperCase()}</b></td><td><span class="car-link" onclick="window.showCarCard('${data.car}', '${data.driver}')">${data.car}</span></td><td style="color: #1db954;"><b>${data.time}</b></td></tr>`;
+                const safeCar = data.car.replace(/'/g, "\\'");
+                tbody.innerHTML += `<tr><td><b>${data.driver.toUpperCase()}</b></td><td><span class="car-link" onclick="window.showCarCard('${safeCar}', '${data.driver}')">${data.car}</span></td><td style="color: #1db954;"><b>${data.time}</b></td></tr>`;
             });
         };
 
@@ -350,35 +394,27 @@
             window.loadLeaderboard(trackName); 
         };
 
-        // --- ZAPOMNIAŁEM HASŁA ---
         document.getElementById('forgotPwdBtn').addEventListener('click', async (e) => {
             e.preventDefault();
             const email = document.getElementById('email').value;
             if(!email) return alert("Wpisz swój adres email w pole powyżej, a następnie kliknij ponownie 'Zapomniałem hasła'.");
-            try {
-                await sendPasswordResetEmail(auth, email);
-                alert("Wysłano link do resetu hasła! Sprawdź skrzynkę e-mail.");
-            } catch(error) { alert("Błąd: " + error.message); }
+            try { await sendPasswordResetEmail(auth, email); alert("Wysłano link do resetu hasła! Sprawdź skrzynkę e-mail."); } catch(error) { alert("Błąd: " + error.message); }
         });
 
-        // --- LOGOWANIE / REJESTRACJA ---
         document.getElementById('loginBtn').addEventListener('click', async () => {
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
             if(!email || !password) return alert("Wpisz dane!");
             try { 
                 const userCred = await signInWithEmailAndPassword(auth, email, password); 
-                if(!userCred.user.emailVerified) {
-                    alert("Ten e-mail nie został jeszcze zweryfikowany! Kliknij w link aktywacyjny, który wysłaliśmy Ci na maila.");
-                    signOut(auth);
-                }
+                if(!userCred.user.emailVerified) { alert("Ten e-mail nie został zweryfikowany! Sprawdź maila."); signOut(auth); }
             } 
             catch (e) {
                 if (e.code === 'auth/invalid-credential' || e.code === 'auth/user-not-found') {
                     try {
                         const newUser = await createUserWithEmailAndPassword(auth, email, password);
                         await sendEmailVerification(newUser.user);
-                        alert("Konto założone! Wysłaliśmy Ci maila z linkiem weryfikacyjnym. Kliknij go, aby móc się zalogować.");
+                        alert("Konto założone! Wysłaliśmy Ci maila z linkiem weryfikacyjnym.");
                         signOut(auth);
                     } catch(err) { alert("Błąd rejestracji: " + err.message); }
                 } else { alert("Błąd: " + e.message); }
@@ -398,7 +434,6 @@
                 map.invalidateSize(); 
                 await loadMyGarage();
 
-                // Autoplay radia po zalogowaniu
                 if(window.ytPlayer && window.ytPlayer.playVideo && !window.isRadioPlaying) {
                     window.ytPlayer.playVideo();
                     document.getElementById('radioBtnToggle').innerHTML = "🔇 Wyłącz Audio";
@@ -408,8 +443,6 @@
             } else {
                 document.getElementById('authOverlay').classList.remove('hidden');
                 document.getElementById('appUI').classList.add('hidden');
-                
-                // Zatrzymaj radio po wylogowaniu
                 if(window.ytPlayer && window.ytPlayer.pauseVideo) { window.ytPlayer.pauseVideo(); window.isRadioPlaying = false; }
             }
         });
@@ -421,18 +454,27 @@
         
         function onYouTubeIframeAPIReady() {
             window.ytPlayer = new YT.Player('youtubePlayer', {
-                height: '10', width: '10', videoId: '8UC6AQyRoc8',
-                playerVars: { 'autoplay': 0, 'loop': 1, 'playlist': '8UC6AQyRoc8' },
+                height: '10', width: '10',
+                playerVars: { 
+                    'autoplay': 0, 
+                    'loop': 1, 
+                    
+                    // ==========================================
+                    // TUTAJ WPISUJESZ ID PLAYLISTY! (TO CO JEST PO list=)
+                    // ==========================================
+                    'listType': 'playlist',
+                    'list': 'PLbPiEQyRcc62qR2gZ_n1tIOfJ6wz0dI-C' // To jest domyślna lista Eurobeat/Initial D
+                },
                 events: {
                     'onReady': function(event) {
-                        event.target.setVolume(15); // Ustawia głośność na 15%
+                        event.target.setVolume(15);
                     }
                 }
             });
         }
 
         document.getElementById('radioBtnToggle').addEventListener('click', (e) => {
-            if(!window.ytPlayer || !window.ytPlayer.playVideo) return;
+            if(!window.ytPlayer) return;
             
             if (!window.isRadioPlaying) {
                 window.ytPlayer.playVideo();
@@ -440,6 +482,7 @@
                 e.target.style.color = "#e74c3c";
                 window.isRadioPlaying = true;
             } else {
+                // Teraz poprawnie pauzuje, a nie resetuje!
                 window.ytPlayer.pauseVideo();
                 e.target.innerHTML = "🎵 Włącz Audio"; 
                 e.target.style.color = "#fff";
