@@ -584,9 +584,31 @@
         document.getElementById('forgotPwdBtn').addEventListener('click', async (e) => { e.preventDefault(); const em = document.getElementById('email').value; if(!em) return alert("Wpisz mail!"); try { await sendPasswordResetEmail(auth, em); alert("Wysłano link!"); } catch(x) { alert(x.message); } });
         document.getElementById('logoutBtn').addEventListener('click', () => { signOut(auth); });
 
-        onAuthStateChanged(auth, async (user) => { 
-            if (user && user.emailVerified) { window.currentUserAlias = user.email.split('@')[0]; document.getElementById('userAlias').innerText = window.currentUserAlias.toUpperCase(); document.getElementById('avatarBtn').querySelector('.greeting span').innerText = window.currentUserAlias.toUpperCase(); updateAvatarUI(user); document.getElementById('authOverlay').classList.add('hidden'); document.getElementById('appUI').classList.remove('hidden'); map.invalidateSize(); await loadMyGarage(); if(window.ytPlayer && window.ytPlayer.playVideo && !window.isRadioPlaying) { window.ytPlayer.playVideo(); window.isRadioPlaying = true; } } 
-            else { document.getElementById('authOverlay').classList.remove('hidden'); document.getElementById('appUI').classList.add('hidden'); if(window.ytPlayer && window.ytPlayer.pauseVideo) { window.ytPlayer.pauseVideo(); window.isRadioPlaying = false; } } 
+onAuthStateChanged(auth, async (user) => { 
+            if (user && user.emailVerified) { 
+                window.currentUserAlias = user.email.split('@')[0]; 
+                
+                // NAPRAWIONA LINIJKA (Zamiast dwóch szukających różnych rzeczy, jest jedna poprawna)
+                document.getElementById('avatarBtn').querySelector('.greeting span').innerText = window.currentUserAlias.toUpperCase(); 
+                
+                updateAvatarUI(user); 
+                document.getElementById('authOverlay').classList.add('hidden'); 
+                document.getElementById('appUI').classList.remove('hidden'); 
+                map.invalidateSize(); 
+                await loadMyGarage(); 
+                if(window.ytPlayer && window.ytPlayer.playVideo && !window.isRadioPlaying) { 
+                    window.ytPlayer.playVideo(); 
+                    window.isRadioPlaying = true; 
+                } 
+            } 
+            else { 
+                document.getElementById('authOverlay').classList.remove('hidden'); 
+                document.getElementById('appUI').classList.add('hidden'); 
+                if(window.ytPlayer && window.ytPlayer.pauseVideo) { 
+                    window.ytPlayer.pauseVideo(); 
+                    window.isRadioPlaying = false; 
+                } 
+            } 
         });
     </script>
     <script>
