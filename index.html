@@ -2,223 +2,179 @@
 <html lang="pl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Trackday - Zmierz się z nami na torze!</title>
     
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏁</text></svg>">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <style>
-        body, html { margin: 0; padding: 0; width: 100%; height: 100%; font-family: 'Arial', sans-serif; background-color: #1a1a1a; color: #f0f0f0; overflow: hidden; }
+        /* ==========================================
+           GLOBALNE USTAWIENIA I TŁO
+           ========================================== */
+        body, html { margin: 0; padding: 0; width: 100%; height: 100%; font-family: 'Arial', sans-serif; background-color: #1a1a1a; color: #333; overflow: hidden; }
         
         /* ==========================================
-           LOGOWANIE (DISCORD + UMA STYLE) 
+           LOGOWANIE (DISCORD STYLE)
            ========================================== */
         #authOverlay { position: absolute; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 5000; display: flex; justify-content: center; align-items: center; cursor: default; background: linear-gradient(135deg, #202225 0%, #1a1a1a 50%, #ff4500 100%); }
-        .auth-card { display: flex; width: 780px; height: 450px; background: #2f3136; border-radius: 25px; overflow: hidden; box-shadow: 0 15px 50px rgba(0,0,0,0.9); border: 5px solid #fff; transition: 0.3s; }
+        .auth-card { display: flex; width: 780px; height: 450px; background: #2f3136; border-radius: 20px; overflow: hidden; box-shadow: 0 15px 50px rgba(0,0,0,0.9); border: 4px solid #fff; transition: 0.3s; }
         .auth-card-form { flex: 1 1 55%; padding: 40px; display: flex; flex-direction: column; justify-content: center; align-items: center; background: #2a2c33; }
         .auth-card-image { flex: 1 1 45%; background-color: #202225; background-size: cover; background-position: center; position: relative; background-image: url('helios.jpg'); border-left: 4px solid #fff;}
         .auth-card-image::after { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(88, 101, 242, 0.1); }
-        .auth-card h1 { color: #fff; margin: 0 0 5px 0; font-size: 32px; text-transform: uppercase; text-shadow: 2px 2px 0 #5865F2, -1px -1px 0 #5865F2; font-weight: 900; }
+        .auth-card h1 { color: #fff; margin: 0 0 5px 0; font-size: 32px; text-transform: uppercase; font-weight: 900; }
         .auth-card p { color: #b9bbbe; margin: 0 0 25px 0; font-size: 14px; text-align: center; font-weight: bold;}
-        
         #forgotPwdBtn { color: #00aff4; text-decoration: none; font-size: 13px; margin-top: 15px; display: block; transition: 0.2s; font-weight: bold;}
         #forgotPwdBtn:hover { text-decoration: underline; color: #fff; }
 
         /* ==========================================
-           POTĘŻNE PRZYCISKI (UMA MUSUME STYLE)
-           ========================================== */
-        button { font-family: 'Arial', sans-serif; }
-        
-        .btn-submit {
-            background: linear-gradient(180deg, #a8f042 0%, #55c814 100%);
-            border: 3px solid #ffffff;
-            border-radius: 40px;
-            box-shadow: 0 5px 0 #3a960b, 0 8px 15px rgba(0,0,0,0.4);
-            color: #ffffff;
-            font-size: 16px;
-            font-weight: 900;
-            text-transform: uppercase;
-            text-shadow: 1px 1px 0px #2b6e06, -1px -1px 0px #2b6e06, 1px -1px 0px #2b6e06, -1px 1px 0px #2b6e06;
-            padding: 14px 20px;
-            cursor: pointer;
-            transition: all 0.1s ease;
-            width: 100%;
-            margin-top: 15px;
-        }
-        .btn-submit:active { transform: translateY(4px); box-shadow: 0 1px 0 #3a960b, 0 3px 5px rgba(0,0,0,0.4); }
-
-        .btn-auth-submit {
-            background: linear-gradient(180deg, #7a98f0 0%, #4664d4 100%);
-            border: 3px solid #ffffff;
-            border-radius: 40px;
-            box-shadow: 0 5px 0 #28409c, 0 8px 15px rgba(0,0,0,0.4);
-            color: #ffffff;
-            font-size: 18px;
-            font-weight: 900;
-            text-transform: uppercase;
-            text-shadow: 1px 1px 0px #1d2e73, -1px -1px 0px #1d2e73, 1px -1px 0px #1d2e73, -1px 1px 0px #1d2e73;
-            padding: 16px 20px;
-            cursor: pointer;
-            transition: all 0.1s ease;
-            width: 100%;
-            margin-top: 15px;
-        }
-        .btn-auth-submit:active { transform: translateY(4px); box-shadow: 0 1px 0 #28409c, 0 3px 5px rgba(0,0,0,0.4); }
-
-        .btn-cancel {
-            background: linear-gradient(180deg, #b0bcc2 0%, #7f8c8d 100%);
-            box-shadow: 0 5px 0 #4a5253, 0 8px 15px rgba(0,0,0,0.4);
-            text-shadow: 1px 1px 0px #333, -1px -1px 0px #333, 1px -1px 0px #333, -1px 1px 0px #333;
-        }
-        .btn-cancel:active { box-shadow: 0 1px 0 #4a5253, 0 3px 5px rgba(0,0,0,0.4); }
-
-        /* ==========================================
-           INPUTY I FORMULARZE (GRUBE I OKRĄGŁE)
+           UMA MUSUME STYLE - PRZYCISKI I FORMULARZE
            ========================================== */
         input, select, textarea {
-            width: 100%;
-            background: #ffffff !important;
-            color: #333 !important;
-            border: 3px solid #dcdcdc !important;
-            border-radius: 20px !important;
-            padding: 12px 15px !important;
-            margin: 8px 0 !important;
-            font-weight: 900 !important;
-            font-size: 14px !important;
-            box-shadow: inset 0 3px 5px rgba(0,0,0,0.1) !important;
-            box-sizing: border-box;
-            outline: none;
-            transition: 0.2s;
+            width: 100%; background: #ffffff !important; color: #333 !important; border: 3px solid #dcdcdc !important;
+            border-radius: 15px !important; padding: 12px 15px !important; margin: 8px 0 !important;
+            font-weight: bold !important; font-size: 14px !important; box-shadow: inset 0 3px 5px rgba(0,0,0,0.1) !important;
+            box-sizing: border-box; outline: none; transition: 0.2s;
         }
-        input:focus, select:focus, textarea:focus { border-color: #ff9a44 !important; box-shadow: inset 0 3px 5px rgba(0,0,0,0.1), 0 0 0 4px rgba(255, 154, 68, 0.3) !important; }
-        
+        input:focus, select:focus, textarea:focus { border-color: #74eb34 !important; box-shadow: inset 0 3px 5px rgba(0,0,0,0.1), 0 0 0 4px rgba(116, 235, 52, 0.3) !important; }
         input[type="number"]::-webkit-inner-spin-button, input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
         input[type="number"] { -moz-appearance: textfield; }
-        input[type="date"]::-webkit-calendar-picker-indicator { cursor: pointer; }
+
+        .btn-submit {
+            background: linear-gradient(180deg, #a3f740 0%, #5ac313 100%); border: 3px solid #ffffff; border-radius: 30px;
+            box-shadow: inset 0px 4px 5px rgba(255,255,255,0.6), 0 5px 0 #3a8a0b, 0 8px 10px rgba(0,0,0,0.3);
+            color: #ffffff; font-size: 16px; font-weight: 900; text-transform: uppercase;
+            text-shadow: 1px 1px 0px #2b6e06, -1px -1px 0px #2b6e06, 1px -1px 0px #2b6e06, -1px 1px 0px #2b6e06;
+            padding: 12px 20px; cursor: pointer; transition: 0.1s ease; width: 100%; margin-top: 15px; font-family: 'Arial', sans-serif;
+        }
+        .btn-submit:active { transform: translateY(4px); box-shadow: inset 0px 2px 2px rgba(255,255,255,0.6), 0 1px 0 #3a8a0b, 0 3px 5px rgba(0,0,0,0.3); }
+
+        .btn-auth-submit { background: linear-gradient(180deg, #7a98f0 0%, #4664d4 100%); box-shadow: inset 0px 4px 5px rgba(255,255,255,0.5), 0 5px 0 #28409c, 0 8px 10px rgba(0,0,0,0.3); text-shadow: 1px 1px 0px #1d2e73, -1px -1px 0px #1d2e73, 1px -1px 0px #1d2e73, -1px 1px 0px #1d2e73; }
+        .btn-auth-submit:active { box-shadow: inset 0px 2px 2px rgba(255,255,255,0.5), 0 1px 0 #28409c, 0 3px 5px rgba(0,0,0,0.3); }
+        
+        .btn-cancel { background: linear-gradient(180deg, #d3d9dc 0%, #a6b1b5 100%); box-shadow: inset 0px 4px 5px rgba(255,255,255,0.6), 0 5px 0 #6e767a, 0 8px 10px rgba(0,0,0,0.3); text-shadow: 1px 1px 0px #444, -1px -1px 0px #444, 1px -1px 0px #444, -1px 1px 0px #444; }
+        .btn-cancel:active { box-shadow: inset 0px 2px 2px rgba(255,255,255,0.6), 0 1px 0 #6e767a, 0 3px 5px rgba(0,0,0,0.3); }
 
         /* ==========================================
-           UI GŁÓWNE
+           UI GŁÓWNE I MAPA
            ========================================== */
         #map { width: 100vw; height: 100vh; position: absolute; top: 0; left: 0; z-index: 1; }
         
         .floating-header { 
             position: absolute; top: 20px; left: 50%; transform: translateX(-50%); z-index: 1000; 
-            background: linear-gradient(180deg, #ff9a44 0%, #fc6076 100%);
-            padding: 10px 40px; border-radius: 50px; border: 4px solid #fff; 
-            box-shadow: 0 6px 0 #c0392b, 0 10px 20px rgba(0,0,0,0.5); 
-            text-align: center; pointer-events: none; display: flex; align-items: center; gap: 20px; 
+            background: linear-gradient(180deg, #ffb72b 0%, #f38815 100%);
+            padding: 10px 30px; border-radius: 40px; border: 4px solid #fff; 
+            box-shadow: 0 5px 0 #c76505, 0 8px 15px rgba(0,0,0,0.4); 
+            text-align: center; pointer-events: none; display: flex; align-items: center; gap: 15px; 
         }
-        .floating-header h1 { margin: 0; color: #fff; letter-spacing: 4px; font-size: 32px; font-weight: 900; text-shadow: 2px 2px 0 #c0392b, -1px -1px 0 #c0392b, 1px -1px 0 #c0392b, -1px 1px 0 #c0392b, 0 4px 5px rgba(0,0,0,0.5); }
-        .floating-header img { height: 75px; width: auto; object-fit: contain; filter: drop-shadow(0 4px 3px rgba(0,0,0,0.5)); }
+        .floating-header h1 { margin: 0; color: #fff; letter-spacing: 2px; font-size: 26px; font-weight: 900; text-shadow: 2px 2px 0 #c76505, -1px -1px 0 #c76505, 1px -1px 0 #c76505, -1px 1px 0 #c76505; }
+        .floating-header img { height: 50px; width: auto; object-fit: contain; filter: drop-shadow(0 2px 2px rgba(0,0,0,0.5)); }
         
         .user-widget { 
-            position: absolute; top: 20px; right: 20px; z-index: 1000; display: flex; align-items: center; gap: 15px; 
-            background: linear-gradient(180deg, #4facfe 0%, #00f2fe 100%); 
-            padding: 8px 20px; border-radius: 50px; border: 3px solid #fff; 
-            box-shadow: 0 6px 0 #0077b6, 0 10px 15px rgba(0,0,0,0.4); cursor: pointer; transition: 0.1s;
+            position: absolute; top: 20px; right: 20px; z-index: 1000; display: flex; align-items: center; gap: 10px; 
+            background: linear-gradient(180deg, #fff 0%, #f0f0f0 100%); 
+            padding: 5px 15px; border-radius: 40px; border: 3px solid #ccc; 
+            box-shadow: 0 4px 0 #aaa, 0 6px 10px rgba(0,0,0,0.3); cursor: pointer; transition: 0.1s;
         }
-        .user-widget:active { transform: translateY(3px); box-shadow: 0 3px 0 #0077b6, 0 5px 10px rgba(0,0,0,0.4); }
-        .greeting { font-weight: 900; color: #fff; font-size: 16px; text-shadow: 1px 1px 2px #0077b6; }
-        .greeting span { color: #fff; text-decoration: underline; }
-        .user-avatar { width: 45px; height: 45px; border-radius: 50%; background: #ff4500; display: flex; justify-content: center; align-items: center; font-weight: bold; font-size: 22px; border: 2px solid #fff; overflow: hidden; box-shadow: 0 3px 5px rgba(0,0,0,0.3); }
+        .user-widget:active { transform: translateY(3px); box-shadow: 0 1px 0 #aaa, 0 3px 5px rgba(0,0,0,0.3); }
+        .greeting { font-weight: 900; color: #333; font-size: 14px; }
+        .greeting span { color: #f38815; text-decoration: underline; }
+        .user-avatar { width: 40px; height: 40px; border-radius: 50%; background: #f38815; display: flex; justify-content: center; align-items: center; font-weight: 900; font-size: 18px; color: #fff; border: 2px solid #fff; overflow: hidden; box-shadow: inset 0 2px 4px rgba(0,0,0,0.2); }
 
-        .dropdown-menu { position: absolute; top: 90px; right: 20px; background: #2a2c33; border-radius: 20px; border: 4px solid #fff; box-shadow: 0 8px 25px rgba(0,0,0,0.8); width: 220px; display: none; flex-direction: column; overflow: hidden; z-index: 1001; }
+        .dropdown-menu { position: absolute; top: 80px; right: 20px; background: #fff; border-radius: 15px; border: 3px solid #ddd; box-shadow: 0 8px 20px rgba(0,0,0,0.4); width: 250px; display: none; flex-direction: column; overflow: hidden; z-index: 1001; }
         .dropdown-menu.active { display: flex; }
-        .dropdown-item { padding: 15px 20px; color: #fff; cursor: pointer; border-bottom: 2px solid #444; font-weight: 900; transition: 0.2s; font-size: 14px; text-transform: uppercase;}
-        .dropdown-item:hover { background: #4facfe; color: #fff; text-shadow: 1px 1px 0 #0077b6;}
+        .dropdown-item { padding: 12px 20px; color: #333; cursor: pointer; border-bottom: 1px solid #eee; font-weight: 900; transition: 0.2s; font-size: 13px; text-transform: uppercase;}
+        .dropdown-item:hover { background: #f4f4f4; color: #5ac313; padding-left: 25px;}
         .dropdown-item:last-child { border-bottom: none; }
+        .admin-menu-item { background: #fff0f0; color: #e74c3c; border-bottom: 2px solid #e74c3c;}
         .hidden { display: none !important; }
 
         /* ==========================================
-           MODALE (OKNA WYSKAKUJĄCE)
+           MODALE (CUKIERKOWE)
            ========================================== */
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.85); z-index: 4000; display: none; justify-content: center; align-items: center; cursor: pointer;}
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.7); z-index: 4000; display: none; justify-content: center; align-items: center; cursor: pointer;}
         .modal-overlay.active { display: flex; }
         
         .modal-content { 
-            background: #2a2c33; 
-            padding: 30px; 
-            border-radius: 30px; 
-            border: 6px solid #fff; 
-            width: 90%; max-width: 550px; max-height: 90vh; overflow-y: auto; overflow-x: hidden; position: relative; 
-            box-shadow: 0 0 0 5px #ff9a44, 0 15px 40px rgba(0,0,0,0.9); /* Podwójna ramka */
-            cursor: default; 
+            background: #f0f3f5; padding: 25px; border-radius: 20px; border: 4px solid #fff; 
+            width: 90%; max-width: 500px; max-height: 85vh; overflow-y: auto; overflow-x: hidden; position: relative; 
+            box-shadow: 0 0 0 4px #ccc, 0 15px 30px rgba(0,0,0,0.5); cursor: default; 
         }
-        .close-modal { position: absolute; top: 15px; right: 20px; font-size: 28px; color: #aaa; cursor: pointer; z-index: 100; font-weight: 900; transition: 0.2s;}
-        .close-modal:hover { color: #ff9a44; transform: scale(1.2); }
+        .close-modal { position: absolute; top: 12px; right: 18px; font-size: 28px; color: #888; cursor: pointer; z-index: 100; font-weight: 900; transition: 0.2s; text-shadow: 1px 1px 0 #fff;}
+        .close-modal:hover { color: #f38815; transform: scale(1.2); }
         
         .modal-content h2 { 
             color: #fff; margin-top: 0; font-weight: 900; text-transform: uppercase; 
-            text-shadow: 2px 2px 0 #ff4500, -1px -1px 0 #ff4500, 1px -1px 0 #ff4500, -1px 1px 0 #ff4500; 
-            font-size: 28px; text-align: center; margin-bottom: 20px;
+            text-shadow: 2px 2px 0 #c76505, -1px -1px 0 #c76505, 1px -1px 0 #c76505, -1px 1px 0 #c76505; 
+            font-size: 24px; text-align: center; margin-bottom: 20px; background: linear-gradient(180deg, #ffb72b 0%, #f38815 100%);
+            padding: 10px; border-radius: 30px; border: 3px solid #fff; box-shadow: 0 4px 0 #c76505;
         }
 
-        /* Sekcja Garażu - ciemniejszy box wewnątrz */
-        .garage-form-box { background: #1f2126; padding: 20px; border-radius: 20px; margin-bottom: 20px; border: 3px solid #444; box-shadow: inset 0 5px 10px rgba(0,0,0,0.5);}
+        .garage-form-box { background: #fff; padding: 20px; border-radius: 15px; margin-bottom: 20px; border: 2px solid #ddd; box-shadow: 0 4px 10px rgba(0,0,0,0.05);}
+        .garage-form-box h3 { color: #5ac313; font-weight: 900; margin-top: 0; text-transform: uppercase;}
 
-        /* LISTY MINI-GUZIKI (Karta, Edytuj, Usuń) */
-        .list-item { display: flex; justify-content: space-between; align-items: center; padding: 15px; background: #fff; margin-bottom: 10px; border-radius: 15px; border: 3px solid #ddd; box-shadow: 0 4px 0 #ccc;}
-        .list-item b { color: #333; font-size: 16px; font-weight: 900;}
-        .list-item-btns { display: flex; gap: 5px; }
+        /* LISTY MINI-GUZIKI */
+        .list-item { display: flex; justify-content: space-between; align-items: center; padding: 12px; background: #fff; margin-bottom: 10px; border-radius: 15px; border: 2px solid #ddd; box-shadow: 0 3px 0 #ccc;}
+        .list-item b { color: #333; font-size: 15px; font-weight: 900;}
+        .list-item-btns { display: flex; gap: 5px; flex-wrap: wrap; justify-content: flex-end;}
         .list-item-btns button { 
-            border: 2px solid #fff; border-radius: 20px; padding: 6px 12px; cursor: pointer; color: white; font-weight: 900; font-size: 12px;
-            box-shadow: 0 3px 0 rgba(0,0,0,0.4); transition: 0.1s; text-transform: uppercase; text-shadow: 1px 1px 0 rgba(0,0,0,0.5);
+            border: 2px solid #fff; border-radius: 20px; padding: 6px 10px; cursor: pointer; color: white; font-weight: 900; font-size: 11px;
+            box-shadow: 0 3px 0 rgba(0,0,0,0.2); transition: 0.1s; text-transform: uppercase;
         }
-        .list-item-btns button:active { transform: translateY(2px); box-shadow: 0 1px 0 rgba(0,0,0,0.4); }
-        .btn-view { background: linear-gradient(180deg, #4facfe, #00f2fe); }
-        .btn-edit { background: linear-gradient(180deg, #f1c40f, #f39c12); }
-        .btn-del { background: linear-gradient(180deg, #e74c3c, #c0392b); }
+        .list-item-btns button:active { transform: translateY(2px); box-shadow: 0 1px 0 rgba(0,0,0,0.2); }
+        .btn-view { background: linear-gradient(180deg, #2bc2ff, #168bd8); }
+        .btn-edit { background: linear-gradient(180deg, #ffb72b, #f38815); }
+        .btn-del { background: linear-gradient(180deg, #ff6b6b, #c0392b); }
 
-        .profile-avatar-large { width: 130px; height: 130px; border-radius: 50%; border: 5px solid #ff9a44; box-shadow: 0 0 0 3px #fff, 0 10px 20px rgba(0,0,0,0.5); margin: 0 auto 15px auto; background-color: #333; background-size: cover; background-position: center; display: flex; justify-content: center; align-items: center; font-size: 45px; font-weight: bold; color: #fff;}
-        .user-list-avatar { width: 45px; height: 45px; border-radius: 50%; background-size: cover; background-position: center; background-color: #ddd; display: inline-block; vertical-align: middle; margin-right: 12px; border: 3px solid #ff9a44; }
+        .profile-avatar-large { width: 120px; height: 120px; border-radius: 50%; border: 4px solid #fff; box-shadow: 0 0 0 4px #5ac313, 0 8px 15px rgba(0,0,0,0.2); margin: 0 auto 15px auto; background-color: #ddd; background-size: cover; background-position: center; display: flex; justify-content: center; align-items: center; font-size: 40px; font-weight: 900; color: #fff;}
+        .user-list-avatar { width: 40px; height: 40px; border-radius: 50%; background-size: cover; background-position: center; background-color: #eee; display: inline-block; vertical-align: middle; margin-right: 10px; border: 2px solid #ccc; }
+
+        /* OSIĄGNIĘCIA */
+        .achievements-container { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-top: 15px; padding-top: 15px; border-top: 2px dashed #ccc; }
+        .achievement-icon { width: 50px; height: 50px; border-radius: 10px; border: 2px solid #fff; background: #fff; box-shadow: 0 0 0 2px #f38815, 0 4px 6px rgba(0,0,0,0.2); object-fit: contain;}
 
         /* ==========================================
-           DYMKI MAPY I TABELE (CUKIERKOWE)
+           DYMKI MAPY I TABELE
            ========================================== */
-        .leaflet-popup-content-wrapper { 
-            background: #2a2c33; border: 5px solid #fff; border-radius: 25px; 
-            box-shadow: 0 0 0 4px #ff9a44, 0 10px 30px rgba(0,0,0,0.7); padding: 0; overflow: hidden; 
-        }
-        .leaflet-popup-tip { background: #ff9a44; width: 25px; height: 25px; margin-top: 4px;}
-        .leaflet-popup-content { margin: 0 !important; width: 380px !important; }
+        .leaflet-popup-content-wrapper { background: #f0f3f5; border: 4px solid #fff; border-radius: 20px; box-shadow: 0 0 0 3px #ccc, 0 10px 20px rgba(0,0,0,0.3); padding: 0; overflow: hidden; }
+        .leaflet-popup-tip { background: #ccc; }
+        .leaflet-popup-content { margin: 0 !important; width: 360px !important; }
+        .track-img-header { width: 100%; height: 140px; object-fit: cover; background-color: #ddd; border-bottom: 4px solid #fff; display: block; }
+        .popup-inner-pad { padding: 15px; }
         
-        /* Naprawione zdjęcie toru - obiekt w całości! */
-        .track-img-header { width: 100%; max-height: 150px; object-fit: contain; background-color: #111; border-bottom: 4px solid #ff9a44; display: block; }
-        .popup-inner-pad { padding: 20px; }
-        
-        .popup-inner-pad h2 {
-            color: #fff; text-shadow: 2px 2px 0 #ff4500, -1px -1px 0 #ff4500, 1px -1px 0 #ff4500, -1px 1px 0 #ff4500; 
-            font-size: 24px; font-weight: 900; text-transform: uppercase; text-align: center; margin-top: 0; margin-bottom: 15px;
-        }
+        .popup-inner-pad h2 { color: #fff; text-shadow: 2px 2px 0 #3a8a0b, -1px -1px 0 #3a8a0b, 1px -1px 0 #3a8a0b, -1px 1px 0 #3a8a0b; font-size: 22px; font-weight: 900; text-transform: uppercase; text-align: center; margin-top: 0; margin-bottom: 10px; background: linear-gradient(180deg, #a3f740 0%, #5ac313 100%); padding: 5px; border-radius: 20px; border: 2px solid #fff;}
 
-        /* Biała, czytelna tabela wewnątrz ciemnego dymka */
-        table { width: 100%; border-collapse: separate; border-spacing: 0; margin: 10px 0; background: #fff; border-radius: 15px; border: 4px solid #ddd; overflow: hidden; }
-        th { background: linear-gradient(180deg, #ff9a44, #fc6076); color: #fff; font-weight: 900; text-shadow: 1px 1px 0 #c0392b; padding: 12px 8px; text-transform: uppercase; font-size: 13px;}
-        td { border-bottom: 2px solid #eee; padding: 10px 8px; color: #333; font-weight: 900; font-size: 14px; text-align: center; vertical-align: middle;}
+        table { width: 100%; border-collapse: separate; border-spacing: 0; margin: 10px 0; background: #fff; border-radius: 10px; border: 2px solid #ddd; overflow: hidden; }
+        th { background: linear-gradient(180deg, #fdfbfb, #ebedee); color: #888; font-weight: 900; padding: 8px; text-transform: uppercase; font-size: 11px; border-bottom: 2px solid #ddd;}
+        td { border-bottom: 1px solid #eee; padding: 8px; color: #333; font-weight: 900; font-size: 13px; text-align: center; vertical-align: middle;}
         tr:last-child td { border-bottom: none; }
         
-        .time-inputs-container { background: #fff; border-radius: 20px; padding: 10px; border: 4px solid #ddd; display: flex; gap: 5px; align-items: center; justify-content: center; margin: 15px 0; }
-        .time-inputs-container input { border: none !important; background: #f4f4f4 !important; box-shadow: inset 0 2px 4px rgba(0,0,0,0.1) !important; padding: 10px !important; margin: 0 !important;}
+        .time-inputs-container { background: #fff; border-radius: 15px; padding: 8px; border: 2px solid #ddd; display: flex; gap: 5px; align-items: center; justify-content: center; margin: 10px 0; }
+        .time-inputs-container input { border: none !important; background: #f9f9f9 !important; box-shadow: inset 0 2px 4px rgba(0,0,0,0.05) !important; padding: 8px !important; margin: 0 !important; font-size: 16px !important;}
 
-        .rank-1 { color: gold; font-weight: 900; font-size: 18px; text-shadow: 1px 1px 0 #000; }
-        .rank-2 { color: silver; font-weight: 900; font-size: 18px; text-shadow: 1px 1px 0 #000;}
-        .rank-3 { color: #cd7f32; font-weight: 900; font-size: 18px; text-shadow: 1px 1px 0 #000;} 
-        .rank-other { color: #888; font-weight: 900; font-size: 16px;}
+        .rank-1 { color: #fff; text-shadow: 1px 1px 0 #b8860b, -1px -1px 0 #b8860b, 1px -1px 0 #b8860b, -1px 1px 0 #b8860b; font-weight: 900; font-size: 16px; background: gold; padding: 2px 6px; border-radius: 10px;}
+        .rank-2 { color: #fff; text-shadow: 1px 1px 0 #666; font-weight: 900; font-size: 14px; background: silver; padding: 2px 6px; border-radius: 10px;}
+        .rank-3 { color: #fff; text-shadow: 1px 1px 0 #663300; font-weight: 900; font-size: 14px; background: #cd7f32; padding: 2px 6px; border-radius: 10px;} 
+        .rank-other { color: #888; font-weight: 900; font-size: 14px;}
 
-        .car-link, .user-link { color: #4facfe; text-decoration: none; font-weight: 900; cursor: pointer; transition: 0.2s; }
-        .user-link { color: #ff9a44; }
-        .car-link:hover, .user-link:hover { color: #0077b6; text-decoration: underline; }
-        .admin-badge { background-color: #e74c3c; color: white; font-size: 10px; padding: 3px 6px; border-radius: 8px; margin-left: 5px; font-weight: 900; text-transform: uppercase; box-shadow: 0 2px 0 #c0392b;}
+        .admin-badge { background-color: #e74c3c; color: white; font-size: 9px; padding: 2px 5px; border-radius: 5px; margin-left: 5px; font-weight: 900; text-transform: uppercase; box-shadow: 0 2px 0 #c0392b;}
 
         /* ==========================================
-           TROLL POPUPS (DIESEL / ZWYCIĘSTWO)
+           RESPONSYWNOŚĆ (TELEFONY)
            ========================================== */
-        .troll-popup { background: #2a2c33; border: 6px solid #e74c3c; text-align: center; padding: 30px; border-radius: 30px; box-shadow: 0 0 0 6px #fff, 0 0 50px rgba(231, 76, 60, 0.8); z-index: 6000; max-width: 420px; display: flex; flex-direction: column; align-items: center; cursor: default;}
-        .troll-popup h2 { margin-top: 0; color: #fff; text-transform: uppercase; font-weight: 900; text-shadow: 2px 2px 0 #c0392b, -1px -1px 0 #c0392b, 1px -1px 0 #c0392b, -1px 1px 0 #c0392b; font-size: 32px;}
-        .troll-img { max-width: 100%; border-radius: 15px; margin-bottom: 15px; border: 4px solid #fff; box-shadow: 0 10px 20px rgba(0,0,0,0.5);}
-        .victory-popup { border-color: gold; box-shadow: 0 0 0 6px #fff, 0 0 50px rgba(255, 215, 0, 0.8); }
-        .victory-popup h2 { color: #fff; text-shadow: 2px 2px 0 #b8860b, -1px -1px 0 #b8860b, 1px -1px 0 #b8860b, -1px 1px 0 #b8860b; }
+        @media screen and (max-width: 600px) {
+            .floating-header { top: 10px; padding: 5px 15px; flex-direction: row; width: auto; white-space: nowrap;}
+            .floating-header h1 { font-size: 20px; letter-spacing: 1px; }
+            .floating-header img { height: 35px; }
+            .user-widget { top: 10px; padding: 2px; right: 10px; border-radius: 50%; }
+            .greeting { display: none; } /* Ukrywamy tekst powitania na telefonie */
+            .user-avatar { width: 35px; height: 35px; font-size: 16px; margin: 0;}
+            .auth-card { width: 95%; flex-direction: column; height: auto; }
+            .auth-card-image { display: none; } /* Ukrywamy obrazek na tel przy logowaniu */
+            .modal-content { width: 95%; padding: 15px; }
+            .leaflet-popup-content { width: 300px !important; }
+        }
     </style>
+    <script src="https://www.youtube.com/iframe_api"></script>
 </head>
 <body>
 
@@ -245,14 +201,19 @@
             <img src="https://media.tenor.com/-lfKiysaO2oAAAAj/uma-musume-chibi.gif" style="transform: scaleX(-1);">
         </div>
         <div class="user-widget" id="avatarBtn">
-            <div class="greeting">Hej <span>Kierowca</span>!</div>
+            <div class="greeting">Hej <span id="greetingAlias">Kierowca</span>!</div>
             <div class="user-avatar" id="avatarIcon">P</div> 
         </div>
         <div class="dropdown-menu" id="userMenu">
             <div class="dropdown-item" onclick="openGarage()">🚗 Garaż</div>
-            <div class="dropdown-item" onclick="openSettings()">⚙️ Profil</div>
+            <div class="dropdown-item" onclick="window.showUserProfile(window.currentUserAlias)">👤 Profil</div>
+            <div class="dropdown-item" onclick="openSettings()">⚙️ Ustawienia Profilu</div>
             <div class="dropdown-item" onclick="openAllCarsList()">📋 Lista Fur</div>
             <div class="dropdown-item" onclick="openUsersList()">👥 Lista Użytkowników</div>
+            <div class="dropdown-item" onclick="openTrophies()">🏆 All Trophy</div>
+            
+            <div class="dropdown-item admin-menu-item hidden" id="adminMenuBtn" onclick="openAdminPanel()">👑 Uma Control Track Panel</div>
+            
             <div class="dropdown-item" id="radioBtnToggle">🔇 Wyłącz Audio</div>
             <div class="dropdown-item" id="logoutBtn" style="color: #e74c3c;">🚪 Wyloguj</div>
         </div>
@@ -260,17 +221,60 @@
 
     <div id="youtubePlayer" style="position: absolute; left: -9999px;"></div>
 
+    <div class="modal-overlay" id="changelogModal" style="z-index: 7000;">
+        <div class="modal-content" style="max-width: 450px;">
+            <span class="close-modal" onclick="closeModals()">×</span>
+            <h2>📢 Patch Notes</h2>
+            <div class="garage-form-box" style="text-align: left; font-size: 14px; font-weight: bold; color: #555;">
+                <p style="margin-top:0; color: #5ac313;">Witajcie na torze! Nowy update (v1.5) właśnie wjechał na serwery:</p>
+                <ul style="padding-left: 20px; line-height: 1.6;">
+                    <li>🏆 <b>System Osiągnięć:</b> Administrator rozdaje unikalne odznaki do Waszych profili!</li>
+                    <li>✨ <b>Cukierkowe UI:</b> Nowe, zaokrąglone okna i przyciski w stylu Gacha.</li>
+                    <li>📝 <b>Customowe Nicki:</b> Możesz zmienić swoją nazwę wyświetlaną w Ustawieniach Profilu!</li>
+                    <li>📱 <b>Wsparcie Mobile:</b> Interfejs nie psuje się już na mniejszych ekranach telefonów.</li>
+                </ul>
+            </div>
+            <button onclick="closeModals()" class="btn-submit">Wchodzę do gry!</button>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="adminModal" style="z-index: 6000;">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModals()">×</span>
+            <h2 style="background: linear-gradient(180deg, #ff7675, #c0392b); box-shadow: 0 4px 0 #8e44ad;">👑 Uma Control Track Panel</h2>
+            <div class="garage-form-box">
+                <p style="color: #333; font-size: 14px; font-weight: bold; margin-bottom: 5px;">Wybierz Gracza:</p>
+                <select id="adminTargetUser">
+                    <option value="" disabled selected>Ładowanie graczy...</option>
+                </select>
+                
+                <p style="color: #333; font-size: 14px; font-weight: bold; margin-bottom: 5px; margin-top: 15px;">Wybierz Osiągnięcie do nadania:</p>
+                <select id="adminAchievementSelect">
+                    </select>
+                <button class="btn-submit btn-admin" onclick="grantAchievement()">Nadaj Odznakę!</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="trophiesModal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModals()">×</span>
+            <h2>🏆 Wszystkie Osiągnięcia</h2>
+            <div class="garage-form-box" id="allTrophiesRender">
+                </div>
+        </div>
+    </div>
+
     <div class="modal-overlay" id="garageModal">
         <div class="modal-content">
             <span class="close-modal" onclick="closeModals()">×</span>
             <h2>🚗 Twój Garaż</h2>
             <div class="garage-form-box">
-                <h3 id="garageFormTitle" style="margin-top: 0; font-size: 18px; color: #fff; text-transform: uppercase; font-weight: 900;">Dodaj nową furę:</h3>
+                <h3 id="garageFormTitle">Dodaj nową furę:</h3>
                 <input type="hidden" id="editCarId" value="">
                 <input type="text" id="newCarName" placeholder="Nazwa fury (np. Gruz E36)">
                 <input type="text" id="newCarPhoto" placeholder="Link do zdjęcia">
                 <input type="text" id="newCarEngine" placeholder="Silnik / Pojemność">
-                
                 <select id="newCarFuel">
                     <option value="" disabled selected>Rodzaj paliwa...</option>
                     <option value="PB95">PB 95</option>
@@ -278,14 +282,13 @@
                     <option value="PB100+">PB 100+ (Racing)</option>
                     <option value="Diesel">Diesel (TDI itp.)</option>
                 </select>
-
                 <input type="text" id="newCarAccel" placeholder="0-100 km/h">
                 <input type="text" id="newCarTires" placeholder="Opony (np. Semi-Slick)">
                 <button id="saveCarBtn" onclick="saveNewCar()" class="btn-submit">Dodaj do garażu!</button>
                 <button id="cancelEditBtn" onclick="cancelEdit()" class="btn-submit btn-cancel hidden">Anuluj Edycję</button>
             </div>
-            <h3 style="margin-top: 0; color: #fff; font-weight: 900; text-transform: uppercase; font-size: 18px; border-bottom: 3px solid #555; padding-bottom: 10px;">Twoje maszyny:</h3>
-            <ul id="myCarsList" style="list-style: none; padding: 0; margin: 0; color: #aaa;"><li>Ładowanie...</li></ul>
+            <h3 style="margin-top: 0; color: #5ac313; font-weight: 900; text-transform: uppercase; font-size: 16px;">Twoje maszyny:</h3>
+            <ul id="myCarsList" style="list-style: none; padding: 0; margin: 0;"><li>Ładowanie...</li></ul>
         </div>
     </div>
 
@@ -308,18 +311,19 @@
         </div>
     </div>
 
-    <div class="modal-overlay" id="allCarsModal"><div class="modal-content"><span class="close-modal" onclick="closeModals()">×</span><h2>📋 Lista Wszystkich Fur</h2><ul id="allCarsListRender" style="list-style: none; padding: 0; margin: 0;"><li>Ładowanie...</li></ul></div></div>
-    <div class="modal-overlay" id="usersListModal"><div class="modal-content"><span class="close-modal" onclick="closeModals()">×</span><h2>👥 Lista Użytkowników</h2><ul id="usersListRender" style="list-style: none; padding: 0; margin: 0;"><li>Ładowanie...</li></ul></div></div>
+    <div class="modal-overlay" id="allCarsModal"><div class="modal-content"><span class="close-modal" onclick="closeModals()">×</span><h2>📋 Wszystkie Fury</h2><ul id="allCarsListRender" style="list-style: none; padding: 0; margin: 0;"><li>Ładowanie...</li></ul></div></div>
+    <div class="modal-overlay" id="usersListModal"><div class="modal-content"><span class="close-modal" onclick="closeModals()">×</span><h2>👥 Użytkownicy</h2><ul id="usersListRender" style="list-style: none; padding: 0; margin: 0;"><li>Ładowanie...</li></ul></div></div>
     
     <div class="modal-overlay" id="settingsModal">
         <div class="modal-content">
             <span class="close-modal" onclick="closeModals()">×</span>
             <h2>⚙️ Ustawienia Profilu</h2>
             <div class="garage-form-box">
-                <p style="color: #fff; font-size: 14px; font-weight: bold; margin-bottom: 5px;">Link do awatara (URL):</p><input type="text" id="settingsAvatar" placeholder="https://link.jpg">
-                <p style="color: #fff; font-size: 14px; font-weight: bold; margin-bottom: 5px; margin-top: 15px;">Data urodzenia:</p><input type="date" id="settingsDob">
-                <p style="color: #fff; font-size: 14px; font-weight: bold; margin-bottom: 5px; margin-top: 15px;">Miejscowość:</p><input type="text" id="settingsCity" placeholder="Skąd nadajesz?">
-                <p style="color: #fff; font-size: 14px; font-weight: bold; margin-bottom: 5px; margin-top: 15px;">Krótki opis / O sobie:</p><textarea id="settingsDesc" rows="3" placeholder="Napisz coś o sobie..."></textarea>
+                <p style="color: #333; font-size: 13px; font-weight: bold; margin-bottom: 2px;">Wyświetlana nazwa (Nick):</p><input type="text" id="settingsNick" placeholder="np. Pancerny King">
+                <p style="color: #333; font-size: 13px; font-weight: bold; margin-bottom: 2px; margin-top: 10px;">Link do awatara (URL):</p><input type="text" id="settingsAvatar" placeholder="https://link.jpg">
+                <p style="color: #333; font-size: 13px; font-weight: bold; margin-bottom: 2px; margin-top: 10px;">Data urodzenia:</p><input type="date" id="settingsDob">
+                <p style="color: #333; font-size: 13px; font-weight: bold; margin-bottom: 2px; margin-top: 10px;">Miejscowość:</p><input type="text" id="settingsCity" placeholder="Skąd nadajesz?">
+                <p style="color: #333; font-size: 13px; font-weight: bold; margin-bottom: 2px; margin-top: 10px;">O sobie:</p><textarea id="settingsDesc" rows="3" placeholder="Napisz coś o sobie..."></textarea>
                 <button onclick="saveSettings()" class="btn-submit">Zapisz Profil</button>
             </div>
         </div>
@@ -329,13 +333,17 @@
         <div class="modal-content" style="text-align: center;">
             <span class="close-modal" onclick="closeModals()">×</span>
             <div id="pubProfileAvatar" class="profile-avatar-large">?</div>
-            <h1 id="pubProfileAlias" style="color: #fff; margin: 0 0 5px 0; text-transform: uppercase; font-weight: 900; text-shadow: 2px 2px 0 #ff9a44, -1px -1px 0 #ff9a44, 1px -1px 0 #ff9a44, -1px 1px 0 #ff9a44;">KIEROWCA</h1>
-            <div id="pubProfileAdminBadge" style="margin-bottom: 15px; display:none;"><span class="admin-badge" style="font-size: 14px; padding: 6px 15px; border-radius: 20px;">ADMINISTRATOR</span></div>
-            <div class="stat-row" style="border-bottom: 2px solid #444;"><span class="stat-label">WIEK:</span><span class="stat-value" id="pubProfileAge">-</span></div>
-            <div class="stat-row" style="border-bottom: 2px solid #444;"><span class="stat-label">MIEJSCOWOŚĆ:</span><span class="stat-value" id="pubProfileCity">-</span></div>
-            <div style="margin-top: 25px; text-align: left; background: #fff; padding: 20px; border-radius: 20px; border: 4px solid #ddd; box-shadow: inset 0 3px 5px rgba(0,0,0,0.1);">
-                <b style="color: #ff4500; font-size: 16px; font-weight: 900; display: block; margin-bottom: 8px; text-transform: uppercase;">O KIEROWCY:</b>
-                <span id="pubProfileDesc" style="font-size: 15px; color: #333; line-height: 1.5; font-weight: bold;">Brak opisu.</span>
+            <h1 id="pubProfileAlias" style="color: #f38815; margin: 0 0 5px 0; text-transform: uppercase; font-weight: 900; text-shadow: 1px 1px 0 #fff;">KIEROWCA</h1>
+            <div id="pubProfileAdminBadge" style="margin-bottom: 15px; display:none;"><span class="admin-badge" style="font-size: 12px; padding: 4px 10px; border-radius: 10px;">ADMINISTRATOR</span></div>
+            <div class="stat-row" style="border-bottom: 2px solid #ddd;"><span class="stat-label" style="color:#888;">WIEK:</span><span class="stat-value" id="pubProfileAge" style="color:#333; text-shadow:none;">-</span></div>
+            <div class="stat-row" style="border-bottom: 2px solid #ddd;"><span class="stat-label" style="color:#888;">MIEJSCOWOŚĆ:</span><span class="stat-value" id="pubProfileCity" style="color:#333; text-shadow:none;">-</span></div>
+            
+            <div style="margin-top: 20px; text-align: left; background: #f9f9f9; padding: 15px; border-radius: 15px; border: 3px solid #ddd;">
+                <b style="color: #5ac313; font-size: 14px; font-weight: 900; display: block; margin-bottom: 5px; text-transform: uppercase;">O KIEROWCY:</b>
+                <span id="pubProfileDesc" style="font-size: 14px; color: #555; line-height: 1.5; font-weight: bold;">Brak opisu.</span>
+                
+                <div class="achievements-container" id="pubProfileAchievements">
+                    </div>
             </div>
         </div>
     </div>
@@ -350,7 +358,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
         import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, sendEmailVerification, sendPasswordResetEmail, updateProfile } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
-        import { getFirestore, collection, addDoc, getDocs, query, where, orderBy, deleteDoc, doc, updateDoc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, getDocs, query, where, orderBy, deleteDoc, doc, updateDoc, setDoc, getDoc, arrayUnion } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
 
         // ==========================================
         // TUTAJ WKLEJ SWÓJ KOD firebaseConfig
@@ -371,16 +379,18 @@
 
         window.myCars = []; 
         window.currentUserAlias = "";
+        window.currentUserNick = ""; // Nowa zmienna na własny nick
         window.bestTimesForTracks = {}; 
 
-        window.victoryGifs = [
-            "daiwa.gif",
-            "daitaku.gif", 
-            "goldship.gif", 
-            "manhattan.gif",
-            "mayano.gif",
-            "seiun.gif"
-        ];
+        window.victoryGifs = ["daiwa.gif", "daitaku.gif", "goldship.gif", "manhattan.gif", "mayano.gif", "seiun.gif"];
+
+        // BAZA OSIĄGNIĘĆ (TUTAJ EDYTUJESZ IDIOTOODPORNE TROFEA)
+        window.bazaOsiagniec = {
+            "first_race": { nazwa: "Pierwszy Wynik", opis: "Wziął udział w swoim pierwszym Trackdayu.", img: "https://preview.redd.it/just-shingo-v0-aogn1fn3lq801.png?width=640&crop=smart&auto=webp&s=108f788f3caf7c1ce8060665763e3385e0b765bc" },
+            "betatester": { nazwa: "Beta Tester", opis: "Odznaka dla pierwszych zjadaczy kodu. Dzięki za wsparcie!", img: "Beta.png" },
+            "dpf_egr_master": { nazwa: "Czarny Bambik", opis: "Wypalił DPFa na torze, kto tu tym Dieslem przyjeżdża?!", img: "Key.png" },
+            "gruz_drifter": { nazwa: "Gruz ze stajni", opis: "Rozwalił zderzak, ale dokończył okrążenie trytytkami.", img: "JapanDerby_garland.png" }
+        };
 
         const darkMap = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png');
         const satelliteMap = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}');
@@ -395,7 +405,7 @@
             { nazwa: "Autodrom Jastrząb", lat: 51.246, lng: 20.942, opis: "Dalej", cena: "Nieznana", kontakt: "+48 694 427 709", foto: "autodromjastrzab.webp" },
             { nazwa: "Tor Kielce", lat: 50.963, lng: 20.457, opis: "Historyczny", cena: "", kontakt: "", foto: "https://via.placeholder.com/360x120/222/ff4500?text=Mapa+Kielce" },
             { nazwa: "Tor Ułęż Moto Park", lat: 51.624, lng: 22.094, opis: "Lotnisko", cena: "500 zł/h", kontakt: "", foto: "https://via.placeholder.com/360x120/222/ff4500?text=Mapa+Ulez" },
-            { nazwa: "TOR ŁÓDŹ", lat: 51.849, lng: 19.539, opis: "Najmniejszy", cena: "", kontakt: "", foto: "https://via.placeholder.com/360x120/222/ff4500?text=Mapa+Lodz" }
+            { nazwa: "TOR ŁÓDŹ", lat: 51.877, lng: 19.533, opis: "Najmniejszy", cena: "", kontakt: "", foto: "https://via.placeholder.com/360x120/222/ff4500?text=Mapa+Lodz" }
         ];
 
         const avatarBtn = document.getElementById('avatarBtn');
@@ -410,32 +420,69 @@
             const docSnap = await getDoc(doc(db, "uzytkownicy", window.currentUserAlias)); 
             if(docSnap.exists()) { 
                 const data = docSnap.data(); 
+                document.getElementById('settingsNick').value = data.nick || window.currentUserAlias; 
                 document.getElementById('settingsDob').value = data.dataUrodzenia || ''; 
                 document.getElementById('settingsCity').value = data.miejscowosc || ''; 
                 document.getElementById('settingsDesc').value = data.opis || ''; 
             } 
         };
         
-        window.closeModals = () => { 
-            document.getElementById('garageModal').classList.remove('active'); document.getElementById('umaCardModal').classList.remove('active'); document.getElementById('settingsModal').classList.remove('active'); document.getElementById('userProfileModal').classList.remove('active'); document.getElementById('allCarsModal').classList.remove('active'); document.getElementById('usersListModal').classList.remove('active'); window.cancelEdit(); 
+        window.openTrophies = () => {
+            userMenu.classList.remove('active'); document.getElementById('trophiesModal').classList.add('active');
+            const render = document.getElementById('allTrophiesRender');
+            render.innerHTML = "";
+            for (const [key, t] of Object.entries(window.bazaOsiagniec)) {
+                render.innerHTML += `<div class="list-item"><img src="${t.img}" style="width:40px; height:40px; border-radius:8px; border:2px solid #ccc; margin-right:15px; object-fit:contain;"><div><b style="color:#5ac313;">${t.nazwa}</b><br><span style="font-size:12px; color:#555; font-weight:normal;">${t.opis}</span></div></div>`;
+            }
+        };
+
+        window.openAdminPanel = async () => { 
+            userMenu.classList.remove('active'); document.getElementById('adminModal').classList.add('active'); 
+            const userSelect = document.getElementById('adminTargetUser');
+            userSelect.innerHTML = "<option value='' disabled selected>Wybierz gracza...</option>";
+            const snap = await getDocs(collection(db, "uzytkownicy"));
+            snap.forEach(d => { userSelect.innerHTML += `<option value="${d.id}">${d.data().nick || d.id}</option>`; });
+            
+            const achSelect = document.getElementById('adminAchievementSelect');
+            achSelect.innerHTML = "<option value='' disabled selected>Wybierz odznakę...</option>";
+            for (const [key, t] of Object.entries(window.bazaOsiagniec)) {
+                achSelect.innerHTML += `<option value="${key}">${t.nazwa}</option>`;
+            }
         };
         
-        const modals = ['garageModal', 'umaCardModal', 'settingsModal', 'userProfileModal', 'allCarsModal', 'usersListModal'];
-        modals.forEach(m => document.getElementById(m).addEventListener('click', (e) => { if(e.target.id === m) window.closeModals(); }));
+        window.closeModals = () => { 
+            const modale = ['garageModal', 'umaCardModal', 'settingsModal', 'userProfileModal', 'allCarsModal', 'usersListModal', 'changelogModal', 'adminModal', 'trophiesModal'];
+            modale.forEach(m => document.getElementById(m).classList.remove('active'));
+            window.cancelEdit(); 
+        };
+        const modalsArr = ['garageModal', 'umaCardModal', 'settingsModal', 'userProfileModal', 'allCarsModal', 'usersListModal', 'changelogModal', 'adminModal', 'trophiesModal'];
+        modalsArr.forEach(m => document.getElementById(m).addEventListener('click', (e) => { if(e.target.id === m) window.closeModals(); }));
 
-        document.getElementById('newCarFuel').addEventListener('change', function() {
-            if(this.value === 'Diesel') { document.getElementById('trollModal').classList.add('active'); }
-        });
+        document.getElementById('newCarFuel').addEventListener('change', function() { if(this.value === 'Diesel') { document.getElementById('trollModal').classList.add('active'); } });
 
+        // USTAWIENIA - TERAZ Z NICKIEM
         window.saveSettings = async () => { 
-            const url = document.getElementById('settingsAvatar').value; const dob = document.getElementById('settingsDob').value; const city = document.getElementById('settingsCity').value; const desc = document.getElementById('settingsDesc').value; 
+            const nick = document.getElementById('settingsNick').value; const url = document.getElementById('settingsAvatar').value; const dob = document.getElementById('settingsDob').value; const city = document.getElementById('settingsCity').value; const desc = document.getElementById('settingsDesc').value; 
             try { 
                 if(url !== auth.currentUser.photoURL) await updateProfile(auth.currentUser, { photoURL: url }); 
-                await setDoc(doc(db, "uzytkownicy", window.currentUserAlias), { dataUrodzenia: dob, miejscowosc: city, opis: desc, avatar: url }, { merge: true }); 
+                await setDoc(doc(db, "uzytkownicy", window.currentUserAlias), { nick: nick, dataUrodzenia: dob, miejscowosc: city, opis: desc, avatar: url }, { merge: true }); 
+                window.currentUserNick = nick || window.currentUserAlias;
+                document.getElementById('greetingAlias').innerText = window.currentUserNick.toUpperCase();
                 alert("Profil zaktualizowany!"); updateAvatarUI(auth.currentUser); window.closeModals(); 
             } catch(e) { alert("Błąd: " + e.message); } 
         };
         
+        window.grantAchievement = async () => {
+            const targetId = document.getElementById('adminTargetUser').value;
+            const achKey = document.getElementById('adminAchievementSelect').value;
+            if(!targetId || !achKey) return alert("Wybierz gracza i odznakę!");
+            try {
+                await setDoc(doc(db, "uzytkownicy", targetId), { osiagniecia: arrayUnion(achKey) }, { merge: true });
+                alert(`Osiągnięcie przyznane!`);
+                document.getElementById('adminTargetUser').value = ''; document.getElementById('adminAchievementSelect').value = '';
+            } catch(e) { alert("Błąd! Sprawdź czy zaktualizowałeś reguły bazy danych."); }
+        };
+
         function updateAvatarUI(user) { 
             if(user.photoURL) document.getElementById('avatarIcon').innerHTML = `<img src="${user.photoURL}" style="width:100%; height:100%; border-radius:50%; object-fit:cover;">`; 
             else document.getElementById('avatarIcon').innerText = window.currentUserAlias.charAt(0).toUpperCase(); 
@@ -443,172 +490,80 @@
         
         window.showUserProfile = async (driverAlias) => { 
             document.getElementById('userProfileModal').classList.add('active'); document.getElementById('pubProfileAlias').innerText = driverAlias; document.getElementById('pubProfileAvatar').innerHTML = driverAlias.charAt(0).toUpperCase(); document.getElementById('pubProfileAvatar').style.backgroundImage = 'none'; document.getElementById('pubProfileAge').innerText = "Ładowanie..."; document.getElementById('pubProfileCity').innerText = "Ładowanie..."; document.getElementById('pubProfileDesc').innerText = "Ładowanie..."; 
+            document.getElementById('pubProfileAchievements').innerHTML = "Ładowanie odznak...";
             const adminBadge = document.getElementById('pubProfileAdminBadge'); if(driverAlias.toLowerCase() === 'pancerny') { adminBadge.style.display = 'block'; } else { adminBadge.style.display = 'none'; } 
             const docSnap = await getDoc(doc(db, "uzytkownicy", driverAlias)); 
+            
             if(docSnap.exists()) { 
                 const data = docSnap.data(); 
+                document.getElementById('pubProfileAlias').innerText = data.nick || driverAlias;
                 if(data.avatar) { document.getElementById('pubProfileAvatar').innerHTML = ""; document.getElementById('pubProfileAvatar').style.backgroundImage = `url('${data.avatar}')`; } 
                 if(data.dataUrodzenia) { const birthDate = new Date(data.dataUrodzenia); const today = new Date(); let age = today.getFullYear() - birthDate.getFullYear(); const m = today.getMonth() - birthDate.getMonth(); if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) { age--; } document.getElementById('pubProfileAge').innerText = age + " lat"; } else { document.getElementById('pubProfileAge').innerText = "Nie podano"; } 
-                document.getElementById('pubProfileCity').innerText = data.miejscowosc || "Nie podano"; document.getElementById('pubProfileDesc').innerText = data.opis || "Ten kierowca woli przemawiać czynami na torze."; 
+                document.getElementById('pubProfileCity').innerText = data.miejscowosc || "Nie podano"; document.getElementById('pubProfileDesc').innerText = data.opis || "Brak opisu."; 
+                
+                const achBox = document.getElementById('pubProfileAchievements'); achBox.innerHTML = '';
+                if(data.osiagniecia && data.osiagniecia.length > 0) {
+                    data.osiagniecia.forEach(key => {
+                        const achInfo = window.bazaOsiagniec[key];
+                        if(achInfo) achBox.innerHTML += `<img src="${achInfo.img}" class="achievement-icon" title="${achInfo.nazwa}: ${achInfo.opis}">`;
+                    });
+                } else { achBox.innerHTML = `<span style="color:#aaa; font-size:12px; font-weight:bold;">Brak odznak w klaserze.</span>`; }
             } else { 
-                document.getElementById('pubProfileAge').innerText = "Nie podano"; document.getElementById('pubProfileCity').innerText = "Nie podano"; document.getElementById('pubProfileDesc').innerText = "Konto założone, ale garaż jeszcze zamknięty."; 
+                document.getElementById('pubProfileAge').innerText = "Nie podano"; document.getElementById('pubProfileCity').innerText = "Nie podano"; document.getElementById('pubProfileDesc').innerText = "Konto założone, ale gracz nie zapisał profilu."; 
+                document.getElementById('pubProfileAchievements').innerHTML = `<span style="color:#aaa; font-size:12px; font-weight:bold;">Brak odznak w klaserze.</span>`;
             } 
         };
 
-        window.openUsersList = async () => { 
-            userMenu.classList.remove('active'); document.getElementById('usersListModal').classList.add('active'); const list = document.getElementById('usersListRender'); list.innerHTML = "Ładowanie..."; 
-            const snapshot = await getDocs(collection(db, "uzytkownicy")); list.innerHTML = ""; if(snapshot.empty) { list.innerHTML = "Brak graczy."; return; } 
-            snapshot.forEach(doc => { 
-                const data = doc.data(); const alias = doc.id; 
-                let bgImage = data.avatar ? `background-image: url('${data.avatar}')` : ''; 
-                let adminTag = alias.toLowerCase() === 'pancerny' ? `<span class="admin-badge">ADMIN</span>` : ''; 
-                list.innerHTML += `<li class="list-item" style="cursor:pointer;" onclick="window.showUserProfile('${alias}')"><div style="display:flex; align-items:center;"><div class="user-list-avatar" style="${bgImage}">${data.avatar ? '' : alias.charAt(0).toUpperCase()}</div><div><b style="color:#333; font-size:16px;">${alias.toUpperCase()}</b> ${adminTag}<br><span style="font-size:12px; color:#888; font-weight:bold;">${data.miejscowosc || 'Nieznane Miasto'}</span></div></div></li>`; 
-            }); 
-        };
-
-        window.openAllCarsList = async () => { 
-            userMenu.classList.remove('active'); document.getElementById('allCarsModal').classList.add('active'); const list = document.getElementById('allCarsListRender'); list.innerHTML = "Ładowanie..."; 
-            const snapshot = await getDocs(collection(db, "fury")); list.innerHTML = ""; if(snapshot.empty) { list.innerHTML = "Brak aut w bazie."; return; } 
-            snapshot.forEach(doc => { 
-                const data = doc.data(); const safeName = data.name.replace(/'/g, "\\'"); const safePhoto = data.photo.replace(/'/g, "\\'"); const safeEngine = data.engine.replace(/'/g, "\\'"); const safeFuel = data.fuel || ""; const safeAccel = data.accel.replace(/'/g, "\\'"); const safeTires = data.tires.replace(/'/g, "\\'"); 
-                let actionBtns = `<button class="btn-view" onclick="window.showCarCard('${safeName}', '${data.driver}')">👁️ Karta</button>`; 
-                if(data.driver === window.currentUserAlias) { actionBtns += `<button class="btn-edit" onclick="window.closeModals(); window.openGarage(); setTimeout(()=>window.triggerEditCar('${doc.id}', '${safeName}', '${safePhoto}', '${safeEngine}', '${safeFuel}', '${safeAccel}', '${safeTires}'), 500)">✏️</button><button class="btn-del" onclick="window.deleteCar('${doc.id}'); document.getElementById('allCarsModal').classList.remove('active');">❌</button>`; } 
-                list.innerHTML += `<li class="list-item"><div><b style="color:#ff9a44;">[${data.driver.toUpperCase()}]</b> <b style="color:#333;">${data.name}</b> <span style="font-size:12px; color:#888;">(${data.engine})</span></div><div class="list-item-btns">${actionBtns}</div></li>`; 
-            }); 
-        };
-
-        window.saveNewCar = async () => { 
-            const editId = document.getElementById('editCarId').value; const name = document.getElementById('newCarName').value; const photo = document.getElementById('newCarPhoto').value || "https://via.placeholder.com/400x250/222/ff4500?text=Brak+Zdjecia"; const engine = document.getElementById('newCarEngine').value || "Nieznany"; const fuel = document.getElementById('newCarFuel').value || "?"; const accel = document.getElementById('newCarAccel').value || "? s"; const tires = document.getElementById('newCarTires').value || "Drogowe"; 
-            if(!name) return alert("Podaj chociaż nazwę fury!"); 
-            if(editId) { await updateDoc(doc(db, "fury", editId), { name: name, photo: photo, engine: engine, fuel: fuel, accel: accel, tires: tires }); window.cancelEdit(); } 
-            else { await addDoc(collection(db, "fury"), { driver: window.currentUserAlias, name: name, photo: photo, engine: engine, fuel: fuel, accel: accel, tires: tires }); window.cancelEdit(); } 
-            await loadMyGarage(); 
-        };
-
-        window.triggerEditCar = (id, name, photo, engine, fuel, accel, tires) => { document.getElementById('editCarId').value = id; document.getElementById('newCarName').value = name; document.getElementById('newCarPhoto').value = photo; document.getElementById('newCarEngine').value = engine; document.getElementById('newCarFuel').value = fuel; document.getElementById('newCarAccel').value = accel; document.getElementById('newCarTires').value = tires; document.getElementById('garageFormTitle').innerText = "Edytuj furę:"; document.getElementById('saveCarBtn').innerText = "Zapisz Zmiany"; document.getElementById('saveCarBtn').style.background = "linear-gradient(180deg, #f1c40f 0%, #f39c12 100%)"; document.getElementById('saveCarBtn').style.boxShadow = "0 5px 0 #d68910, 0 8px 15px rgba(0,0,0,0.4)"; document.getElementById('cancelEditBtn').classList.remove('hidden'); };
-        window.cancelEdit = () => { document.getElementById('editCarId').value = ""; document.getElementById('newCarName').value = ''; document.getElementById('newCarPhoto').value = ''; document.getElementById('newCarEngine').value = ''; document.getElementById('newCarFuel').value = ''; document.getElementById('newCarAccel').value = ''; document.getElementById('newCarTires').value = ''; document.getElementById('garageFormTitle').innerText = "Dodaj nową furę:"; document.getElementById('saveCarBtn').innerText = "Dodaj do garażu!"; document.getElementById('saveCarBtn').style.background = "linear-gradient(180deg, #a8f042 0%, #55c814 100%)"; document.getElementById('saveCarBtn').style.boxShadow = "0 5px 0 #3a960b, 0 8px 15px rgba(0,0,0,0.4)"; document.getElementById('cancelEditBtn').classList.add('hidden'); };
-        window.deleteCar = async (docId) => { if(confirm("Na pewno chcesz zezłomować?")) { await deleteDoc(doc(db, "fury", docId)); await loadMyGarage(); } };
+        window.openUsersList = async () => { userMenu.classList.remove('active'); document.getElementById('usersListModal').classList.add('active'); const list = document.getElementById('usersListRender'); list.innerHTML = "Ładowanie..."; const snapshot = await getDocs(collection(db, "uzytkownicy")); list.innerHTML = ""; if(snapshot.empty) { list.innerHTML = "Brak graczy."; return; } snapshot.forEach(doc => { const data = doc.data(); const alias = doc.id; const dispName = data.nick || alias; let bgImage = data.avatar ? `background-image: url('${data.avatar}')` : ''; let adminTag = alias.toLowerCase() === 'pancerny' ? `<span class="admin-badge">ADMIN</span>` : ''; list.innerHTML += `<li class="list-item" style="cursor:pointer;" onclick="window.showUserProfile('${alias}')"><div style="display:flex; align-items:center;"><div class="user-list-avatar" style="${bgImage}">${data.avatar ? '' : alias.charAt(0).toUpperCase()}</div><div><b style="color:#333; font-size:15px;">${dispName.toUpperCase()}</b> ${adminTag}<br><span style="font-size:11px; color:#888; font-weight:bold;">${data.miejscowosc || 'Nieznane Miasto'}</span></div></div></li>`; }); };
         
-        async function loadMyGarage() { 
-            const q = query(collection(db, "fury"), where("driver", "==", window.currentUserAlias)); const snapshot = await getDocs(q); const list = document.getElementById('myCarsList'); window.myCars = []; list.innerHTML = ""; if(snapshot.empty) { list.innerHTML = "Brak aut."; return; } 
-            snapshot.forEach(doc => { const data = doc.data(); window.myCars.push(data.name); const safeName = data.name.replace(/'/g, "\\'"); const safePhoto = data.photo.replace(/'/g, "\\'"); const safeEngine = data.engine.replace(/'/g, "\\'"); const safeFuel = data.fuel || ""; const safeAccel = data.accel.replace(/'/g, "\\'"); const safeTires = data.tires.replace(/'/g, "\\'"); list.innerHTML += `<li class="list-item"><div><b style="color:#333;">${data.name}</b></div><div class="list-item-btns"><button class="btn-view" onclick="window.showCarCard('${safeName}', '${window.currentUserAlias}')">Karta</button><button class="btn-edit" onclick="window.triggerEditCar('${doc.id}', '${safeName}', '${safePhoto}', '${safeEngine}', '${safeFuel}', '${safeAccel}', '${safeTires}')">✏️</button><button class="btn-del" onclick="window.deleteCar('${doc.id}')">❌</button></div></li>`; }); 
-        }
+        window.openAllCarsList = async () => { userMenu.classList.remove('active'); document.getElementById('allCarsModal').classList.add('active'); const list = document.getElementById('allCarsListRender'); list.innerHTML = "Ładowanie..."; const snapshot = await getDocs(collection(db, "fury")); list.innerHTML = ""; if(snapshot.empty) { list.innerHTML = "Brak aut w bazie."; return; } snapshot.forEach(doc => { const data = doc.data(); const safeName = data.name.replace(/'/g, "\\'"); const safePhoto = data.photo.replace(/'/g, "\\'"); const safeEngine = data.engine.replace(/'/g, "\\'"); const safeFuel = data.fuel || ""; const safeAccel = data.accel.replace(/'/g, "\\'"); const safeTires = data.tires.replace(/'/g, "\\'"); let actionBtns = `<button class="btn-view" onclick="window.showCarCard('${safeName}', '${data.driver}')">KARTA</button>`; if(data.driver === window.currentUserAlias) { actionBtns += `<button class="btn-edit" onclick="window.closeModals(); window.openGarage(); setTimeout(()=>window.triggerEditCar('${doc.id}', '${safeName}', '${safePhoto}', '${safeEngine}', '${safeFuel}', '${safeAccel}', '${safeTires}'), 500)">EDYCJA</button><button class="btn-del" onclick="window.deleteCar('${doc.id}'); document.getElementById('allCarsModal').classList.remove('active');">USUŃ</button>`; } list.innerHTML += `<li class="list-item"><div><b style="color:#5ac313; font-size:13px;">[${data.driver.toUpperCase()}]</b><br><b style="color:#333; font-size:15px;">${data.name}</b> <span style="font-size:11px; color:#888;">(${data.engine})</span></div><div class="list-item-btns">${actionBtns}</div></li>`; }); };
 
-        window.showCarCard = async (carName, driverName) => { 
-            document.getElementById('umaCardModal').classList.add('active'); const cardContent = document.getElementById('umaCardContent'); cardContent.innerHTML = `<div style="padding: 40px; text-align: center; background: #222; border-radius: 10px; color: white; font-weight: bold;">Ładowanie...</div>`; 
-            const q = query(collection(db, "fury"), where("driver", "==", driverName), where("name", "==", carName)); const snapshot = await getDocs(q); if(snapshot.empty) { cardContent.innerHTML = `<div style="padding: 40px; text-align: center; background: #222; border-radius: 10px; color: white;">Brak danych.</div>`; return; } 
-            const carData = snapshot.docs[0].data(); const fuelDisplay = carData.fuel ? carData.fuel : "Brak danych"; 
-            cardContent.innerHTML = `<div style="position: relative; width: 100%; max-width: 340px; height: 500px; margin: auto; background: #000; border-radius: 20px; overflow: hidden; box-shadow: 0 0 30px rgba(79, 172, 254, 0.8), inset 0 0 0 3px #fff;"><span onclick="window.closeModals()" style="position: absolute; top: 15px; right: 20px; font-size: 32px; color: #fff; cursor: pointer; z-index: 10; text-shadow: 2px 2px 4px #000; font-weight: bold;">×</span><div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-image: url('${carData.photo}'); background-size: cover; background-position: center; z-index: 1;"></div><div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-image: url('https://pbs.twimg.com/media/GxszfaMawAE5j4G.png'); background-size: 100% 100%; z-index: 2; pointer-events: none;"></div><div style="position: absolute; bottom: 0; left: 0; width: 100%; height: 170px; background: linear-gradient(to top, rgba(0,0,0,1) 5%, rgba(0,0,0,0.8) 50%, transparent); z-index: 3; display: flex; flex-direction: column; justify-content: flex-end; padding: 12px; box-sizing: border-box;"><h2 style="font-size: 22px; color: #ffeb3b; margin: 0 0 2px 0; text-transform: uppercase; text-align: center; text-shadow: 2px 2px 4px #000;">${carData.name}</h2><div style="text-align: center; color: #fff; font-size: 12px; margin-bottom: 8px; text-shadow: 1px 1px 3px #000; font-weight: bold;">WŁAŚCICIEL: <b>${carData.driver.toUpperCase()}</b></div><div class="stat-row"><span class="stat-label">SILNIK:</span><span class="stat-value">${carData.engine}</span></div><div class="stat-row"><span class="stat-label">PALIWO:</span><span class="stat-value" style="color: #4facfe;">${fuelDisplay}</span></div><div class="stat-row"><span class="stat-label">0-100 km/h:</span><span class="stat-value">${carData.accel}</span></div><div class="stat-row"><span class="stat-label">OPONY:</span><span class="stat-value" style="color: #4cd137;">${carData.tires}</span></div></div></div>`; 
-        };
+        window.saveNewCar = async () => { const editId = document.getElementById('editCarId').value; const name = document.getElementById('newCarName').value; const photo = document.getElementById('newCarPhoto').value || "https://via.placeholder.com/400x250/222/ff4500?text=Brak+Zdjecia"; const engine = document.getElementById('newCarEngine').value || "Nieznany"; const fuel = document.getElementById('newCarFuel').value || "?"; const accel = document.getElementById('newCarAccel').value || "? s"; const tires = document.getElementById('newCarTires').value || "Drogowe"; if(!name) return alert("Podaj chociaż nazwę fury!"); if(editId) { await updateDoc(doc(db, "fury", editId), { name: name, photo: photo, engine: engine, fuel: fuel, accel: accel, tires: tires }); window.cancelEdit(); } else { await addDoc(collection(db, "fury"), { driver: window.currentUserAlias, name: name, photo: photo, engine: engine, fuel: fuel, accel: accel, tires: tires }); window.cancelEdit(); } await loadMyGarage(); };
+        window.triggerEditCar = (id, name, photo, engine, fuel, accel, tires) => { document.getElementById('editCarId').value = id; document.getElementById('newCarName').value = name; document.getElementById('newCarPhoto').value = photo; document.getElementById('newCarEngine').value = engine; document.getElementById('newCarFuel').value = fuel; document.getElementById('newCarAccel').value = accel; document.getElementById('newCarTires').value = tires; document.getElementById('garageFormTitle').innerText = "Edytuj furę:"; document.getElementById('saveCarBtn').innerText = "Zapisz Zmiany"; document.getElementById('saveCarBtn').style.background = "linear-gradient(180deg, #ffb72b 0%, #f38815 100%)"; document.getElementById('saveCarBtn').style.boxShadow = "inset 0px 4px 5px rgba(255,255,255,0.6), 0 5px 0 #c76505, 0 8px 10px rgba(0,0,0,0.3)"; document.getElementById('cancelEditBtn').classList.remove('hidden'); };
+        window.cancelEdit = () => { document.getElementById('editCarId').value = ""; document.getElementById('newCarName').value = ''; document.getElementById('newCarPhoto').value = ''; document.getElementById('newCarEngine').value = ''; document.getElementById('newCarFuel').value = ''; document.getElementById('newCarAccel').value = ''; document.getElementById('newCarTires').value = ''; document.getElementById('garageFormTitle').innerText = "Dodaj nową furę:"; document.getElementById('saveCarBtn').innerText = "Dodaj do garażu!"; document.getElementById('saveCarBtn').style.background = "linear-gradient(180deg, #a3f740 0%, #5ac313 100%)"; document.getElementById('saveCarBtn').style.boxShadow = "inset 0px 4px 5px rgba(255,255,255,0.6), 0 5px 0 #3a8a0b, 0 8px 10px rgba(0,0,0,0.3)"; document.getElementById('cancelEditBtn').classList.add('hidden'); };
+        window.deleteCar = async (docId) => { if(confirm("Na pewno chcesz zezłomować?")) { await deleteDoc(doc(db, "fury", docId)); await loadMyGarage(); } };
+        async function loadMyGarage() { const q = query(collection(db, "fury"), where("driver", "==", window.currentUserAlias)); const snapshot = await getDocs(q); const list = document.getElementById('myCarsList'); window.myCars = []; list.innerHTML = ""; if(snapshot.empty) { list.innerHTML = "Brak aut."; return; } snapshot.forEach(doc => { const data = doc.data(); window.myCars.push(data.name); const safeName = data.name.replace(/'/g, "\\'"); const safePhoto = data.photo.replace(/'/g, "\\'"); const safeEngine = data.engine.replace(/'/g, "\\'"); const safeFuel = data.fuel || ""; const safeAccel = data.accel.replace(/'/g, "\\'"); const safeTires = data.tires.replace(/'/g, "\\'"); list.innerHTML += `<li class="list-item"><div><b style="color:#333;">${data.name}</b></div><div class="list-item-btns"><button class="btn-view" onclick="window.showCarCard('${safeName}', '${window.currentUserAlias}')">KARTA</button><button class="btn-edit" onclick="window.triggerEditCar('${doc.id}', '${safeName}', '${safePhoto}', '${safeEngine}', '${safeFuel}', '${safeAccel}', '${safeTires}')">EDYCJA</button><button class="btn-del" onclick="window.deleteCar('${doc.id}')">USUŃ</button></div></li>`; }); }
 
-        // --- MAPA I ZARZĄDZANIE CZASAMI ---
-        tory.forEach(tor => { 
-            const marker = L.marker([tor.lat, tor.lng]).addTo(map); 
-            const safeId = tor.nazwa.replace(/\s+/g, '');
-            
-            // Poprawnie działający znacznik <img> (nie background!)
-            marker.bindPopup(`<div id="popup-content-${safeId}">Ładowanie...</div>`, { minWidth: 380 });
-            marker.on('popupopen', () => { 
-                let carSelectHTML = `<select id="carSelect-${safeId}" style="width:100%; border: 3px solid #ccc; border-radius: 15px; padding: 10px; font-weight: bold;">`; 
-                if(window.myCars.length === 0) carSelectHTML += `<option value="" disabled selected>Brak aut!</option>`; 
-                else { window.myCars.forEach(car => { carSelectHTML += `<option value="${car}">${car}</option>`; }); } 
-                carSelectHTML += `</select>`;
+        window.showCarCard = async (carName, driverName) => { document.getElementById('umaCardModal').classList.add('active'); const cardContent = document.getElementById('umaCardContent'); cardContent.innerHTML = `<div style="padding: 40px; text-align: center; background: #f0f3f5; border-radius: 10px; color: #333; font-weight: bold;">Ładowanie...</div>`; const q = query(collection(db, "fury"), where("driver", "==", driverName), where("name", "==", carName)); const snapshot = await getDocs(q); if(snapshot.empty) { cardContent.innerHTML = `<div style="padding: 40px; text-align: center; background: #f0f3f5; border-radius: 10px; color: #333;">Brak danych.</div>`; return; } const carData = snapshot.docs[0].data(); const fuelDisplay = carData.fuel ? carData.fuel : "Brak danych"; cardContent.innerHTML = `<div style="position: relative; width: 100%; max-width: 340px; height: 500px; margin: auto; background: #000; border-radius: 20px; overflow: hidden; box-shadow: 0 0 30px rgba(79, 172, 254, 0.8), inset 0 0 0 3px #fff;"><span onclick="window.closeModals()" style="position: absolute; top: 15px; right: 20px; font-size: 32px; color: #fff; cursor: pointer; z-index: 10; text-shadow: 2px 2px 4px #000; font-weight: bold;">×</span><div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-image: url('${carData.photo}'); background-size: cover; background-position: center; z-index: 1;"></div><div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-image: url('https://pbs.twimg.com/media/GxszfaMawAE5j4G.png'); background-size: 100% 100%; z-index: 2; pointer-events: none;"></div><div style="position: absolute; bottom: 0; left: 0; width: 100%; height: 170px; background: linear-gradient(to top, rgba(0,0,0,1) 5%, rgba(0,0,0,0.8) 50%, transparent); z-index: 3; display: flex; flex-direction: column; justify-content: flex-end; padding: 12px; box-sizing: border-box;"><h2 style="font-size: 22px; color: #ffeb3b; margin: 0 0 2px 0; text-transform: uppercase; text-align: center; text-shadow: 2px 2px 4px #000;">${carData.name}</h2><div style="text-align: center; color: #fff; font-size: 12px; margin-bottom: 8px; text-shadow: 1px 1px 3px #000; font-weight: bold;">WŁAŚCICIEL: <b>${carData.driver.toUpperCase()}</b></div><div class="stat-row"><span class="stat-label">SILNIK:</span><span class="stat-value">${carData.engine}</span></div><div class="stat-row"><span class="stat-label">PALIWO:</span><span class="stat-value" style="color: #4facfe;">${fuelDisplay}</span></div><div class="stat-row"><span class="stat-label">0-100 km/h:</span><span class="stat-value">${carData.accel}</span></div><div class="stat-row"><span class="stat-label">OPONY:</span><span class="stat-value" style="color: #4cd137;">${carData.tires}</span></div></div></div>`; };
 
-                const timeInputHTML = `<div class="time-inputs-container"><input type="number" id="timeM-${safeId}" placeholder="Min" min="0" max="99" style="width: 30%; text-align: center;"> : <input type="number" id="timeS-${safeId}" placeholder="Sek" min="0" max="59" style="width: 30%; text-align: center;"> . <input type="number" id="timeMS-${safeId}" placeholder="MS" min="0" max="999" style="width: 35%; text-align: center;"></div>`; 
-                
-                // TU JEST KLUCZ DO NAPRAWY ZDJĘCIA TORU
-                let trackImgHTML = tor.foto ? `<img src="${tor.foto}" class="track-img-header">` : '';
+        tory.forEach(tor => { const marker = L.marker([tor.lat, tor.lng]).addTo(map); const safeId = tor.nazwa.replace(/\s+/g, ''); marker.bindPopup(`<div id="popup-content-${safeId}">Ładowanie...</div>`, { minWidth: 360 }); marker.on('popupopen', () => { let carSelectHTML = `<select id="carSelect-${safeId}" style="width:100%; border: 3px solid #ccc; border-radius: 15px; padding: 10px; font-weight: bold;">`; if(window.myCars.length === 0) carSelectHTML += `<option value="" disabled selected>Brak aut!</option>`; else { window.myCars.forEach(car => { carSelectHTML += `<option value="${car}">${car}</option>`; }); } carSelectHTML += `</select>`; const timeInputHTML = `<div class="time-inputs-container"><input type="number" id="timeM-${safeId}" placeholder="Min" min="0" max="99" style="width: 30%; text-align: center;"> : <input type="number" id="timeS-${safeId}" placeholder="Sek" min="0" max="59" style="width: 30%; text-align: center;"> . <input type="number" id="timeMS-${safeId}" placeholder="MS" min="0" max="999" style="width: 35%; text-align: center;"></div>`; let trackImgHTML = tor.foto ? `<img src="${tor.foto}" class="track-img-header">` : ''; const fullHTML = `${trackImgHTML}<div class="popup-inner-pad"><h2>${tor.nazwa}</h2><table><thead><tr><th>Kierowca</th><th>Fura</th><th>Czas</th></tr></thead><tbody id="table-${safeId}"><tr><td colspan='3'>Ładowanie...</td></tr></tbody></table>${carSelectHTML}${timeInputHTML}<button onclick="window.saveTime('${tor.nazwa}')" class="btn-submit">Zapisz wynik</button></div>`; document.getElementById(`popup-content-${safeId}`).innerHTML = fullHTML; window.loadLeaderboard(tor.nazwa); }); });
 
-                const fullHTML = `
-                    ${trackImgHTML}
-                    <div class="popup-inner-pad">
-                        <h2>${tor.nazwa}</h2>
-                        <table><thead><tr><th>Kierowca</th><th>Fura</th><th>Czas</th></tr></thead><tbody id="table-${safeId}"><tr><td colspan='3'>Ładowanie...</td></tr></tbody></table>
-                        <hr style="border-color:#444; margin:15px 0;">
-                        ${carSelectHTML}
-                        ${timeInputHTML}
-                        <button onclick="window.saveTime('${tor.nazwa}')" class="btn-submit">Zapisz wynik</button>
-                    </div>`; 
-
-                document.getElementById(`popup-content-${safeId}`).innerHTML = fullHTML;
-                window.loadLeaderboard(tor.nazwa); 
-            }); 
-        });
-
-        window.loadLeaderboard = async (trackName) => { 
-            const safeId = trackName.replace(/\s+/g, ''); const tbody = document.getElementById(`table-${safeId}`); if(!tbody) return; 
-            const q = query(collection(db, "czasy"), where("track", "==", trackName), orderBy("time", "asc")); const snapshot = await getDocs(q); 
-            tbody.innerHTML = ""; 
-            if (snapshot.empty) { tbody.innerHTML = "<tr><td colspan='3'>Brak czasów. Bądź pierwszy!</td></tr>"; window.bestTimesForTracks[trackName] = "99:99.999"; return; } 
-            
-            let currentRank = 1; let firstPlaceTime = "";
-            snapshot.forEach((doc) => { 
-                const data = doc.data(); const safeCar = data.car.replace(/'/g, "\\'"); 
-                if(currentRank === 1) { firstPlaceTime = data.time; window.bestTimesForTracks[trackName] = firstPlaceTime; }
-
-                let rankDisplay = ""; let rankClass = "rank-other";
-                if(currentRank === 1) { rankDisplay = `<img src="1st.png" style="height: 22px; vertical-align: middle; margin-right: 3px; border-radius: 5px; border: 2px solid gold;">`; rankClass = "rank-1"; }
-                else if(currentRank === 2) { rankDisplay = "🥈"; rankClass = "rank-2"; }
-                else if(currentRank === 3) { rankDisplay = "🥉"; rankClass = "rank-3"; }
-                else { rankDisplay = currentRank + "."; }
-
-                let adminTag = data.driver.toLowerCase() === 'pancerny' ? `<span class="admin-badge">ADMIN</span>` : '';
-                let actionBtns = ""; if(data.driver === window.currentUserAlias) { actionBtns = `<br><span onclick="window.editLapTime('${doc.id}', '${data.time}', '${trackName}')" style="cursor:pointer; font-size:14px; margin-right:5px; text-shadow:none;" title="Edytuj">✏️</span> <span onclick="window.deleteLapTime('${doc.id}', '${trackName}')" style="cursor:pointer; font-size:14px; text-shadow:none;" title="Usuń">❌</span>`; } 
-                
-                // Zmieniono kolor czasu na zielony pasujący do białej tabeli
-                tbody.innerHTML += `<tr><td style="text-align: left; padding-left: 10px;"><span class="${rankClass}" style="margin-right: 5px;">${rankDisplay}</span><span class="user-link" onclick="window.showUserProfile('${data.driver}')">${data.driver.toUpperCase()}</span><br><div style="text-align: center; margin-top:2px;">${adminTag}</div></td><td><span class="car-link" onclick="window.showCarCard('${safeCar}', '${data.driver}')">${data.car}</span></td><td><b style="color:#128c3a; font-size: 16px;">${data.time}</b>${actionBtns}</td></tr>`; 
-                currentRank++;
-            }); 
-        };
+        window.loadLeaderboard = async (trackName) => { const safeId = trackName.replace(/\s+/g, ''); const tbody = document.getElementById(`table-${safeId}`); if(!tbody) return; const q = query(collection(db, "czasy"), where("track", "==", trackName), orderBy("time", "asc")); const snapshot = await getDocs(q); tbody.innerHTML = ""; if (snapshot.empty) { tbody.innerHTML = "<tr><td colspan='3'>Brak czasów. Bądź pierwszy!</td></tr>"; window.bestTimesForTracks[trackName] = "99:99.999"; return; } let currentRank = 1; let firstPlaceTime = ""; snapshot.forEach((doc) => { const data = doc.data(); const safeCar = data.car.replace(/'/g, "\\'"); if(currentRank === 1) { firstPlaceTime = data.time; window.bestTimesForTracks[trackName] = firstPlaceTime; } let rankDisplay = ""; let rankClass = "rank-other"; if(currentRank === 1) { rankDisplay = `<img src="0oyvkaqq4is61.jpg" style="height: 22px; vertical-align: middle; margin-right: 3px; border-radius: 5px; border: 2px solid gold;">`; rankClass = "rank-1"; } else if(currentRank === 2) { rankDisplay = "🥈"; rankClass = "rank-2"; } else if(currentRank === 3) { rankDisplay = "🥉"; rankClass = "rank-3"; } else { rankDisplay = currentRank + "."; } let adminTag = data.driver.toLowerCase() === 'pancerny' ? `<span class="admin-badge">ADMIN</span>` : ''; let actionBtns = ""; if(data.driver === window.currentUserAlias) { actionBtns = `<br><span onclick="window.editLapTime('${doc.id}', '${data.time}', '${trackName}')" style="cursor:pointer; font-size:16px; margin-right:5px; text-shadow:none;" title="Edytuj">✏️</span> <span onclick="window.deleteLapTime('${doc.id}', '${trackName}')" style="cursor:pointer; font-size:16px; text-shadow:none;" title="Usuń">❌</span>`; } tbody.innerHTML += `<tr><td style="text-align: left; padding-left: 10px;"><span class="${rankClass}" style="margin-right: 5px;">${rankDisplay}</span><span class="user-link" onclick="window.showUserProfile('${data.driver}')">${data.driver.toUpperCase()}</span><br><div style="text-align: center; margin-top:2px;">${adminTag}</div></td><td><span class="car-link" onclick="window.showCarCard('${safeCar}', '${data.driver}')">${data.car}</span></td><td><b style="color:#5ac313; font-size: 15px;">${data.time}</b>${actionBtns}</td></tr>`; currentRank++; }); };
         
         window.editLapTime = async (docId, oldTime, trackName) => { let valid = false; let newTime = oldTime; while(!valid) { newTime = prompt("Podaj nowy czas w formacie MM:SS.MS (np. 01:45.336):", newTime); if(newTime === null) return; const regex = /^\d{1,2}:\d{2}[\.\:]\d{1,3}$/; if(regex.test(newTime)) { valid = true; newTime = newTime.replace(/:(\d{1,3})$/, '.$1'); } else { alert("Zły format! Wpisz czas okrążenia np. 01:45.336"); } } if(newTime && newTime !== oldTime) { await updateDoc(doc(db, "czasy", docId), { time: newTime }); window.loadLeaderboard(trackName); } };
         window.deleteLapTime = async (docId, trackName) => { if(confirm("Usunąć ten wynik?")) { await deleteDoc(doc(db, "czasy", docId)); window.loadLeaderboard(trackName); } };
-        
-        window.saveTime = async (trackName) => { 
-            const safeId = trackName.replace(/\s+/g, ''); const car = document.getElementById(`carSelect-${safeId}`)?.value; const m = document.getElementById(`timeM-${safeId}`).value; const s = document.getElementById(`timeS-${safeId}`).value; const ms = document.getElementById(`timeMS-${safeId}`).value; 
-            if(!car) return alert("Wybierz auto z Garażu!"); if(!m && !s && !ms) return alert("Wpisz czas!"); 
-            const formattedTime = `${(m||'0').toString().padStart(2, '0')}:${(s||'0').toString().padStart(2, '0')}.${(ms||'0').toString().padStart(3, '0')}`; 
-            const currentBest = window.bestTimesForTracks[trackName] || "99:99.999"; 
-            await addDoc(collection(db, "czasy"), { driver: window.currentUserAlias, car: car, track: trackName, time: formattedTime }); 
-            document.getElementById(`timeM-${safeId}`).value = ''; document.getElementById(`timeS-${safeId}`).value = ''; document.getElementById(`timeMS-${safeId}`).value = ''; 
-            if (formattedTime < currentBest) { 
-                const randomIndex = Math.floor(Math.random() * window.victoryGifs.length); 
-                document.getElementById('victoryImgRender').src = window.victoryGifs[randomIndex]; 
-                setTimeout(() => { document.getElementById('victoryModal').classList.add('active'); }, 500); 
-            } 
-            window.loadLeaderboard(trackName); 
-        };
+        window.saveTime = async (trackName) => { const safeId = trackName.replace(/\s+/g, ''); const car = document.getElementById(`carSelect-${safeId}`)?.value; const m = document.getElementById(`timeM-${safeId}`).value; const s = document.getElementById(`timeS-${safeId}`).value; const ms = document.getElementById(`timeMS-${safeId}`).value; if(!car) return alert("Wybierz auto z Garażu!"); if(!m && !s && !ms) return alert("Wpisz czas!"); const formattedTime = `${(m||'0').toString().padStart(2, '0')}:${(s||'0').toString().padStart(2, '0')}.${(ms||'0').toString().padStart(3, '0')}`; const currentBest = window.bestTimesForTracks[trackName] || "99:99.999"; await addDoc(collection(db, "czasy"), { driver: window.currentUserAlias, car: car, track: trackName, time: formattedTime }); document.getElementById(`timeM-${safeId}`).value = ''; document.getElementById(`timeS-${safeId}`).value = ''; document.getElementById(`timeMS-${safeId}`).value = ''; if (formattedTime < currentBest) { const randomIndex = Math.floor(Math.random() * window.victoryGifs.length); document.getElementById('victoryImgRender').src = window.victoryGifs[randomIndex]; setTimeout(() => { document.getElementById('victoryModal').classList.add('active'); }, 500); } window.loadLeaderboard(trackName); };
 
-        // --- AUTH ---
         document.getElementById('loginBtn').addEventListener('click', async () => { const e = document.getElementById('email').value; const p = document.getElementById('password').value; if(!e || !p) return alert("Wpisz dane!"); try { const user = await signInWithEmailAndPassword(auth, e, p); if(!user.user.emailVerified) { alert("Potwierdź e-mail!"); signOut(auth); } } catch (err) { try { const user = await createUserWithEmailAndPassword(auth, e, p); await sendEmailVerification(user.user); alert("Konto założone! Sprawdź mail."); signOut(auth); } catch(err2) { alert(err2.message); } } });
         document.getElementById('forgotPwdBtn').addEventListener('click', async (e) => { e.preventDefault(); const em = document.getElementById('email').value; if(!em) return alert("Wpisz mail!"); try { await sendPasswordResetEmail(auth, em); alert("Wysłano link!"); } catch(x) { alert(x.message); } });
         document.getElementById('logoutBtn').addEventListener('click', () => { signOut(auth); });
 
-onAuthStateChanged(auth, async (user) => { 
+        onAuthStateChanged(auth, async (user) => { 
             if (user && user.emailVerified) { 
                 window.currentUserAlias = user.email.split('@')[0]; 
                 
-                // NAPRAWIONA LINIJKA (Zamiast dwóch szukających różnych rzeczy, jest jedna poprawna)
-                document.getElementById('avatarBtn').querySelector('.greeting span').innerText = window.currentUserAlias.toUpperCase(); 
+                // Pobranie customowego nicku przy logowaniu
+                const docSnap = await getDoc(doc(db, "uzytkownicy", window.currentUserAlias));
+                if(docSnap.exists() && docSnap.data().nick) { window.currentUserNick = docSnap.data().nick; } 
+                else { window.currentUserNick = window.currentUserAlias; }
                 
+                document.getElementById('greetingAlias').innerText = window.currentUserNick.toUpperCase(); 
+                
+                if(window.currentUserAlias.toLowerCase() === 'pancerny') { document.getElementById('adminMenuBtn').classList.remove('hidden'); }
+
                 updateAvatarUI(user); 
-                document.getElementById('authOverlay').classList.add('hidden'); 
-                document.getElementById('appUI').classList.remove('hidden'); 
-                map.invalidateSize(); 
-                await loadMyGarage(); 
-                if(window.ytPlayer && window.ytPlayer.playVideo && !window.isRadioPlaying) { 
-                    window.ytPlayer.playVideo(); 
-                    window.isRadioPlaying = true; 
-                } 
+                document.getElementById('authOverlay').classList.add('hidden'); document.getElementById('appUI').classList.remove('hidden'); map.invalidateSize(); await loadMyGarage(); 
+                
+                // POKAŻ PATCH NOTES TYLKO RAZ
+                const currentVersion = "v1.5";
+                if(localStorage.getItem("trackday_version") !== currentVersion) {
+                    document.getElementById("changelogModal").classList.add("active");
+                    localStorage.setItem("trackday_version", currentVersion);
+                }
+
+                if(window.ytPlayer && window.ytPlayer.playVideo && !window.isRadioPlaying) { window.ytPlayer.playVideo(); window.isRadioPlaying = true; } 
             } 
-            else { 
-                document.getElementById('authOverlay').classList.remove('hidden'); 
-                document.getElementById('appUI').classList.add('hidden'); 
-                if(window.ytPlayer && window.ytPlayer.pauseVideo) { 
-                    window.ytPlayer.pauseVideo(); 
-                    window.isRadioPlaying = false; 
-                } 
-            } 
+            else { document.getElementById('authOverlay').classList.remove('hidden'); document.getElementById('appUI').classList.add('hidden'); if(window.ytPlayer && window.ytPlayer.pauseVideo) { window.ytPlayer.pauseVideo(); window.isRadioPlaying = false; } } 
         });
     </script>
     <script>
