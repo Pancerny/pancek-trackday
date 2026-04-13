@@ -48,8 +48,8 @@
         }
         .btn-submit:active { transform: translateY(4px); box-shadow: inset 0px 2px 2px rgba(255,255,255,0.6), 0 1px 0 #3a8a0b, 0 3px 5px rgba(0,0,0,0.3); }
 
-        .btn-auth-submit { background: linear-gradient(180deg, #7a98f0 0%, #4664d4 100%); box-shadow: inset 0px 4px 5px rgba(255,255,255,0.5), 0 5px 0 #28409c, 0 8px 10px rgba(0,0,0,0.3); text-shadow: 1px 1px 0px #1d2e73, -1px -1px 0px #1d2e73, 1px -1px 0px #1d2e73, -1px 1px 0px #1d2e73; }
-        .btn-auth-submit:active { box-shadow: inset 0px 2px 2px rgba(255,255,255,0.5), 0 1px 0 #28409c, 0 3px 5px rgba(0,0,0,0.3); }
+        .btn-auth-submit { background: linear-gradient(180deg, #7a98f0 0%, #4664d4 100%); box-shadow: inset 0px 4px 5px rgba(255,255,255,0.5), 0 5px 0 #28409c, 0 8px 10px rgba(0,0,0,0.3); text-shadow: 1px 1px 0px #1d2e73, -1px -1px 0px #1d2e73, 1px -1px 0px #1d2e73, -1px 1px 0px #1d2e73; border: 3px solid #ffffff; border-radius: 30px; color: #ffffff; font-size: 18px; font-weight: 900; text-transform: uppercase; padding: 16px 20px; cursor: pointer; transition: all 0.1s ease; width: 100%; margin-top: 15px;}
+        .btn-auth-submit:active { transform: translateY(4px); box-shadow: inset 0px 2px 2px rgba(255,255,255,0.5), 0 1px 0 #28409c, 0 3px 5px rgba(0,0,0,0.3); }
         
         .btn-cancel { background: linear-gradient(180deg, #d3d9dc 0%, #a6b1b5 100%); box-shadow: inset 0px 4px 5px rgba(255,255,255,0.6), 0 5px 0 #6e767a, 0 8px 10px rgba(0,0,0,0.3); text-shadow: 1px 1px 0px #444, -1px -1px 0px #444, 1px -1px 0px #444, -1px 1px 0px #444; }
         .btn-cancel:active { box-shadow: inset 0px 2px 2px rgba(255,255,255,0.6), 0 1px 0 #6e767a, 0 3px 5px rgba(0,0,0,0.3); }
@@ -91,6 +91,7 @@
         /* ==========================================
            MODALE (CUKIERKOWE)
            ========================================== */
+        /* Zmieniony z-index, overlay teraz jest wspólny dla zamykania tła */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.7); z-index: 4000; display: none; justify-content: center; align-items: center; cursor: pointer;}
         .modal-overlay.active { display: flex; }
         
@@ -159,6 +160,16 @@
         .admin-badge { background-color: #e74c3c; color: white; font-size: 9px; padding: 2px 5px; border-radius: 5px; margin-left: 5px; font-weight: 900; text-transform: uppercase; box-shadow: 0 2px 0 #c0392b;}
 
         /* ==========================================
+           TROLL POPUPS ZMIENIONE NA ZWYKŁY MODAL STYLE
+           ========================================== */
+        .troll-popup { background: #2a2c33; border: 6px solid #e74c3c; text-align: center; padding: 30px; border-radius: 30px; box-shadow: 0 0 0 6px #fff, 0 0 50px rgba(231, 76, 60, 0.8); z-index: 6000; max-width: 420px; display: flex; flex-direction: column; align-items: center; cursor: default;}
+        .troll-popup h2 { margin-top: 0; color: #fff; text-transform: uppercase; font-weight: 900; text-shadow: 2px 2px 0 #c0392b, -1px -1px 0 #c0392b, 1px -1px 0 #c0392b, -1px 1px 0 #c0392b; font-size: 32px;}
+        .troll-img { max-width: 100%; border-radius: 15px; margin-bottom: 15px; border: 4px solid #fff; box-shadow: 0 10px 20px rgba(0,0,0,0.5);}
+        
+        .victory-popup { border-color: gold; box-shadow: 0 0 0 6px #fff, 0 0 50px rgba(255, 215, 0, 0.8); }
+        .victory-popup h2 { color: #fff; text-shadow: 2px 2px 0 #b8860b, -1px -1px 0 #b8860b, 1px -1px 0 #b8860b, -1px 1px 0 #b8860b; }
+
+        /* ==========================================
            RESPONSYWNOŚĆ (TELEFONY)
            ========================================== */
         @media screen and (max-width: 600px) {
@@ -166,15 +177,14 @@
             .floating-header h1 { font-size: 20px; letter-spacing: 1px; }
             .floating-header img { height: 35px; }
             .user-widget { top: 10px; padding: 2px; right: 10px; border-radius: 50%; }
-            .greeting { display: none; } /* Ukrywamy tekst powitania na telefonie */
+            .greeting { display: none; }
             .user-avatar { width: 35px; height: 35px; font-size: 16px; margin: 0;}
             .auth-card { width: 95%; flex-direction: column; height: auto; }
-            .auth-card-image { display: none; } /* Ukrywamy obrazek na tel przy logowaniu */
+            .auth-card-image { display: none; }
             .modal-content { width: 95%; padding: 15px; }
             .leaflet-popup-content { width: 300px !important; }
         }
     </style>
-    <script src="https://www.youtube.com/iframe_api"></script>
 </head>
 <body>
 
@@ -223,24 +233,24 @@
 
     <div class="modal-overlay" id="changelogModal" style="z-index: 7000;">
         <div class="modal-content" style="max-width: 450px;">
-            <span class="close-modal" onclick="closeModals()">×</span>
+            <span class="close-modal" onclick="closeModal('changelogModal')">×</span>
             <h2>📢 Patch Notes</h2>
             <div class="garage-form-box" style="text-align: left; font-size: 14px; font-weight: bold; color: #555;">
                 <p style="margin-top:0; color: #5ac313;">Witajcie na torze! Nowy update (v1.5) właśnie wjechał na serwery:</p>
                 <ul style="padding-left: 20px; line-height: 1.6;">
-                    <li>🏆 <b>System Osiągnięć:</b> Administrator rozdaje unikalne odznaki do Waszych profili!</li>
-                    <li>✨ <b>Cukierkowe UI:</b> Nowe, zaokrąglone okna i przyciski w stylu Gacha.</li>
-                    <li>📝 <b>Customowe Nicki:</b> Możesz zmienić swoją nazwę wyświetlaną w Ustawieniach Profilu!</li>
-                    <li>📱 <b>Wsparcie Mobile:</b> Interfejs nie psuje się już na mniejszych ekranach telefonów.</li>
+                    <li>🏆 <b>System Osiągnięć:</b> Poprawka osiągnieć i dodanie easter eggów</li>
+                    <li>✨ <b>Cukierkowe UI:</b> Poprawa UI i przycisków.</li>
+                    <li>📝 <b>Customowe Nicki:</b> Możliwość nicków będzie poprawiana</li>
+                    <li>📱 <b>Wsparcie Mobile:</b> Nowe elementy.</li>
                 </ul>
             </div>
-            <button onclick="closeModals()" class="btn-submit">Wchodzę do gry!</button>
+            <button onclick="closeModal('changelogModal')" class="btn-submit">Wbijamy na mapę</button>
         </div>
     </div>
 
     <div class="modal-overlay" id="adminModal" style="z-index: 6000;">
         <div class="modal-content">
-            <span class="close-modal" onclick="closeModals()">×</span>
+            <span class="close-modal" onclick="closeModal('adminModal')">×</span>
             <h2 style="background: linear-gradient(180deg, #ff7675, #c0392b); box-shadow: 0 4px 0 #8e44ad;">👑 Uma Control Track Panel</h2>
             <div class="garage-form-box">
                 <p style="color: #333; font-size: 14px; font-weight: bold; margin-bottom: 5px;">Wybierz Gracza:</p>
@@ -251,14 +261,14 @@
                 <p style="color: #333; font-size: 14px; font-weight: bold; margin-bottom: 5px; margin-top: 15px;">Wybierz Osiągnięcie do nadania:</p>
                 <select id="adminAchievementSelect">
                     </select>
-                <button class="btn-submit btn-admin" onclick="grantAchievement()">Nadaj Odznakę!</button>
+                <button class="btn-submit" style="background: linear-gradient(180deg, #ff7675 0%, #c0392b 100%); box-shadow: 0 5px 0 #8e44ad, 0 8px 15px rgba(0,0,0,0.4); text-shadow: 1px 1px 0px #8e44ad;" onclick="grantAchievement()">Nadaj Odznakę!</button>
             </div>
         </div>
     </div>
 
     <div class="modal-overlay" id="trophiesModal">
         <div class="modal-content">
-            <span class="close-modal" onclick="closeModals()">×</span>
+            <span class="close-modal" onclick="closeModal('trophiesModal')">×</span>
             <h2>🏆 Wszystkie Osiągnięcia</h2>
             <div class="garage-form-box" id="allTrophiesRender">
                 </div>
@@ -267,7 +277,7 @@
 
     <div class="modal-overlay" id="garageModal">
         <div class="modal-content">
-            <span class="close-modal" onclick="closeModals()">×</span>
+            <span class="close-modal" onclick="closeModal('garageModal')">×</span>
             <h2>🚗 Twój Garaż</h2>
             <div class="garage-form-box">
                 <h3 id="garageFormTitle">Dodaj nową furę:</h3>
@@ -311,12 +321,12 @@
         </div>
     </div>
 
-    <div class="modal-overlay" id="allCarsModal"><div class="modal-content"><span class="close-modal" onclick="closeModals()">×</span><h2>📋 Wszystkie Fury</h2><ul id="allCarsListRender" style="list-style: none; padding: 0; margin: 0;"><li>Ładowanie...</li></ul></div></div>
-    <div class="modal-overlay" id="usersListModal"><div class="modal-content"><span class="close-modal" onclick="closeModals()">×</span><h2>👥 Użytkownicy</h2><ul id="usersListRender" style="list-style: none; padding: 0; margin: 0;"><li>Ładowanie...</li></ul></div></div>
+    <div class="modal-overlay" id="allCarsModal"><div class="modal-content"><span class="close-modal" onclick="closeModal('allCarsModal')">×</span><h2>📋 Wszystkie Fury</h2><ul id="allCarsListRender" style="list-style: none; padding: 0; margin: 0;"><li>Ładowanie...</li></ul></div></div>
+    <div class="modal-overlay" id="usersListModal"><div class="modal-content"><span class="close-modal" onclick="closeModal('usersListModal')">×</span><h2>👥 Użytkownicy</h2><ul id="usersListRender" style="list-style: none; padding: 0; margin: 0;"><li>Ładowanie...</li></ul></div></div>
     
     <div class="modal-overlay" id="settingsModal">
         <div class="modal-content">
-            <span class="close-modal" onclick="closeModals()">×</span>
+            <span class="close-modal" onclick="closeModal('settingsModal')">×</span>
             <h2>⚙️ Ustawienia Profilu</h2>
             <div class="garage-form-box">
                 <p style="color: #333; font-size: 13px; font-weight: bold; margin-bottom: 2px;">Wyświetlana nazwa (Nick):</p><input type="text" id="settingsNick" placeholder="np. Pancerny King">
@@ -331,7 +341,7 @@
     
     <div class="modal-overlay" id="userProfileModal">
         <div class="modal-content" style="text-align: center;">
-            <span class="close-modal" onclick="closeModals()">×</span>
+            <span class="close-modal" onclick="closeModal('userProfileModal')">×</span>
             <div id="pubProfileAvatar" class="profile-avatar-large">?</div>
             <h1 id="pubProfileAlias" style="color: #f38815; margin: 0 0 5px 0; text-transform: uppercase; font-weight: 900; text-shadow: 1px 1px 0 #fff;">KIEROWCA</h1>
             <div id="pubProfileAdminBadge" style="margin-bottom: 15px; display:none;"><span class="admin-badge" style="font-size: 12px; padding: 4px 10px; border-radius: 10px;">ADMINISTRATOR</span></div>
@@ -361,7 +371,7 @@
         import { getFirestore, collection, addDoc, getDocs, query, where, orderBy, deleteDoc, doc, updateDoc, setDoc, getDoc, arrayUnion } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
 
         // ==========================================
-        // TUTAJ WKLEJ SWÓJ KOD firebaseConfig
+        // KLUCZE FIREBASE
         // ==========================================
         const firebaseConfig = {
             apiKey: "AIzaSyBzQ0BiOaLPagjDrGKRorGliVNzsWgVEZI",
@@ -371,7 +381,6 @@
             messagingSenderId: "259254559037",
             appId: "1:259254559037:web:be2b584673d77ec6312554"
         };
-        // ==========================================
 
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
@@ -379,12 +388,11 @@
 
         window.myCars = []; 
         window.currentUserAlias = "";
-        window.currentUserNick = ""; // Nowa zmienna na własny nick
+        window.currentUserNick = ""; 
         window.bestTimesForTracks = {}; 
 
         window.victoryGifs = ["daiwa.gif", "daitaku.gif", "goldship.gif", "manhattan.gif", "mayano.gif", "seiun.gif"];
 
-        // BAZA OSIĄGNIĘĆ (TUTAJ EDYTUJESZ IDIOTOODPORNE TROFEA)
         window.bazaOsiagniec = {
             "first_race": { nazwa: "Pierwszy Wynik", opis: "Wziął udział w swoim pierwszym Trackdayu.", img: "https://preview.redd.it/just-shingo-v0-aogn1fn3lq801.png?width=640&crop=smart&auto=webp&s=108f788f3caf7c1ce8060665763e3385e0b765bc" },
             "betatester": { nazwa: "Beta Tester", opis: "Odznaka dla pierwszych zjadaczy kodu. Dzięki za wsparcie!", img: "Beta.png" },
@@ -399,15 +407,16 @@
         L.control.layers({ "Tryb Nocny": darkMap, "Satelita": satelliteMap }, null, {position: 'bottomleft'}).addTo(map);
 
         const tory = [
-            { nazwa: "Autodrom Bemowo", lat: 52.265, lng: 20.912, opis: "Najbliżej i bezpiecznie", cena: "Nieznana", kontakt: "sekretariat@automobilklubpolski.pl", foto: "torbemowo.jpeg" },
-            { nazwa: "Tor Modlin", lat: 52.444, lng: 20.648, opis: "Wąsko, daily carem z uwagą", cena: "Nieznana", kontakt: "+48 22 100 27 00", foto: "tormodlin.webp" },
-            { nazwa: "Autodrom Słomczyn", lat: 51.905, lng: 20.842, opis: "Szeroko", cena: "400 zł", kontakt: "+48 605 453 971", foto: "torslomczyn.webp" },
-            { nazwa: "Autodrom Jastrząb", lat: 51.246, lng: 20.942, opis: "Dalej", cena: "Nieznana", kontakt: "+48 694 427 709", foto: "autodromjastrzab.webp" },
-            { nazwa: "Tor Kielce", lat: 50.963, lng: 20.457, opis: "Historyczny", cena: "", kontakt: "", foto: "https://via.placeholder.com/360x120/222/ff4500?text=Mapa+Kielce" },
-            { nazwa: "Tor Ułęż Moto Park", lat: 51.624, lng: 22.094, opis: "Lotnisko", cena: "500 zł/h", kontakt: "", foto: "https://via.placeholder.com/360x120/222/ff4500?text=Mapa+Ulez" },
-            { nazwa: "TOR ŁÓDŹ", lat: 51.877, lng: 19.533, opis: "Najmniejszy", cena: "", kontakt: "", foto: "https://via.placeholder.com/360x120/222/ff4500?text=Mapa+Lodz" }
+            { nazwa: "Autodrom Bemowo", lat: 52.265, lng: 20.912, foto: "torbemowo.jpeg" },
+            { nazwa: "Tor Modlin", lat: 52.444, lng: 20.648, foto: "tormodlin.webp" },
+            { nazwa: "Autodrom Słomczyn", lat: 51.905, lng: 20.842, foto: "torslomczyn.webp" },
+            { nazwa: "Autodrom Jastrząb", lat: 51.246, lng: 20.942, foto: "autodromjastrzab.webp" },
+            { nazwa: "Tor Kielce", lat: 50.963, lng: 20.457, foto: "https://via.placeholder.com/360x120/222/ff4500?text=Mapa+Kielce" },
+            { nazwa: "Tor Ułęż Moto Park", lat: 51.624, lng: 22.094, foto: "https://via.placeholder.com/360x120/222/ff4500?text=Mapa+Ulez" },
+            { nazwa: "TOR ŁÓDŹ", lat: 51.877, lng: 19.533, foto: "https://via.placeholder.com/360x120/222/ff4500?text=Mapa+Lodz" }
         ];
 
+        // ZARZĄDZANIE MODALAMI (Z OBSŁUGĄ TŁA)
         const avatarBtn = document.getElementById('avatarBtn');
         const userMenu = document.getElementById('userMenu');
         avatarBtn.addEventListener('click', () => userMenu.classList.toggle('active'));
@@ -445,22 +454,23 @@
             
             const achSelect = document.getElementById('adminAchievementSelect');
             achSelect.innerHTML = "<option value='' disabled selected>Wybierz odznakę...</option>";
-            for (const [key, t] of Object.entries(window.bazaOsiagniec)) {
-                achSelect.innerHTML += `<option value="${key}">${t.nazwa}</option>`;
-            }
+            for (const [key, t] of Object.entries(window.bazaOsiagniec)) { achSelect.innerHTML += `<option value="${key}">${t.nazwa}</option>`; }
         };
         
-        window.closeModals = () => { 
-            const modale = ['garageModal', 'umaCardModal', 'settingsModal', 'userProfileModal', 'allCarsModal', 'usersListModal', 'changelogModal', 'adminModal', 'trophiesModal'];
-            modale.forEach(m => document.getElementById(m).classList.remove('active'));
-            window.cancelEdit(); 
+        // ZAMYKANIE MODALI (Klik w "X" lub w konkretne tło)
+        window.closeModal = (modalId) => {
+            document.getElementById(modalId).classList.remove('active');
         };
+
         const modalsArr = ['garageModal', 'umaCardModal', 'settingsModal', 'userProfileModal', 'allCarsModal', 'usersListModal', 'changelogModal', 'adminModal', 'trophiesModal'];
-        modalsArr.forEach(m => document.getElementById(m).addEventListener('click', (e) => { if(e.target.id === m) window.closeModals(); }));
+        modalsArr.forEach(m => {
+            document.getElementById(m).addEventListener('click', (e) => { 
+                if(e.target.id === m) window.closeModal(m); // Zamyka tylko modal, w którego tło kliknięto
+            });
+        });
 
         document.getElementById('newCarFuel').addEventListener('change', function() { if(this.value === 'Diesel') { document.getElementById('trollModal').classList.add('active'); } });
 
-        // USTAWIENIA - TERAZ Z NICKIEM
         window.saveSettings = async () => { 
             const nick = document.getElementById('settingsNick').value; const url = document.getElementById('settingsAvatar').value; const dob = document.getElementById('settingsDob').value; const city = document.getElementById('settingsCity').value; const desc = document.getElementById('settingsDesc').value; 
             try { 
@@ -468,13 +478,12 @@
                 await setDoc(doc(db, "uzytkownicy", window.currentUserAlias), { nick: nick, dataUrodzenia: dob, miejscowosc: city, opis: desc, avatar: url }, { merge: true }); 
                 window.currentUserNick = nick || window.currentUserAlias;
                 document.getElementById('greetingAlias').innerText = window.currentUserNick.toUpperCase();
-                alert("Profil zaktualizowany!"); updateAvatarUI(auth.currentUser); window.closeModals(); 
+                alert("Profil zaktualizowany!"); updateAvatarUI(auth.currentUser); window.closeModal('settingsModal'); 
             } catch(e) { alert("Błąd: " + e.message); } 
         };
         
         window.grantAchievement = async () => {
-            const targetId = document.getElementById('adminTargetUser').value;
-            const achKey = document.getElementById('adminAchievementSelect').value;
+            const targetId = document.getElementById('adminTargetUser').value; const achKey = document.getElementById('adminAchievementSelect').value;
             if(!targetId || !achKey) return alert("Wybierz gracza i odznakę!");
             try {
                 await setDoc(doc(db, "uzytkownicy", targetId), { osiagniecia: arrayUnion(achKey) }, { merge: true });
@@ -503,10 +512,7 @@
                 
                 const achBox = document.getElementById('pubProfileAchievements'); achBox.innerHTML = '';
                 if(data.osiagniecia && data.osiagniecia.length > 0) {
-                    data.osiagniecia.forEach(key => {
-                        const achInfo = window.bazaOsiagniec[key];
-                        if(achInfo) achBox.innerHTML += `<img src="${achInfo.img}" class="achievement-icon" title="${achInfo.nazwa}: ${achInfo.opis}">`;
-                    });
+                    data.osiagniecia.forEach(key => { const achInfo = window.bazaOsiagniec[key]; if(achInfo) achBox.innerHTML += `<img src="${achInfo.img}" class="achievement-icon" title="${achInfo.nazwa}: ${achInfo.opis}">`; });
                 } else { achBox.innerHTML = `<span style="color:#aaa; font-size:12px; font-weight:bold;">Brak odznak w klaserze.</span>`; }
             } else { 
                 document.getElementById('pubProfileAge').innerText = "Nie podano"; document.getElementById('pubProfileCity').innerText = "Nie podano"; document.getElementById('pubProfileDesc').innerText = "Konto założone, ale gracz nie zapisał profilu."; 
@@ -516,19 +522,35 @@
 
         window.openUsersList = async () => { userMenu.classList.remove('active'); document.getElementById('usersListModal').classList.add('active'); const list = document.getElementById('usersListRender'); list.innerHTML = "Ładowanie..."; const snapshot = await getDocs(collection(db, "uzytkownicy")); list.innerHTML = ""; if(snapshot.empty) { list.innerHTML = "Brak graczy."; return; } snapshot.forEach(doc => { const data = doc.data(); const alias = doc.id; const dispName = data.nick || alias; let bgImage = data.avatar ? `background-image: url('${data.avatar}')` : ''; let adminTag = alias.toLowerCase() === 'pancerny' ? `<span class="admin-badge">ADMIN</span>` : ''; list.innerHTML += `<li class="list-item" style="cursor:pointer;" onclick="window.showUserProfile('${alias}')"><div style="display:flex; align-items:center;"><div class="user-list-avatar" style="${bgImage}">${data.avatar ? '' : alias.charAt(0).toUpperCase()}</div><div><b style="color:#333; font-size:15px;">${dispName.toUpperCase()}</b> ${adminTag}<br><span style="font-size:11px; color:#888; font-weight:bold;">${data.miejscowosc || 'Nieznane Miasto'}</span></div></div></li>`; }); };
         
-        window.openAllCarsList = async () => { userMenu.classList.remove('active'); document.getElementById('allCarsModal').classList.add('active'); const list = document.getElementById('allCarsListRender'); list.innerHTML = "Ładowanie..."; const snapshot = await getDocs(collection(db, "fury")); list.innerHTML = ""; if(snapshot.empty) { list.innerHTML = "Brak aut w bazie."; return; } snapshot.forEach(doc => { const data = doc.data(); const safeName = data.name.replace(/'/g, "\\'"); const safePhoto = data.photo.replace(/'/g, "\\'"); const safeEngine = data.engine.replace(/'/g, "\\'"); const safeFuel = data.fuel || ""; const safeAccel = data.accel.replace(/'/g, "\\'"); const safeTires = data.tires.replace(/'/g, "\\'"); let actionBtns = `<button class="btn-view" onclick="window.showCarCard('${safeName}', '${data.driver}')">KARTA</button>`; if(data.driver === window.currentUserAlias) { actionBtns += `<button class="btn-edit" onclick="window.closeModals(); window.openGarage(); setTimeout(()=>window.triggerEditCar('${doc.id}', '${safeName}', '${safePhoto}', '${safeEngine}', '${safeFuel}', '${safeAccel}', '${safeTires}'), 500)">EDYCJA</button><button class="btn-del" onclick="window.deleteCar('${doc.id}'); document.getElementById('allCarsModal').classList.remove('active');">USUŃ</button>`; } list.innerHTML += `<li class="list-item"><div><b style="color:#5ac313; font-size:13px;">[${data.driver.toUpperCase()}]</b><br><b style="color:#333; font-size:15px;">${data.name}</b> <span style="font-size:11px; color:#888;">(${data.engine})</span></div><div class="list-item-btns">${actionBtns}</div></li>`; }); };
+        window.openAllCarsList = async () => { userMenu.classList.remove('active'); document.getElementById('allCarsModal').classList.add('active'); const list = document.getElementById('allCarsListRender'); list.innerHTML = "Ładowanie..."; const snapshot = await getDocs(collection(db, "fury")); list.innerHTML = ""; if(snapshot.empty) { list.innerHTML = "Brak aut w bazie."; return; } snapshot.forEach(doc => { const data = doc.data(); const safeName = data.name.replace(/'/g, "\\'"); const safePhoto = data.photo.replace(/'/g, "\\'"); const safeEngine = data.engine.replace(/'/g, "\\'"); const safeFuel = data.fuel || ""; const safeAccel = data.accel.replace(/'/g, "\\'"); const safeTires = data.tires.replace(/'/g, "\\'"); let actionBtns = `<button class="btn-view" onclick="window.showCarCard('${safeName}', '${data.driver}')">KARTA</button>`; if(data.driver === window.currentUserAlias) { actionBtns += `<button class="btn-edit" onclick="window.closeModal('allCarsModal'); window.openGarage(); setTimeout(()=>window.triggerEditCar('${doc.id}', '${safeName}', '${safePhoto}', '${safeEngine}', '${safeFuel}', '${safeAccel}', '${safeTires}'), 500)">EDYCJA</button><button class="btn-del" onclick="window.deleteCar('${doc.id}')">USUŃ</button>`; } list.innerHTML += `<li class="list-item"><div><b style="color:#5ac313; font-size:13px;">[${data.driver.toUpperCase()}]</b><br><b style="color:#333; font-size:15px;">${data.name}</b> <span style="font-size:11px; color:#888;">(${data.engine})</span></div><div class="list-item-btns">${actionBtns}</div></li>`; }); };
 
         window.saveNewCar = async () => { const editId = document.getElementById('editCarId').value; const name = document.getElementById('newCarName').value; const photo = document.getElementById('newCarPhoto').value || "https://via.placeholder.com/400x250/222/ff4500?text=Brak+Zdjecia"; const engine = document.getElementById('newCarEngine').value || "Nieznany"; const fuel = document.getElementById('newCarFuel').value || "?"; const accel = document.getElementById('newCarAccel').value || "? s"; const tires = document.getElementById('newCarTires').value || "Drogowe"; if(!name) return alert("Podaj chociaż nazwę fury!"); if(editId) { await updateDoc(doc(db, "fury", editId), { name: name, photo: photo, engine: engine, fuel: fuel, accel: accel, tires: tires }); window.cancelEdit(); } else { await addDoc(collection(db, "fury"), { driver: window.currentUserAlias, name: name, photo: photo, engine: engine, fuel: fuel, accel: accel, tires: tires }); window.cancelEdit(); } await loadMyGarage(); };
         window.triggerEditCar = (id, name, photo, engine, fuel, accel, tires) => { document.getElementById('editCarId').value = id; document.getElementById('newCarName').value = name; document.getElementById('newCarPhoto').value = photo; document.getElementById('newCarEngine').value = engine; document.getElementById('newCarFuel').value = fuel; document.getElementById('newCarAccel').value = accel; document.getElementById('newCarTires').value = tires; document.getElementById('garageFormTitle').innerText = "Edytuj furę:"; document.getElementById('saveCarBtn').innerText = "Zapisz Zmiany"; document.getElementById('saveCarBtn').style.background = "linear-gradient(180deg, #ffb72b 0%, #f38815 100%)"; document.getElementById('saveCarBtn').style.boxShadow = "inset 0px 4px 5px rgba(255,255,255,0.6), 0 5px 0 #c76505, 0 8px 10px rgba(0,0,0,0.3)"; document.getElementById('cancelEditBtn').classList.remove('hidden'); };
         window.cancelEdit = () => { document.getElementById('editCarId').value = ""; document.getElementById('newCarName').value = ''; document.getElementById('newCarPhoto').value = ''; document.getElementById('newCarEngine').value = ''; document.getElementById('newCarFuel').value = ''; document.getElementById('newCarAccel').value = ''; document.getElementById('newCarTires').value = ''; document.getElementById('garageFormTitle').innerText = "Dodaj nową furę:"; document.getElementById('saveCarBtn').innerText = "Dodaj do garażu!"; document.getElementById('saveCarBtn').style.background = "linear-gradient(180deg, #a3f740 0%, #5ac313 100%)"; document.getElementById('saveCarBtn').style.boxShadow = "inset 0px 4px 5px rgba(255,255,255,0.6), 0 5px 0 #3a8a0b, 0 8px 10px rgba(0,0,0,0.3)"; document.getElementById('cancelEditBtn').classList.add('hidden'); };
         window.deleteCar = async (docId) => { if(confirm("Na pewno chcesz zezłomować?")) { await deleteDoc(doc(db, "fury", docId)); await loadMyGarage(); } };
+        
         async function loadMyGarage() { const q = query(collection(db, "fury"), where("driver", "==", window.currentUserAlias)); const snapshot = await getDocs(q); const list = document.getElementById('myCarsList'); window.myCars = []; list.innerHTML = ""; if(snapshot.empty) { list.innerHTML = "Brak aut."; return; } snapshot.forEach(doc => { const data = doc.data(); window.myCars.push(data.name); const safeName = data.name.replace(/'/g, "\\'"); const safePhoto = data.photo.replace(/'/g, "\\'"); const safeEngine = data.engine.replace(/'/g, "\\'"); const safeFuel = data.fuel || ""; const safeAccel = data.accel.replace(/'/g, "\\'"); const safeTires = data.tires.replace(/'/g, "\\'"); list.innerHTML += `<li class="list-item"><div><b style="color:#333;">${data.name}</b></div><div class="list-item-btns"><button class="btn-view" onclick="window.showCarCard('${safeName}', '${window.currentUserAlias}')">KARTA</button><button class="btn-edit" onclick="window.triggerEditCar('${doc.id}', '${safeName}', '${safePhoto}', '${safeEngine}', '${safeFuel}', '${safeAccel}', '${safeTires}')">EDYCJA</button><button class="btn-del" onclick="window.deleteCar('${doc.id}')">USUŃ</button></div></li>`; }); }
 
-        window.showCarCard = async (carName, driverName) => { document.getElementById('umaCardModal').classList.add('active'); const cardContent = document.getElementById('umaCardContent'); cardContent.innerHTML = `<div style="padding: 40px; text-align: center; background: #f0f3f5; border-radius: 10px; color: #333; font-weight: bold;">Ładowanie...</div>`; const q = query(collection(db, "fury"), where("driver", "==", driverName), where("name", "==", carName)); const snapshot = await getDocs(q); if(snapshot.empty) { cardContent.innerHTML = `<div style="padding: 40px; text-align: center; background: #f0f3f5; border-radius: 10px; color: #333;">Brak danych.</div>`; return; } const carData = snapshot.docs[0].data(); const fuelDisplay = carData.fuel ? carData.fuel : "Brak danych"; cardContent.innerHTML = `<div style="position: relative; width: 100%; max-width: 340px; height: 500px; margin: auto; background: #000; border-radius: 20px; overflow: hidden; box-shadow: 0 0 30px rgba(79, 172, 254, 0.8), inset 0 0 0 3px #fff;"><span onclick="window.closeModals()" style="position: absolute; top: 15px; right: 20px; font-size: 32px; color: #fff; cursor: pointer; z-index: 10; text-shadow: 2px 2px 4px #000; font-weight: bold;">×</span><div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-image: url('${carData.photo}'); background-size: cover; background-position: center; z-index: 1;"></div><div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-image: url('https://pbs.twimg.com/media/GxszfaMawAE5j4G.png'); background-size: 100% 100%; z-index: 2; pointer-events: none;"></div><div style="position: absolute; bottom: 0; left: 0; width: 100%; height: 170px; background: linear-gradient(to top, rgba(0,0,0,1) 5%, rgba(0,0,0,0.8) 50%, transparent); z-index: 3; display: flex; flex-direction: column; justify-content: flex-end; padding: 12px; box-sizing: border-box;"><h2 style="font-size: 22px; color: #ffeb3b; margin: 0 0 2px 0; text-transform: uppercase; text-align: center; text-shadow: 2px 2px 4px #000;">${carData.name}</h2><div style="text-align: center; color: #fff; font-size: 12px; margin-bottom: 8px; text-shadow: 1px 1px 3px #000; font-weight: bold;">WŁAŚCICIEL: <b>${carData.driver.toUpperCase()}</b></div><div class="stat-row"><span class="stat-label">SILNIK:</span><span class="stat-value">${carData.engine}</span></div><div class="stat-row"><span class="stat-label">PALIWO:</span><span class="stat-value" style="color: #4facfe;">${fuelDisplay}</span></div><div class="stat-row"><span class="stat-label">0-100 km/h:</span><span class="stat-value">${carData.accel}</span></div><div class="stat-row"><span class="stat-label">OPONY:</span><span class="stat-value" style="color: #4cd137;">${carData.tires}</span></div></div></div>`; };
+        window.showCarCard = async (carName, driverName) => { document.getElementById('umaCardModal').classList.add('active'); const cardContent = document.getElementById('umaCardContent'); cardContent.innerHTML = `<div style="padding: 40px; text-align: center; background: #f0f3f5; border-radius: 10px; color: #333; font-weight: bold;">Ładowanie...</div>`; const q = query(collection(db, "fury"), where("driver", "==", driverName), where("name", "==", carName)); const snapshot = await getDocs(q); if(snapshot.empty) { cardContent.innerHTML = `<div style="padding: 40px; text-align: center; background: #f0f3f5; border-radius: 10px; color: #333;">Brak danych.</div>`; return; } const carData = snapshot.docs[0].data(); const fuelDisplay = carData.fuel ? carData.fuel : "Brak danych"; cardContent.innerHTML = `<div style="position: relative; width: 100%; max-width: 340px; height: 500px; margin: auto; background: #000; border-radius: 20px; overflow: hidden; box-shadow: 0 0 30px rgba(79, 172, 254, 0.8), inset 0 0 0 3px #fff;"><span onclick="window.closeModal('umaCardModal')" style="position: absolute; top: 15px; right: 20px; font-size: 32px; color: #fff; cursor: pointer; z-index: 10; text-shadow: 2px 2px 4px #000; font-weight: bold;">×</span><div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-image: url('${carData.photo}'); background-size: cover; background-position: center; z-index: 1;"></div><div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-image: url('https://pbs.twimg.com/media/GxszfaMawAE5j4G.png'); background-size: 100% 100%; z-index: 2; pointer-events: none;"></div><div style="position: absolute; bottom: 0; left: 0; width: 100%; height: 170px; background: linear-gradient(to top, rgba(0,0,0,1) 5%, rgba(0,0,0,0.8) 50%, transparent); z-index: 3; display: flex; flex-direction: column; justify-content: flex-end; padding: 12px; box-sizing: border-box;"><h2 style="font-size: 22px; color: #ffeb3b; margin: 0 0 2px 0; text-transform: uppercase; text-align: center; text-shadow: 2px 2px 4px #000;">${carData.name}</h2><div style="text-align: center; color: #fff; font-size: 12px; margin-bottom: 8px; text-shadow: 1px 1px 3px #000; font-weight: bold;">WŁAŚCICIEL: <b>${carData.driver.toUpperCase()}</b></div><div class="stat-row" style="border-bottom: 1px solid rgba(255,255,255,0.2); display:flex; justify-content:space-between; padding:4px 0;"><span style="color:#ccc; font-weight:bold; font-size:13px; text-shadow: 1px 1px 2px #000;">SILNIK:</span><span style="color:#fff; font-weight:bold; font-size:14px; text-shadow: 1px 1px 2px #000;">${carData.engine}</span></div><div class="stat-row" style="border-bottom: 1px solid rgba(255,255,255,0.2); display:flex; justify-content:space-between; padding:4px 0;"><span style="color:#ccc; font-weight:bold; font-size:13px; text-shadow: 1px 1px 2px #000;">PALIWO:</span><span style="color:#4facfe; font-weight:bold; font-size:14px; text-shadow: 1px 1px 2px #000;">${fuelDisplay}</span></div><div class="stat-row" style="border-bottom: 1px solid rgba(255,255,255,0.2); display:flex; justify-content:space-between; padding:4px 0;"><span style="color:#ccc; font-weight:bold; font-size:13px; text-shadow: 1px 1px 2px #000;">0-100 km/h:</span><span style="color:#fff; font-weight:bold; font-size:14px; text-shadow: 1px 1px 2px #000;">${carData.accel}</span></div><div class="stat-row" style="border-bottom: 1px solid rgba(255,255,255,0.2); display:flex; justify-content:space-between; padding:4px 0;"><span style="color:#ccc; font-weight:bold; font-size:13px; text-shadow: 1px 1px 2px #000;">OPONY:</span><span style="color:#4cd137; font-weight:bold; font-size:14px; text-shadow: 1px 1px 2px #000;">${carData.tires}</span></div></div></div>`; };
 
-        tory.forEach(tor => { const marker = L.marker([tor.lat, tor.lng]).addTo(map); const safeId = tor.nazwa.replace(/\s+/g, ''); marker.bindPopup(`<div id="popup-content-${safeId}">Ładowanie...</div>`, { minWidth: 360 }); marker.on('popupopen', () => { let carSelectHTML = `<select id="carSelect-${safeId}" style="width:100%; border: 3px solid #ccc; border-radius: 15px; padding: 10px; font-weight: bold;">`; if(window.myCars.length === 0) carSelectHTML += `<option value="" disabled selected>Brak aut!</option>`; else { window.myCars.forEach(car => { carSelectHTML += `<option value="${car}">${car}</option>`; }); } carSelectHTML += `</select>`; const timeInputHTML = `<div class="time-inputs-container"><input type="number" id="timeM-${safeId}" placeholder="Min" min="0" max="99" style="width: 30%; text-align: center;"> : <input type="number" id="timeS-${safeId}" placeholder="Sek" min="0" max="59" style="width: 30%; text-align: center;"> . <input type="number" id="timeMS-${safeId}" placeholder="MS" min="0" max="999" style="width: 35%; text-align: center;"></div>`; let trackImgHTML = tor.foto ? `<img src="${tor.foto}" class="track-img-header">` : ''; const fullHTML = `${trackImgHTML}<div class="popup-inner-pad"><h2>${tor.nazwa}</h2><table><thead><tr><th>Kierowca</th><th>Fura</th><th>Czas</th></tr></thead><tbody id="table-${safeId}"><tr><td colspan='3'>Ładowanie...</td></tr></tbody></table>${carSelectHTML}${timeInputHTML}<button onclick="window.saveTime('${tor.nazwa}')" class="btn-submit">Zapisz wynik</button></div>`; document.getElementById(`popup-content-${safeId}`).innerHTML = fullHTML; window.loadLeaderboard(tor.nazwa); }); });
+        tory.forEach(tor => { 
+            const marker = L.marker([tor.lat, tor.lng]).addTo(map); 
+            const safeId = tor.nazwa.replace(/\s+/g, ''); 
+            marker.bindPopup(`<div id="popup-content-${safeId}">Ładowanie...</div>`, { minWidth: 380 }); 
+            marker.on('popupopen', () => { 
+                let carSelectHTML = `<select id="carSelect-${safeId}" style="width:100%; border: 3px solid #ccc; border-radius: 15px; padding: 10px; font-weight: bold;">`; 
+                if(window.myCars.length === 0) carSelectHTML += `<option value="" disabled selected>Brak aut!</option>`; 
+                else { window.myCars.forEach(car => { carSelectHTML += `<option value="${car}">${car}</option>`; }); } 
+                carSelectHTML += `</select>`; 
+                const timeInputHTML = `<div class="time-inputs-container"><input type="number" id="timeM-${safeId}" placeholder="Min" min="0" max="99" style="width: 30%; text-align: center;"> : <input type="number" id="timeS-${safeId}" placeholder="Sek" min="0" max="59" style="width: 30%; text-align: center;"> . <input type="number" id="timeMS-${safeId}" placeholder="MS" min="0" max="999" style="width: 35%; text-align: center;"></div>`; 
+                let trackImgHTML = tor.foto ? `<img src="${tor.foto}" class="track-img-header">` : ''; 
+                const fullHTML = `${trackImgHTML}<div class="popup-inner-pad"><h2>${tor.nazwa}</h2><table><thead><tr><th>Kierowca</th><th>Fura</th><th>Czas</th></tr></thead><tbody id="table-${safeId}"><tr><td colspan='3'>Ładowanie...</td></tr></tbody></table><hr style="border-color:#444; margin:15px 0;">${carSelectHTML}${timeInputHTML}<button onclick="window.saveTime('${tor.nazwa}')" class="btn-submit">Zapisz wynik</button></div>`; 
+                document.getElementById(`popup-content-${safeId}`).innerHTML = fullHTML; 
+                window.loadLeaderboard(tor.nazwa); 
+            }); 
+        });
 
-        window.loadLeaderboard = async (trackName) => { const safeId = trackName.replace(/\s+/g, ''); const tbody = document.getElementById(`table-${safeId}`); if(!tbody) return; const q = query(collection(db, "czasy"), where("track", "==", trackName), orderBy("time", "asc")); const snapshot = await getDocs(q); tbody.innerHTML = ""; if (snapshot.empty) { tbody.innerHTML = "<tr><td colspan='3'>Brak czasów. Bądź pierwszy!</td></tr>"; window.bestTimesForTracks[trackName] = "99:99.999"; return; } let currentRank = 1; let firstPlaceTime = ""; snapshot.forEach((doc) => { const data = doc.data(); const safeCar = data.car.replace(/'/g, "\\'"); if(currentRank === 1) { firstPlaceTime = data.time; window.bestTimesForTracks[trackName] = firstPlaceTime; } let rankDisplay = ""; let rankClass = "rank-other"; if(currentRank === 1) { rankDisplay = `<img src="0oyvkaqq4is61.jpg" style="height: 22px; vertical-align: middle; margin-right: 3px; border-radius: 5px; border: 2px solid gold;">`; rankClass = "rank-1"; } else if(currentRank === 2) { rankDisplay = "🥈"; rankClass = "rank-2"; } else if(currentRank === 3) { rankDisplay = "🥉"; rankClass = "rank-3"; } else { rankDisplay = currentRank + "."; } let adminTag = data.driver.toLowerCase() === 'pancerny' ? `<span class="admin-badge">ADMIN</span>` : ''; let actionBtns = ""; if(data.driver === window.currentUserAlias) { actionBtns = `<br><span onclick="window.editLapTime('${doc.id}', '${data.time}', '${trackName}')" style="cursor:pointer; font-size:16px; margin-right:5px; text-shadow:none;" title="Edytuj">✏️</span> <span onclick="window.deleteLapTime('${doc.id}', '${trackName}')" style="cursor:pointer; font-size:16px; text-shadow:none;" title="Usuń">❌</span>`; } tbody.innerHTML += `<tr><td style="text-align: left; padding-left: 10px;"><span class="${rankClass}" style="margin-right: 5px;">${rankDisplay}</span><span class="user-link" onclick="window.showUserProfile('${data.driver}')">${data.driver.toUpperCase()}</span><br><div style="text-align: center; margin-top:2px;">${adminTag}</div></td><td><span class="car-link" onclick="window.showCarCard('${safeCar}', '${data.driver}')">${data.car}</span></td><td><b style="color:#5ac313; font-size: 15px;">${data.time}</b>${actionBtns}</td></tr>`; currentRank++; }); };
+        window.loadLeaderboard = async (trackName) => { const safeId = trackName.replace(/\s+/g, ''); const tbody = document.getElementById(`table-${safeId}`); if(!tbody) return; const q = query(collection(db, "czasy"), where("track", "==", trackName), orderBy("time", "asc")); const snapshot = await getDocs(q); tbody.innerHTML = ""; if (snapshot.empty) { tbody.innerHTML = "<tr><td colspan='3'>Brak czasów. Bądź pierwszy!</td></tr>"; window.bestTimesForTracks[trackName] = "99:99.999"; return; } let currentRank = 1; let firstPlaceTime = ""; snapshot.forEach((doc) => { const data = doc.data(); const safeCar = data.car.replace(/'/g, "\\'"); if(currentRank === 1) { firstPlaceTime = data.time; window.bestTimesForTracks[trackName] = firstPlaceTime; } let rankDisplay = ""; let rankClass = "rank-other"; if(currentRank === 1) { rankDisplay = `<img src="0oyvkaqq4is61.jpg" style="height: 22px; vertical-align: middle; margin-right: 3px; border-radius: 5px; border: 2px solid gold;">`; rankClass = "rank-1"; } else if(currentRank === 2) { rankDisplay = "🥈"; rankClass = "rank-2"; } else if(currentRank === 3) { rankDisplay = "🥉"; rankClass = "rank-3"; } else { rankDisplay = currentRank + "."; } let adminTag = data.driver.toLowerCase() === 'pancerny' ? `<span class="admin-badge">ADMIN</span>` : ''; let actionBtns = ""; if(data.driver === window.currentUserAlias) { actionBtns = `<br><span onclick="window.editLapTime('${doc.id}', '${data.time}', '${trackName}')" style="cursor:pointer; font-size:11px; margin-right:5px; background: #f39c12; color:#fff; padding:2px 6px; border-radius:10px;">EDYTUJ</span> <span onclick="window.deleteLapTime('${doc.id}', '${trackName}')" style="cursor:pointer; font-size:11px; background:#e74c3c; color:#fff; padding:2px 6px; border-radius:10px;">USUŃ</span>`; } tbody.innerHTML += `<tr><td style="text-align: left; padding-left: 10px;"><span class="${rankClass}" style="margin-right: 5px;">${rankDisplay}</span><span class="user-link" onclick="window.showUserProfile('${data.driver}')">${data.driver.toUpperCase()}</span><br><div style="text-align: center; margin-top:2px;">${adminTag}</div></td><td><span class="car-link" onclick="window.showCarCard('${safeCar}', '${data.driver}')">${data.car}</span></td><td><b style="color:#128c3a; font-size: 16px;">${data.time}</b>${actionBtns}</td></tr>`; currentRank++; }); };
         
         window.editLapTime = async (docId, oldTime, trackName) => { let valid = false; let newTime = oldTime; while(!valid) { newTime = prompt("Podaj nowy czas w formacie MM:SS.MS (np. 01:45.336):", newTime); if(newTime === null) return; const regex = /^\d{1,2}:\d{2}[\.\:]\d{1,3}$/; if(regex.test(newTime)) { valid = true; newTime = newTime.replace(/:(\d{1,3})$/, '.$1'); } else { alert("Zły format! Wpisz czas okrążenia np. 01:45.336"); } } if(newTime && newTime !== oldTime) { await updateDoc(doc(db, "czasy", docId), { time: newTime }); window.loadLeaderboard(trackName); } };
         window.deleteLapTime = async (docId, trackName) => { if(confirm("Usunąć ten wynik?")) { await deleteDoc(doc(db, "czasy", docId)); window.loadLeaderboard(trackName); } };
