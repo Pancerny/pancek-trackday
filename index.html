@@ -946,9 +946,9 @@
                 let modBtn = "";
                 if(window.userRole === 'admin') {
                     if(uData.role === 'mod') {
-                        modBtn = `<button class="btn-del" style="font-size:9px; padding:3px 6px; width:auto;" onclick="window.toggleMod('${uid}', false)">ZABRAĆ MODA</button>`;
+                        modBtn = `<button class="btn-del" style="font-size:9px; padding:3px 6px; width:auto;" onclick="window.toggleMod('${uid}', false)">Odbierz uprawnienia</button>`;
                     } else if(uid !== 'pancerny') {
-                        modBtn = `<button class="btn-view" style="font-size:9px; padding:3px 6px; width:auto;" onclick="window.toggleMod('${uid}', true)">NADAĆ MODA</button>`;
+                        modBtn = `<button class="btn-view" style="font-size:9px; padding:3px 6px; width:auto;" onclick="window.toggleMod('${uid}', true)">Nadaj uprawnienia</button>`;
                     }
                 }
 
