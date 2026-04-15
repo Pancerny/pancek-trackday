@@ -48,26 +48,8 @@
         }
         .btn-submit:active { transform: translateY(4px); box-shadow: inset 0px 2px 2px rgba(255,255,255,0.6), 0 1px 0 #3a8a0b, 0 3px 5px rgba(0,0,0,0.3); }
 
-.btn-auth-submit { 
-    background: linear-gradient(180deg, #5865F2 0%, #4752C4 100%); 
-    border: 3px solid #ffffff; 
-    border-radius: 30px;
-    box-shadow: inset 0px 4px 5px rgba(255,255,255,0.4), 0 5px 0 #3c45a5, 0 8px 10px rgba(0,0,0,0.3); 
-    color: #ffffff; 
-    font-size: 16px; 
-    font-weight: 900; 
-    text-transform: uppercase;
-    text-shadow: 1px 1px 0px #2f3688, -1px -1px 0px #2f3688, 1px -1px 0px #2f3688, -1px 1px 0px #2f3688; 
-    padding: 12px 20px; 
-    cursor: pointer; 
-    transition: 0.1s ease; 
-    width: 100%; 
-    margin-top: 15px; 
-}
-.btn-auth-submit:active { 
-    transform: translateY(4px); 
-    box-shadow: inset 0px 2px 2px rgba(255,255,255,0.4), 0 1px 0 #3c45a5, 0 3px 5px rgba(0,0,0,0.3); 
-}
+        .btn-auth-submit { background: linear-gradient(180deg, #5865F2 0%, #4752C4 100%); border: 3px solid #ffffff; border-radius: 30px; box-shadow: inset 0px 4px 5px rgba(255,255,255,0.4), 0 5px 0 #3c45a5, 0 8px 10px rgba(0,0,0,0.3); color: #ffffff; font-size: 16px; font-weight: 900; text-transform: uppercase; text-shadow: 1px 1px 0px #2f3688, -1px -1px 0px #2f3688, 1px -1px 0px #2f3688, -1px 1px 0px #2f3688; padding: 12px 20px; cursor: pointer; transition: 0.1s ease; width: 100%; margin-top: 15px; }
+        .btn-auth-submit:active { transform: translateY(4px); box-shadow: inset 0px 2px 2px rgba(255,255,255,0.4), 0 1px 0 #3c45a5, 0 3px 5px rgba(0,0,0,0.3); }
         
         .btn-cancel { background: linear-gradient(180deg, #d3d9dc 0%, #a6b1b5 100%); box-shadow: inset 0px 4px 5px rgba(255,255,255,0.6), 0 5px 0 #6e767a, 0 8px 10px rgba(0,0,0,0.3); text-shadow: 1px 1px 0px #444, -1px -1px 0px #444, 1px -1px 0px #444, -1px 1px 0px #444; }
         .btn-cancel:active { box-shadow: inset 0px 2px 2px rgba(255,255,255,0.6), 0 1px 0 #6e767a, 0 3px 5px rgba(0,0,0,0.3); }
@@ -80,12 +62,12 @@
         .floating-header { 
             position: absolute; top: 20px; left: 50%; transform: translateX(-50%); z-index: 1000; 
             background: linear-gradient(180deg, #ffb72b 0%, #f38815 100%);
-            padding: 10px 30px; border-radius: 40px; border: 4px solid #fff; 
+            padding: 10px 40px; border-radius: 50px; border: 4px solid #fff; 
             box-shadow: 0 5px 0 #c76505, 0 8px 15px rgba(0,0,0,0.4); 
-            text-align: center; pointer-events: none; display: flex; align-items: center; gap: 15px; 
+            text-align: center; pointer-events: none; display: flex; align-items: center; gap: 20px; 
         }
-        .floating-header h1 { margin: 0; color: #fff; letter-spacing: 2px; font-size: 26px; font-weight: 900; text-shadow: 2px 2px 0 #c76505, -1px -1px 0 #c76505, 1px -1px 0 #c76505, -1px 1px 0 #c76505; }
-        .floating-header img { height: 50px; width: auto; object-fit: contain; filter: drop-shadow(0 2px 2px rgba(0,0,0,0.5)); }
+        .floating-header h1 { margin: 0; color: #fff; letter-spacing: 2px; font-size: 32px; font-weight: 900; text-shadow: 2px 2px 0 #c76505, -1px -1px 0 #c76505, 1px -1px 0 #c76505, -1px 1px 0 #c76505; }
+        .floating-header img { height: 90px; width: auto; object-fit: contain; filter: drop-shadow(0 2px 2px rgba(0,0,0,0.5)); margin: -15px 0; }
         
         .user-widget { 
             position: absolute; top: 20px; right: 20px; z-index: 1000; display: flex; align-items: center; gap: 10px; 
@@ -105,6 +87,41 @@
         .dropdown-item:last-child { border-bottom: none; }
         .admin-menu-item { background: #fff0f0; color: #e74c3c; border-bottom: 2px solid #e74c3c;}
         .hidden { display: none !important; }
+
+        /* ==========================================
+           HAMBURGER MENU I LISTA TORÓW
+           ========================================== */
+        #hamburgerBtn {
+            position: absolute; top: 20px; left: 20px; z-index: 1000;
+            background: linear-gradient(180deg, #fff 0%, #f0f0f0 100%);
+            width: 50px; height: 50px; border-radius: 15px; border: 3px solid #ccc;
+            box-shadow: 0 4px 0 #aaa, 0 6px 10px rgba(0,0,0,0.3);
+            display: flex; justify-content: center; align-items: center;
+            font-size: 28px; color: #333; cursor: pointer; transition: 0.1s; font-weight: bold;
+        }
+        #hamburgerBtn:active { transform: translateY(3px); box-shadow: 0 1px 0 #aaa, 0 3px 5px rgba(0,0,0,0.3); }
+        
+        #sideMenu {
+            position: absolute; top: 0; left: -320px; width: 300px; height: 100vh;
+            background: #f0f3f5; z-index: 2000; box-shadow: 10px 0 20px rgba(0,0,0,0.5);
+            transition: left 0.3s ease; border-right: 4px solid #fff; display: flex; flex-direction: column;
+        }
+        #sideMenu.active { left: 0; }
+        .side-menu-header {
+            background: linear-gradient(180deg, #2bc2ff, #168bd8); padding: 25px 20px;
+            color: #fff; font-weight: 900; font-size: 22px; text-transform: uppercase;
+            text-shadow: 2px 2px 0 #0d6299, -1px -1px 0 #0d6299, 1px -1px 0 #0d6299, -1px 1px 0 #0d6299;
+            display: flex; justify-content: space-between; align-items: center; border-bottom: 4px solid #fff;
+        }
+        .close-menu-btn { cursor: pointer; font-size: 28px; line-height: 20px; transition: 0.2s; }
+        .close-menu-btn:hover { color: #ffb72b; transform: scale(1.2); }
+        #sideMenuList { list-style: none; padding: 0; margin: 0; overflow-y: auto; flex: 1; }
+        .track-list-item {
+            padding: 15px 20px; border-bottom: 2px solid #ddd; font-weight: 900; color: #333;
+            cursor: pointer; transition: 0.2s; display: flex; align-items: center; gap: 10px; background: #fff;
+        }
+        .track-list-item:hover { background: #e3f2fd; padding-left: 30px; color: #168bd8; }
+        .track-list-icon { width: 30px; height: 30px; border-radius: 8px; background: #ddd; object-fit: cover; border: 2px solid #ccc;}
 
         /* ==========================================
            MODALE (CUKIERKOWE)
@@ -130,14 +147,9 @@
         .garage-form-box { background: #fff; padding: 20px; border-radius: 15px; margin-bottom: 20px; border: 2px solid #ddd; box-shadow: 0 4px 10px rgba(0,0,0,0.05);}
         .garage-form-box h3 { color: #5ac313; font-weight: 900; margin-top: 0; text-transform: uppercase;}
 
-        /* LISTY MINI-GUZIKI ORAZ OSIĄGNIĘCIA */
         .list-item { display: flex; justify-content: flex-start; align-items: center; padding: 12px; background: #fff; margin-bottom: 10px; border-radius: 15px; border: 2px solid #ddd; box-shadow: 0 3px 0 #ccc;}
-        .list-item b { color: #333; font-size: 15px; font-weight: 900;}
         .list-item-btns { display: flex; gap: 5px; flex-wrap: wrap; justify-content: flex-end; margin-left: auto;}
-        .list-item-btns button { 
-            border: 2px solid #fff; border-radius: 20px; padding: 6px 10px; cursor: pointer; color: white; font-weight: 900; font-size: 11px;
-            box-shadow: 0 3px 0 rgba(0,0,0,0.2); transition: 0.1s; text-transform: uppercase;
-        }
+        .list-item-btns button { border: 2px solid #fff; border-radius: 20px; padding: 6px 10px; cursor: pointer; color: white; font-weight: 900; font-size: 11px; box-shadow: 0 3px 0 rgba(0,0,0,0.2); transition: 0.1s; text-transform: uppercase; }
         .list-item-btns button:active { transform: translateY(2px); box-shadow: 0 1px 0 rgba(0,0,0,0.2); }
         .btn-view { background: linear-gradient(180deg, #2bc2ff, #168bd8); }
         .btn-edit { background: linear-gradient(180deg, #ffb72b, #f38815); }
@@ -154,13 +166,18 @@
            ========================================== */
         .leaflet-popup-content-wrapper { background: #f0f3f5; border: 4px solid #fff; border-radius: 20px; box-shadow: 0 0 0 3px #ccc, 0 10px 20px rgba(0,0,0,0.3); padding: 0; overflow: hidden; }
         .leaflet-popup-tip { background: #ccc; }
-        .leaflet-popup-content { margin: 0 !important; width: 360px !important; }
+        .leaflet-popup-content { margin: 0 !important; width: 380px !important; }
         
         .track-img-header { width: 100%; height: 140px; object-fit: contain; background-color: #222; border-bottom: 4px solid #fff; display: block; }
         
         .popup-inner-pad { padding: 15px; }
         .popup-inner-pad h2 { color: #fff; text-shadow: 2px 2px 0 #3a8a0b, -1px -1px 0 #3a8a0b, 1px -1px 0 #3a8a0b, -1px 1px 0 #3a8a0b; font-size: 22px; font-weight: 900; text-transform: uppercase; text-align: center; margin-top: 0; margin-bottom: 10px; background: linear-gradient(180deg, #a3f740 0%, #5ac313 100%); padding: 5px; border-radius: 20px; border: 2px solid #fff;}
 
+        /* SEKCJA DETALI TORU W DYMKU */
+        .track-details-box { background: #fff; border-radius: 10px; padding: 10px; margin-bottom: 10px; border: 2px solid #ddd; font-size: 13px; text-align: left;}
+        .track-details-box p { margin: 5px 0; color: #555; font-weight: bold;}
+        .track-details-box strong { color: #333; }
+        
         table { width: 100%; border-collapse: separate; border-spacing: 0; margin: 10px 0; background: #fff; border-radius: 10px; border: 2px solid #ddd; overflow: hidden; }
         th { background: linear-gradient(180deg, #fdfbfb, #ebedee); color: #888; font-weight: 900; padding: 8px; text-transform: uppercase; font-size: 11px; border-bottom: 2px solid #ddd;}
         td { border-bottom: 1px solid #eee; padding: 8px; color: #333; font-weight: 900; font-size: 13px; text-align: center; vertical-align: middle;}
@@ -169,22 +186,28 @@
         .time-inputs-container { background: #fff; border-radius: 15px; padding: 8px; border: 2px solid #ddd; display: flex; gap: 5px; align-items: center; justify-content: center; margin: 10px 0; }
         .time-inputs-container input { border: none !important; background: #f9f9f9 !important; box-shadow: inset 0 2px 4px rgba(0,0,0,0.05) !important; padding: 8px !important; margin: 0 !important; font-size: 16px !important;}
 
-        .rank-1 { color: #fff; text-shadow: 1px 1px 0 #b8860b, -1px -1px 0 #b8860b, 1px -1px 0 #b8860b, -1px 1px 0 #b8860b; font-weight: 900; font-size: 16px; background: gold; padding: 2px 6px; border-radius: 10px;}
-        .rank-2 { color: #fff; text-shadow: 1px 1px 0 #666; font-weight: 900; font-size: 14px; background: silver; padding: 2px 6px; border-radius: 10px;}
-        .rank-3 { color: #fff; text-shadow: 1px 1px 0 #663300; font-weight: 900; font-size: 14px; background: #cd7f32; padding: 2px 6px; border-radius: 10px;} 
-        .rank-other { color: #888; font-weight: 900; font-size: 14px;}
-
+        .rank-1 { color: #fff; text-shadow: 1px 1px 0 #b8860b, -1px -1px 0 #b8860b, 1px -1px 0 #b8860b, -1px 1px 0 #b8860b; font-weight: 900; background: gold; padding: 2px 6px; border-radius: 10px;}
         .admin-badge { background-color: #e74c3c; color: white; font-size: 9px; padding: 2px 5px; border-radius: 5px; margin-left: 5px; font-weight: 900; text-transform: uppercase; box-shadow: 0 2px 0 #c0392b;}
+        .mod-badge { background-color: #3498db; color: white; font-size: 9px; padding: 2px 5px; border-radius: 5px; margin-left: 5px; font-weight: 900; text-transform: uppercase; box-shadow: 0 2px 0 #2980b9;}
 
         /* ==========================================
-           TROLL POPUPS ZMIENIONE NA ZWYKŁY MODAL STYLE
+           EASTER EGG (UMAUMA) ANIMATIONS
            ========================================== */
-        .troll-popup { background: #2a2c33; border: 6px solid #e74c3c; text-align: center; padding: 30px; border-radius: 30px; box-shadow: 0 0 0 6px #fff, 0 0 50px rgba(231, 76, 60, 0.8); z-index: 6000; max-width: 420px; display: flex; flex-direction: column; align-items: center; cursor: default;}
-        .troll-popup h2 { margin-top: 0; color: #fff; text-transform: uppercase; font-weight: 900; text-shadow: 2px 2px 0 #c0392b, -1px -1px 0 #c0392b, 1px -1px 0 #c0392b, -1px 1px 0 #c0392b; font-size: 32px;}
-        .troll-img { max-width: 100%; border-radius: 15px; margin-bottom: 15px; border: 4px solid #fff; box-shadow: 0 10px 20px rgba(0,0,0,0.5);}
-        
-        .victory-popup { border-color: gold; box-shadow: 0 0 0 6px #fff, 0 0 50px rgba(255, 215, 0, 0.8); }
-        .victory-popup h2 { color: #fff; text-shadow: 2px 2px 0 #b8860b, -1px -1px 0 #b8860b, 1px -1px 0 #b8860b, -1px 1px 0 #b8860b; }
+        body.easter-egg-active .floating-header { animation: bounceInterface 0.5s infinite alternate; }
+        body.easter-egg-active .user-widget { animation: bounceInterface 0.6s infinite alternate-reverse; }
+        body.easter-egg-active #hamburgerBtn { animation: bounceInterface 0.55s infinite alternate; }
+        body.easter-egg-active .btn-submit, body.easter-egg-active .btn-view, body.easter-egg-active .btn-edit, body.easter-egg-active .btn-del {
+            background: linear-gradient(45deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #9400d3);
+            background-size: 400% 400%;
+            animation: rainbowBG 3s ease infinite;
+            color: #fff !important; text-shadow: 1px 1px 2px #000 !important; border-color: #fff !important;
+        }
+
+        @keyframes rainbowBG { 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} }
+        @keyframes bounceInterface { from { transform: translateY(0) translateX(-50%); } to { transform: translateY(-15px) translateX(-50%); } }
+        /* Dla elementów bez translateX w oryginale: */
+        body.easter-egg-active .user-widget, body.easter-egg-active #hamburgerBtn { animation-name: bounceSimple; }
+        @keyframes bounceSimple { from { transform: translateY(0); } to { transform: translateY(-15px); } }
 
         /* ==========================================
            RESPONSYWNOŚĆ (TELEFONY)
@@ -192,7 +215,8 @@
         @media screen and (max-width: 600px) {
             .floating-header { top: 10px; padding: 5px 15px; flex-direction: row; width: auto; white-space: nowrap;}
             .floating-header h1 { font-size: 20px; letter-spacing: 1px; }
-            .floating-header img { height: 35px; }
+            .floating-header img { height: 50px; margin: 0;}
+            #hamburgerBtn { top: 10px; left: 10px; width: 40px; height: 40px; font-size: 20px;}
             .user-widget { top: 10px; padding: 2px; right: 10px; border-radius: 50%; }
             .greeting { display: none; }
             .user-avatar { width: 35px; height: 35px; font-size: 16px; margin: 0;}
@@ -213,7 +237,7 @@
                 <p>Trackday - Zmierz się z nami na torze!</p>
                 <input type="email" id="email" placeholder="Adres e-mail">
                 <input type="password" id="password" placeholder="Hasło">
-                <button id="loginBtn" class="btn-auth-submit">rura! 🏎️</button>
+                <button id="loginBtn" class="btn-auth-submit">Odpal silnik 🏁</button>
                 <a href="#" id="forgotPwdBtn">Zapomniałeś hasła?</a>
             </div>
             <div class="auth-card-image"></div>
@@ -223,10 +247,19 @@
     <div id="map"></div>
 
     <div id="appUI" class="hidden">
+        <div id="hamburgerBtn">☰</div>
+        <div id="sideMenu">
+            <div class="side-menu-header">
+                Wybierz Tor
+                <span class="close-menu-btn" onclick="document.getElementById('sideMenu').classList.remove('active')">×</span>
+            </div>
+            <ul id="sideMenuList"></ul>
+        </div>
+
         <div class="floating-header">
-            <img src="https://media.tenor.com/-lfKiysaO2oAAAAj/uma-musume-chibi.gif">
-            <h1>TRACKDAY</h1>
-            <img src="https://media.tenor.com/-lfKiysaO2oAAAAj/uma-musume-chibi.gif" style="transform: scaleX(-1);">
+            <img src="oguri.gif" class="header-gif">
+            <h1 id="headerTitle">TRACKDAY</h1>
+            <img src="oguri.gif" class="header-gif" style="transform: scaleX(-1);">
         </div>
         
         <div class="user-widget" id="avatarBtn">
@@ -250,13 +283,23 @@
 
     <div id="youtubePlayer" style="position: absolute; left: -9999px; width: 1px; height: 1px;"></div>
 
-    <div class="modal-overlay" id="changelogModal" style="z-index: 7000;">
-        <div class="modal-content" style="max-width: 450px;">
-            <span class="close-modal" onclick="closeModal('changelogModal')">×</span>
-            <h2>📢 Wiadomość od Admina</h2>
-            <div class="garage-form-box" style="text-align: left; font-size: 14px; font-weight: bold; color: #555;" id="changelogText">
-                </div>
-            <button onclick="closeModal('changelogModal')" class="btn-submit">Zrozumiałem, wchodzę do gry!</button>
+    <div class="modal-overlay" id="trackInfoEditModal" style="z-index: 6500;">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal('trackInfoEditModal')">×</span>
+            <h2>📝 Edycja Toru</h2>
+            <div class="garage-form-box">
+                <h3 id="editTrackNameTitle" style="color:#168bd8;">Nazwa Toru</h3>
+                <input type="hidden" id="editTrackSafeId">
+                <p>Opis toru:</p>
+                <textarea id="editTrackDesc" rows="3" placeholder="Krótki opis..."></textarea>
+                <p>Nr Kontaktowy:</p>
+                <input type="text" id="editTrackPhone" placeholder="np. +48 123 456 789">
+                <p>Adres E-mail:</p>
+                <input type="text" id="editTrackEmail" placeholder="np. kontakt@tor.pl">
+                <p>Ceny / Wpisowe:</p>
+                <input type="text" id="editTrackPrice" placeholder="np. 450 PLN / Sesja">
+                <button class="btn-submit" onclick="saveTrackDetails()">Zapisz Informacje</button>
+            </div>
         </div>
     </div>
 
@@ -266,121 +309,46 @@
             <h2 style="background: linear-gradient(180deg, #ff7675, #c0392b); box-shadow: 0 4px 0 #8e44ad;">👑 Uma Control Track Panel</h2>
             
             <div class="garage-form-box">
+                <h3 style="color:#5ac313; margin-top:0;">📍 Dodaj Nowy Tor</h3>
+                <input type="text" id="newPinName" placeholder="Nazwa Toru (np. Tor Jastrząb)">
+                <div style="display:flex; gap:10px;">
+                    <input type="number" id="newPinLat" placeholder="Szerokość (Lat) np. 51.246">
+                    <input type="number" id="newPinLng" placeholder="Długość (Lng) np. 20.942">
+                </div>
+                <input type="text" id="newPinFoto" placeholder="Link do zdjęcia (opcjonalnie)">
+                <button class="btn-submit" onclick="addNewCustomTrack()">Dodaj Tor do Mapy</button>
+            </div>
+
+            <div class="garage-form-box">
                 <h3 style="color:#5ac313; margin-top:0;">📜 Zarządzaj Patch Notes</h3>
-                <textarea id="adminPatchText" rows="4" placeholder="Wpisz nowości... (możesz użyć HTML np. <b>pogrubienie</b>)"></textarea>
+                <textarea id="adminPatchText" rows="4" placeholder="Wpisz nowości..."></textarea>
                 <button class="btn-submit" onclick="publishPatchNotes()">Opublikuj nową wiadomość</button>
             </div>
 
             <div class="garage-form-box">
-                <h3 style="color:#5ac313; margin-top:0;">🏆 Osiągnięcia Graczy</h3>
-                <div id="adminUsersAchRender" style="max-height: 300px; overflow-y: auto;">
-                    </div>
+                <h3 style="color:#5ac313; margin-top:0;">👥 Zarządzanie Graczami (Role i Osiągnięcia)</h3>
+                <div id="adminUsersAchRender" style="max-height: 300px; overflow-y: auto;"></div>
             </div>
         </div>
     </div>
 
-    <div class="modal-overlay" id="trophiesModal">
-        <div class="modal-content">
-            <span class="close-modal" onclick="closeModal('trophiesModal')">×</span>
-            <h2>🏆 Wszystkie Osiągnięcia</h2>
-            <div class="garage-form-box" id="allTrophiesRender" style="text-align: left;">
-                </div>
-        </div>
-    </div>
-
-    <div class="modal-overlay" id="garageModal">
-        <div class="modal-content">
-            <span class="close-modal" onclick="closeModal('garageModal')">×</span>
-            <h2>🚗 Twój Garaż</h2>
-            <div class="garage-form-box">
-                <h3 id="garageFormTitle">Dodaj nową furę:</h3>
-                <input type="hidden" id="editCarId" value="">
-                <input type="text" id="newCarName" placeholder="Nazwa fury (np. Gruz E36)">
-                <input type="text" id="newCarPhoto" placeholder="Link do zdjęcia">
-                <input type="text" id="newCarEngine" placeholder="Silnik / Pojemność">
-                <select id="newCarFuel">
-                    <option value="" disabled selected>Rodzaj paliwa...</option>
-                    <option value="PB95">PB 95</option>
-                    <option value="PB98">PB 98</option>
-                    <option value="PB100+">PB 100+ (Racing)</option>
-                    <option value="Diesel">Diesel (TDI itp.)</option>
-                </select>
-                <input type="text" id="newCarAccel" placeholder="0-100 km/h">
-                <input type="text" id="newCarTires" placeholder="Opony (np. Semi-Slick)">
-                <button id="saveCarBtn" onclick="saveNewCar()" class="btn-submit">Dodaj do garażu!</button>
-                <button id="cancelEditBtn" onclick="cancelEdit()" class="btn-submit btn-cancel hidden">Anuluj Edycję</button>
-            </div>
-            <h3 style="margin-top: 0; color: #5ac313; font-weight: 900; text-transform: uppercase; font-size: 16px;">Twoje maszyny:</h3>
-            <ul id="myCarsList" style="list-style: none; padding: 0; margin: 0;"><li>Ładowanie...</li></ul>
-        </div>
-    </div>
-
-    <div class="modal-overlay" id="trollModal" style="z-index: 6000;">
-        <div class="troll-popup">
-            <h2>⚠️ BŁĄD KRYTYCZNY!</h2>
-            <img src="https://i.imgur.com/in4fXQO.gif" class="troll-img">
-            <p style="font-size: 18px; font-weight: 900; color: #fff; text-shadow: 1px 1px 2px #000;">Dieslem? To chyba już lepiej taczkę wpisać.</p>
-            <button onclick="document.getElementById('trollModal').classList.remove('active');" class="btn-submit" style="background: linear-gradient(180deg, #e74c3c 0%, #c0392b 100%); box-shadow: 0 5px 0 #900000, 0 8px 15px rgba(0,0,0,0.4);">Zrozumiałem, będę się wstydzić</button>
-        </div>
-    </div>
-
-    <div class="modal-overlay" id="victoryModal" style="z-index: 6000;">
-        <div class="troll-popup victory-popup">
-            <h2>🏆 NOWY REKORD TORU! 🏆</h2>
-            <img src="" id="victoryImgRender" class="troll-img" style="border-color: gold; border-width: 5px;">
-            <p style="font-size: 22px; font-weight: 900; color: #fff; text-shadow: 2px 2px 0px #000;">Gratki, pocisnąłeś!</p>
-            <p style="font-size: 16px; color: #ccc; font-weight: bold; margin-bottom: 20px;">Nie ma co zbierać z gruntu.</p>
-            <button onclick="document.getElementById('victoryModal').classList.remove('active');" class="btn-submit" style="background: linear-gradient(180deg, #f1c40f 0%, #f39c12 100%); box-shadow: 0 5px 0 #d68910, 0 8px 15px rgba(0,0,0,0.4); color: #fff; text-shadow: 1px 1px 0 #b8860b, -1px -1px 0 #b8860b, 1px -1px 0 #b8860b, -1px 1px 0 #b8860b;">Lecimy po więcej</button>
-        </div>
-    </div>
-
+    <div class="modal-overlay" id="changelogModal" style="z-index: 7000;"><div class="modal-content" style="max-width: 450px;"><span class="close-modal" onclick="closeModal('changelogModal')">×</span><h2>📢 Wiadomość od Admina</h2><div class="garage-form-box" style="text-align: left; font-size: 14px; font-weight: bold; color: #555;" id="changelogText"></div><button onclick="closeModal('changelogModal')" class="btn-submit">Zrozumiałem, wchodzę do gry!</button></div></div>
+    <div class="modal-overlay" id="trophiesModal"><div class="modal-content"><span class="close-modal" onclick="closeModal('trophiesModal')">×</span><h2>🏆 Wszystkie Osiągnięcia</h2><div class="garage-form-box" id="allTrophiesRender" style="text-align: left;"></div></div></div>
+    <div class="modal-overlay" id="garageModal"><div class="modal-content"><span class="close-modal" onclick="closeModal('garageModal')">×</span><h2>🚗 Twój Garaż</h2><div class="garage-form-box"><h3 id="garageFormTitle">Dodaj nową furę:</h3><input type="hidden" id="editCarId" value=""><input type="text" id="newCarName" placeholder="Nazwa fury"><input type="text" id="newCarPhoto" placeholder="Link do zdjęcia"><input type="text" id="newCarEngine" placeholder="Silnik"><select id="newCarFuel"><option value="" disabled selected>Rodzaj paliwa...</option><option value="PB95">PB 95</option><option value="PB98">PB 98</option><option value="PB100+">PB 100+</option><option value="Diesel">Diesel</option></select><input type="text" id="newCarAccel" placeholder="0-100 km/h"><input type="text" id="newCarTires" placeholder="Opony"><button id="saveCarBtn" onclick="saveNewCar()" class="btn-submit">Dodaj do garażu!</button><button id="cancelEditBtn" onclick="cancelEdit()" class="btn-submit btn-cancel hidden">Anuluj Edycję</button></div><h3 style="margin-top: 0; color: #5ac313;">Twoje maszyny:</h3><ul id="myCarsList" style="list-style: none; padding: 0; margin: 0;"><li>Ładowanie...</li></ul></div></div>
     <div class="modal-overlay" id="allCarsModal"><div class="modal-content"><span class="close-modal" onclick="closeModal('allCarsModal')">×</span><h2>📋 Wszystkie Fury</h2><ul id="allCarsListRender" style="list-style: none; padding: 0; margin: 0;"><li>Ładowanie...</li></ul></div></div>
     <div class="modal-overlay" id="usersListModal"><div class="modal-content"><span class="close-modal" onclick="closeModal('usersListModal')">×</span><h2>👥 Użytkownicy</h2><ul id="usersListRender" style="list-style: none; padding: 0; margin: 0;"><li>Ładowanie...</li></ul></div></div>
+    <div class="modal-overlay" id="settingsModal"><div class="modal-content"><span class="close-modal" onclick="closeModal('settingsModal')">×</span><h2>⚙️ Ustawienia Profilu</h2><div class="garage-form-box"><input type="text" id="settingsNick" placeholder="Nick"><input type="text" id="settingsAvatar" placeholder="Link do awatara"><input type="date" id="settingsDob"><input type="text" id="settingsCity" placeholder="Miejscowość"><textarea id="settingsDesc" rows="3" placeholder="O sobie..."></textarea><button onclick="saveSettings()" class="btn-submit">Zapisz Profil</button></div></div></div>
     
-    <div class="modal-overlay" id="settingsModal">
-        <div class="modal-content">
-            <span class="close-modal" onclick="closeModal('settingsModal')">×</span>
-            <h2>⚙️ Ustawienia Profilu</h2>
-            <div class="garage-form-box">
-                <p style="color: #333; font-size: 13px; font-weight: bold; margin-bottom: 2px;">Wyświetlana nazwa (Nick):</p><input type="text" id="settingsNick" placeholder="np. Pancerny King">
-                <p style="color: #333; font-size: 13px; font-weight: bold; margin-bottom: 2px; margin-top: 10px;">Link do awatara (URL):</p><input type="text" id="settingsAvatar" placeholder="https://link.jpg">
-                <p style="color: #333; font-size: 13px; font-weight: bold; margin-bottom: 2px; margin-top: 10px;">Data urodzenia:</p><input type="date" id="settingsDob">
-                <p style="color: #333; font-size: 13px; font-weight: bold; margin-bottom: 2px; margin-top: 10px;">Miejscowość:</p><input type="text" id="settingsCity" placeholder="Skąd nadajesz?">
-                <p style="color: #333; font-size: 13px; font-weight: bold; margin-bottom: 2px; margin-top: 10px;">O sobie:</p><textarea id="settingsDesc" rows="3" placeholder="Napisz coś o sobie..."></textarea>
-                <button onclick="saveSettings()" class="btn-submit">Zapisz Profil</button>
-            </div>
-        </div>
-    </div>
+    <div class="modal-overlay" id="userProfileModal"><div class="modal-content" style="text-align: center;"><span class="close-modal" onclick="closeModal('userProfileModal')">×</span><div id="pubProfileAvatar" class="profile-avatar-large">?</div><h1 id="pubProfileAlias" style="color: #f38815; margin: 0 0 5px 0; text-transform: uppercase; font-weight: 900; text-shadow: 1px 1px 0 #fff;">KIEROWCA</h1><div id="pubProfileAdminBadge" style="margin-bottom: 15px; display:none;"></div><div class="stat-row" style="border-bottom: 2px solid #ddd;"><span style="color:#888;">WIEK:</span> <span id="pubProfileAge" style="color:#333; font-weight:bold;">-</span></div><div class="stat-row" style="border-bottom: 2px solid #ddd;"><span style="color:#888;">MIEJSCOWOŚĆ:</span> <span id="pubProfileCity" style="color:#333; font-weight:bold;">-</span></div><div style="margin-top: 20px; text-align: left; background: #f9f9f9; padding: 15px; border-radius: 15px; border: 3px solid #ddd;"><b style="color: #5ac313;">O KIEROWCY:</b><br><span id="pubProfileDesc" style="font-size: 14px; color: #555; font-weight: bold;"></span><div class="achievements-container" id="pubProfileAchievements"></div></div></div></div>
     
-    <div class="modal-overlay" id="userProfileModal">
-        <div class="modal-content" style="text-align: center;">
-            <span class="close-modal" onclick="closeModal('userProfileModal')">×</span>
-            <div id="pubProfileAvatar" class="profile-avatar-large">?</div>
-            <h1 id="pubProfileAlias" style="color: #f38815; margin: 0 0 5px 0; text-transform: uppercase; font-weight: 900; text-shadow: 1px 1px 0 #fff;">KIEROWCA</h1>
-            <div id="pubProfileAdminBadge" style="margin-bottom: 15px; display:none;"><span class="admin-badge" style="font-size: 12px; padding: 4px 10px; border-radius: 10px;">ADMINISTRATOR</span></div>
-            <div class="stat-row" style="border-bottom: 2px solid #ddd;"><span class="stat-label" style="color:#888;">WIEK:</span><span class="stat-value" id="pubProfileAge" style="color:#333; text-shadow:none;">-</span></div>
-            <div class="stat-row" style="border-bottom: 2px solid #ddd;"><span class="stat-label" style="color:#888;">MIEJSCOWOŚĆ:</span><span class="stat-value" id="pubProfileCity" style="color:#333; text-shadow:none;">-</span></div>
-            
-            <div style="margin-top: 20px; text-align: left; background: #f9f9f9; padding: 15px; border-radius: 15px; border: 3px solid #ddd;">
-                <b style="color: #5ac313; font-size: 14px; font-weight: 900; display: block; margin-bottom: 5px; text-transform: uppercase;">O KIEROWCY:</b>
-                <span id="pubProfileDesc" style="font-size: 14px; color: #555; line-height: 1.5; font-weight: bold;">Brak opisu.</span>
-                
-                <div class="achievements-container" id="pubProfileAchievements">
-                    </div>
-            </div>
-        </div>
-    </div>
+    <div class="modal-overlay" id="victoryModal" style="z-index: 6000;"><div class="modal-content" style="background:#2a2c33; border-color:gold; text-align:center;"><h2 style="color:#fff; background:none; border:none; box-shadow:none; text-shadow: 2px 2px 0 #b8860b;">🏆 NOWY REKORD TORU! 🏆</h2><img src="" id="victoryImgRender" style="max-width:100%; border:4px solid gold; border-radius:15px;"><p style="color:#fff; font-weight:bold; font-size:18px;">Gratki, pocisnąłeś!</p><button onclick="closeModal('victoryModal');" class="btn-submit" style="background: linear-gradient(180deg, #f1c40f 0%, #f39c12 100%);">Lecimy po więcej</button></div></div>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
         import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, sendEmailVerification, sendPasswordResetEmail, updateProfile } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
-        // Dodany arrayRemove dla Admina
         import { getFirestore, collection, addDoc, getDocs, query, where, orderBy, deleteDoc, doc, updateDoc, setDoc, getDoc, arrayUnion, arrayRemove } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
 
-        // ==========================================
-        // KLUCZE FIREBASE
-        // ==========================================
         const firebaseConfig = {
             apiKey: "AIzaSyBzQ0BiOaLPagjDrGKRorGliVNzsWgVEZI",
             authDomain: "pancek-trackday.firebaseapp.com",
@@ -397,26 +365,27 @@
         window.myCars = []; 
         window.currentUserAlias = "";
         window.currentUserNick = ""; 
+        window.userRole = "user"; // "user", "mod", "admin"
         window.bestTimesForTracks = {}; 
+        window.allMarkers = {}; // Referencje do markerów na mapie
 
         window.victoryGifs = ["winanim/daiwa.gif", "winanim/daitaku.gif", "winanim/goldship.gif", "winanim/manhattan.gif", "winanim/mayano.gif", "winanim/seiun.gif"];
-
         window.bazaOsiagniec = {
-            "first_race": { nazwa: "Pierwszy Wynik", opis: "Wziął udział w swoim pierwszym Trackdayu.", img: "Achiev/Daily.png" },
-            "betatester": { nazwa: "Beta Tester", opis: "Odznaka dla pierwszych zjadaczy kodu. Dzięki za wsparcie!", img: "Achiev/Beta.png" },
-            "dpf_egr_master": { nazwa: "Czarny Bambik", opis: "Wypalił DPFa na torze, kto tu tym Dieslem przyjeżdża?!", img: "Achiev/Key.png" },
-            "gruz_drifter": { nazwa: "Gruz ze stajni", opis: "Rozwalił zderzak, ale dokończył okrążenie trytytkami.", img: "Achiev/JapanDerby_garland.png" }
+            "first_race": { nazwa: "Pierwszy Wynik", opis: "Wziął udział w swoim pierwszym Trackdayu.", img: "1st.png" },
+            "betatester": { nazwa: "Beta Tester", opis: "Odznaka dla pierwszych zjadaczy kodu.", img: "Achiev/Beta.png" },
+            "dpf_egr_master": { nazwa: "Czarny Bambik", opis: "Wypalił DPFa na torze.", img: "Achiev/Key.png" },
+            "gruz_drifter": { nazwa: "Gruz ze stajni", opis: "Rozwalił zderzak, ale dokończył trytytkami.", img: "Achiev/JapanDerby_garland.png" }
         };
 
         const darkMap = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png');
         const satelliteMap = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}');
         const map = L.map('map', { zoomControl: false, layers: [satelliteMap] }).setView([51.8, 20.5], 7);
-        L.control.zoom({ position: 'topleft' }).addTo(map);
-        L.control.layers({ "Tryb Nocny": darkMap, "Satelita": satelliteMap }, null, {position: 'bottomleft'}).addTo(map);
+        L.control.zoom({ position: 'topright' }).addTo(map); // Przeniosłem zoom na prawo bo z lewej jest hamburger
+        L.control.layers({ "Tryb Nocny": darkMap, "Satelita": satelliteMap }, null, {position: 'bottomright'}).addTo(map);
 
-        const tory = [
-            { nazwa: "Autodrom Bemowo", lat: 52.265, lng: 20.927, foto: "track/torbemowo.jpeg" },
-            { nazwa: "Tor Modlin", lat: 52.445, lng: 20.639, foto: "track/tormodlin.webp" },
+        let tory = [
+            { nazwa: "Autodrom Bemowo", lat: 52.265, lng: 20.912, foto: "track/torbemowo.jpeg" },
+            { nazwa: "Tor Modlin", lat: 52.444, lng: 20.648, foto: "track/tormodlin.webp" },
             { nazwa: "Autodrom Słomczyn", lat: 51.905, lng: 20.842, foto: "track/torslomczyn.webp" },
             { nazwa: "Autodrom Jastrząb", lat: 51.246, lng: 20.942, foto: "track/autodromjastrzab.webp" },
             { nazwa: "Tor Kielce", lat: 50.963, lng: 20.457, foto: "track/kielce.webp" },
@@ -424,44 +393,165 @@
             { nazwa: "TOR ŁÓDŹ", lat: 51.877, lng: 19.533, foto: "track/torlodz.webp" }
         ];
 
-        // ZARZĄDZANIE MODALAMI (Z OBSŁUGĄ TŁA)
+        // ZARZĄDZANIE UI
         const avatarBtn = document.getElementById('avatarBtn');
         const userMenu = document.getElementById('userMenu');
         avatarBtn.addEventListener('click', () => userMenu.classList.toggle('active'));
-        document.addEventListener('click', (e) => { if(!avatarBtn.contains(e.target) && !userMenu.contains(e.target)) userMenu.classList.remove('active'); });
+        document.getElementById('hamburgerBtn').addEventListener('click', () => document.getElementById('sideMenu').classList.add('active'));
         
-        window.openGarage = async () => { userMenu.classList.remove('active'); document.getElementById('garageModal').classList.add('active'); await loadMyGarage(); };
-        window.openSettings = async () => { 
-            userMenu.classList.remove('active'); document.getElementById('settingsModal').classList.add('active'); 
-            document.getElementById('settingsAvatar').value = auth.currentUser.photoURL || ''; 
-            const docSnap = await getDoc(doc(db, "uzytkownicy", window.currentUserAlias)); 
-            if(docSnap.exists()) { 
-                const data = docSnap.data(); 
-                document.getElementById('settingsNick').value = data.nick || window.currentUserAlias; 
-                document.getElementById('settingsDob').value = data.dataUrodzenia || ''; 
-                document.getElementById('settingsCity').value = data.miejscowosc || ''; 
-                document.getElementById('settingsDesc').value = data.opis || ''; 
-            } 
+        window.closeModal = (modalId) => { document.getElementById(modalId).classList.remove('active'); };
+        
+        // POBIERANIE ROLI I INICJALIZACJA TORÓW
+        async function initializeAppAfterLogin() {
+            // Check Admin / Mod
+            window.userRole = "user";
+            if(window.currentUserAlias.toLowerCase() === 'pancerny') { window.userRole = "admin"; }
+            const uSnap = await getDoc(doc(db, "uzytkownicy", window.currentUserAlias));
+            if(uSnap.exists()) {
+                const ud = uSnap.data();
+                if(ud.nick) window.currentUserNick = ud.nick;
+                if(ud.role === 'mod' && window.userRole !== 'admin') window.userRole = 'mod';
+            }
+            document.getElementById('greetingAlias').innerText = (window.currentUserNick || window.currentUserAlias).toUpperCase(); 
+            
+            if(window.userRole === 'admin' || window.userRole === 'mod') { 
+                document.getElementById('adminMenuBtn').classList.remove('hidden'); 
+            }
+
+            // Pobierz Custom Tory z Bazy
+            const customTracksSnap = await getDocs(collection(db, "tory_custom"));
+            customTracksSnap.forEach(d => {
+                const td = d.data();
+                tory.push({ nazwa: td.nazwa, lat: td.lat, lng: td.lng, foto: td.foto || "" });
+            });
+
+            renderTracksOnMapAndMenu();
+            await loadMyGarage(); 
+        }
+
+        function renderTracksOnMapAndMenu() {
+            const sideMenuList = document.getElementById('sideMenuList');
+            sideMenuList.innerHTML = "";
+            
+            tory.forEach(tor => { 
+                // Mapa
+                const marker = L.marker([tor.lat, tor.lng]).addTo(map); 
+                const safeId = tor.nazwa.replace(/\s+/g, ''); 
+                window.allMarkers[safeId] = marker;
+                
+                marker.bindPopup(`<div id="popup-content-${safeId}"><div style="padding:20px; text-align:center;">Ładowanie...</div></div>`, { minWidth: 380 }); 
+                
+                marker.on('popupopen', async () => { 
+                    let trackImgHTML = tor.foto ? `<img src="${tor.foto}" class="track-img-header">` : ''; 
+                    
+                    // Budowa dymka szkieletu
+                    const fullHTML = `
+                        ${trackImgHTML}
+                        <div class="popup-inner-pad">
+                            <h2>${tor.nazwa}</h2>
+                            <div id="trackInfoRender-${safeId}" class="track-details-box">Ładowanie informacji...</div>
+                            <table><thead><tr><th>Kierowca</th><th>Fura</th><th>Czas</th></tr></thead><tbody id="table-${safeId}"><tr><td colspan='3'>Ładowanie...</td></tr></tbody></table>
+                            <hr style="border-color:#444; margin:15px 0;">
+                            <div id="carSelectContainer-${safeId}"></div>
+                            <div class="time-inputs-container"><input type="number" id="timeM-${safeId}" placeholder="Min" min="0" max="99" style="width: 30%; text-align: center;"> : <input type="number" id="timeS-${safeId}" placeholder="Sek" min="0" max="59" style="width: 30%; text-align: center;"> . <input type="number" id="timeMS-${safeId}" placeholder="MS" min="0" max="999" style="width: 35%; text-align: center;"></div>
+                            <button onclick="window.saveTime('${tor.nazwa}')" class="btn-submit">Zapisz wynik</button>
+                        </div>`; 
+                    document.getElementById(`popup-content-${safeId}`).innerHTML = fullHTML; 
+                    
+                    // Wypełnienie garażu (Select)
+                    let carSelectHTML = `<select id="carSelect-${safeId}" style="width:100%; border: 3px solid #ccc; border-radius: 15px; padding: 10px; font-weight: bold;">`; 
+                    if(window.myCars.length === 0) carSelectHTML += `<option value="" disabled selected>Brak aut!</option>`; 
+                    else { window.myCars.forEach(car => { carSelectHTML += `<option value="${car}">${car}</option>`; }); } 
+                    carSelectHTML += `</select>`; 
+                    document.getElementById(`carSelectContainer-${safeId}`).innerHTML = carSelectHTML;
+
+                    // Pobranie Detali Toru (Opis, Ceny)
+                    const infoBox = document.getElementById(`trackInfoRender-${safeId}`);
+                    const infoSnap = await getDoc(doc(db, "tory_detale", safeId));
+                    let infoData = { opis: "Brak opisu.", kontakt: "Brak", email: "Brak", ceny: "Brak info" };
+                    if(infoSnap.exists()) infoData = infoSnap.data();
+
+                    let editBtnHTML = (window.userRole === 'admin' || window.userRole === 'mod') ? `<button class="btn-view" style="width:100%; margin-top:5px;" onclick="window.openTrackEditModal('${safeId}', '${tor.nazwa}')">✏️ Edytuj Informacje (Tylko Admin/Mod)</button>` : '';
+
+                    infoBox.innerHTML = `
+                        <p>${infoData.opis}</p>
+                        <p>☎️ Kontakt: <strong>${infoData.kontakt}</strong></p>
+                        <p>📧 E-mail: <strong>${infoData.email}</strong></p>
+                        <p>💰 Ceny: <strong>${infoData.ceny}</strong></p>
+                        ${editBtnHTML}
+                    `;
+
+                    window.loadLeaderboard(tor.nazwa); 
+                }); 
+
+                // Menu Boczne
+                let listImg = tor.foto ? `<img src="${tor.foto}" class="track-list-icon">` : `<div class="track-list-icon"></div>`;
+                sideMenuList.innerHTML += `
+                    <li class="track-list-item" onclick="window.focusTrack('${safeId}', ${tor.lat}, ${tor.lng})">
+                        ${listImg} ${tor.nazwa}
+                    </li>`;
+            });
+        }
+
+        window.focusTrack = (safeId, lat, lng) => {
+            document.getElementById('sideMenu').classList.remove('active');
+            map.setView([lat, lng], 14, { animate: true });
+            setTimeout(() => { if(window.allMarkers[safeId]) window.allMarkers[safeId].openPopup(); }, 500);
         };
-        
-        window.openTrophies = () => {
-            userMenu.classList.remove('active'); document.getElementById('trophiesModal').classList.add('active');
-            const render = document.getElementById('allTrophiesRender');
-            render.innerHTML = "";
-            for (const [key, t] of Object.entries(window.bazaOsiagniec)) {
-                render.innerHTML += `<div class="list-item" style="justify-content: flex-start;"><img src="${t.img}" style="width:40px; height:40px; border-radius:8px; border:2px solid #ccc; margin-right:15px; object-fit:contain; flex-shrink:0;"><div style="text-align: left;"><b style="color:#5ac313;">${t.nazwa}</b><br><span style="font-size:12px; color:#555; font-weight:normal;">${t.opis}</span></div></div>`;
+
+        // ==========================================
+        // EDYCJA INFO O TORZE
+        // ==========================================
+        window.openTrackEditModal = async (safeId, trackName) => {
+            document.getElementById('trackInfoEditModal').classList.add('active');
+            document.getElementById('editTrackNameTitle').innerText = trackName;
+            document.getElementById('editTrackSafeId').value = safeId;
+            
+            const infoSnap = await getDoc(doc(db, "tory_detale", safeId));
+            if(infoSnap.exists()) {
+                const d = infoSnap.data();
+                document.getElementById('editTrackDesc').value = d.opis || "";
+                document.getElementById('editTrackPhone').value = d.kontakt || "";
+                document.getElementById('editTrackEmail').value = d.email || "";
+                document.getElementById('editTrackPrice').value = d.ceny || "";
+            } else {
+                document.getElementById('editTrackDesc').value = ""; document.getElementById('editTrackPhone').value = ""; document.getElementById('editTrackEmail').value = ""; document.getElementById('editTrackPrice').value = "";
             }
         };
 
-        // NOWY PANEL ADMINA Z LISTĄ I USUWANIE ORAZ PATCHNOTES
+        window.saveTrackDetails = async () => {
+            const safeId = document.getElementById('editTrackSafeId').value;
+            const o = document.getElementById('editTrackDesc').value;
+            const k = document.getElementById('editTrackPhone').value;
+            const e = document.getElementById('editTrackEmail').value;
+            const c = document.getElementById('editTrackPrice').value;
+            await setDoc(doc(db, "tory_detale", safeId), { opis: o, kontakt: k, email: e, ceny: c }, {merge: true});
+            alert("Zapisano info o torze!");
+            closeModal('trackInfoEditModal');
+            if(window.allMarkers[safeId]) window.allMarkers[safeId].closePopup(); // Wymusza odświeżenie przy ponownym otwarciu
+        };
+
+        // ==========================================
+        // PANEL ADMINA / DODAWANIE TOROW / MODY
+        // ==========================================
         window.openAdminPanel = async () => { 
             userMenu.classList.remove('active'); document.getElementById('adminModal').classList.add('active'); 
-            
-            // Ladowanie Patch notes
             const patchSnap = await getDoc(doc(db, "ustawienia", "patchnotes"));
             if(patchSnap.exists()) { document.getElementById('adminPatchText').value = patchSnap.data().text || ""; }
-
             window.loadAdminUsers();
+        };
+
+        window.addNewCustomTrack = async () => {
+            if(window.userRole !== 'admin') return alert("Tylko główny Admin może dodawać tory do bazy!");
+            const n = document.getElementById('newPinName').value;
+            const lat = parseFloat(document.getElementById('newPinLat').value);
+            const lng = parseFloat(document.getElementById('newPinLng').value);
+            const f = document.getElementById('newPinFoto').value;
+            if(!n || isNaN(lat) || isNaN(lng)) return alert("Wypełnij poprawnie nazwę i współrzędne!");
+            
+            await addDoc(collection(db, "tory_custom"), { nazwa: n, lat: lat, lng: lng, foto: f });
+            alert("Dodano tor! Odśwież stronę, żeby go zobaczyć.");
+            closeModal('adminModal');
         };
 
         window.loadAdminUsers = async () => {
@@ -479,13 +569,27 @@
                 if(uData.osiagniecia && uData.osiagniecia.length > 0) {
                     uData.osiagniecia.forEach(achKey => {
                         const info = window.bazaOsiagniec[achKey];
-                        if(info) {
-                            achHTML += `<div style="display:inline-block; position:relative; margin:2px;"><img src="${info.img}" style="width:30px; height:30px; border-radius:5px; border:1px solid #ccc; object-fit:contain;"><span onclick="removeAchievement('${uid}', '${achKey}')" style="position:absolute; top:-5px; right:-5px; background:red; color:white; border-radius:50%; width:15px; height:15px; font-size:10px; line-height:15px; text-align:center; cursor:pointer; font-weight:bold;">X</span></div>`;
-                        }
+                        if(info) achHTML += `<div style="display:inline-block; position:relative; margin:2px;"><img src="${info.img}" style="width:30px; height:30px; border-radius:5px; border:1px solid #ccc; object-fit:contain;"><span onclick="removeAchievement('${uid}', '${achKey}')" style="position:absolute; top:-5px; right:-5px; background:red; color:white; border-radius:50%; width:15px; height:15px; font-size:10px; line-height:15px; text-align:center; cursor:pointer; font-weight:bold;">X</span></div>`;
                     });
                 }
-                render.innerHTML += `<div style="background:#fff; padding:10px; margin-bottom:10px; border-radius:10px; border:2px solid #eee;"><b style="color:#333;">${nick.toUpperCase()}</b> <span style="font-size:10px; color:#888;">(${uid})</span><br><div style="margin: 5px 0; min-height: 35px;">${achHTML}</div><div style="display:flex; gap:5px;"><select id="addAchSel_${uid}" style="margin:0 !important; padding:5px !important; font-size:12px !important;">${selectOptions}</select><button class="btn-submit" style="width:auto; padding:5px 10px; margin:0;" onclick="addAchievement('${uid}')">DODAJ</button></div></div>`;
+                
+                let modBtn = "";
+                if(window.userRole === 'admin') {
+                    if(uData.role === 'mod') modBtn = `<button class="btn-del" style="font-size:9px; padding:3px 6px; width:auto;" onclick="window.toggleMod('${uid}', false)">ZABRAĆ MODA</button>`;
+                    else if(uid !== 'pancerny') modBtn = `<button class="btn-view" style="font-size:9px; padding:3px 6px; width:auto;" onclick="window.toggleMod('${uid}', true)">NADAĆ MODA</button>`;
+                }
+
+                let roleTag = uData.role === 'mod' ? `<span class="mod-badge">MOD</span>` : '';
+                if(uid === 'pancerny') roleTag = `<span class="admin-badge">ADMIN</span>`;
+
+                render.innerHTML += `<div style="background:#fff; padding:10px; margin-bottom:10px; border-radius:10px; border:2px solid #eee;"><div style="display:flex; justify-content:space-between;"><div><b style="color:#333;">${nick.toUpperCase()}</b> ${roleTag} <span style="font-size:10px; color:#888;">(${uid})</span></div>${modBtn}</div><div style="margin: 5px 0; min-height: 35px;">${achHTML}</div><div style="display:flex; gap:5px;"><select id="addAchSel_${uid}" style="margin:0 !important; padding:5px !important; font-size:12px !important;">${selectOptions}</select><button class="btn-submit" style="width:auto; padding:5px 10px; margin:0;" onclick="addAchievement('${uid}')">DODAJ</button></div></div>`;
             });
+        };
+
+        window.toggleMod = async (uid, makeMod) => {
+            if(!confirm(`Czy na pewno chcesz ${makeMod ? 'dać' : 'zabrać'} rangę Moderatora?`)) return;
+            await updateDoc(doc(db, "uzytkownicy", uid), { role: makeMod ? 'mod' : 'user' });
+            window.loadAdminUsers();
         };
 
         window.addAchievement = async (uid) => {
@@ -493,179 +597,73 @@
             if(!achKey) return alert("Wybierz odznakę z listy!");
             try { await setDoc(doc(db, "uzytkownicy", uid), { osiagniecia: arrayUnion(achKey) }, { merge: true }); window.loadAdminUsers(); } catch(e) { alert("Błąd zapisu reguł: " + e.message); }
         };
+        window.removeAchievement = async (uid, achKey) => { if(confirm("Zabrać tę odznakę graczowi?")) { await updateDoc(doc(db, "uzytkownicy", uid), { osiagniecia: arrayRemove(achKey) }); window.loadAdminUsers(); } };
 
-        window.removeAchievement = async (uid, achKey) => {
-            if(confirm("Zabrać tę odznakę graczowi?")) {
-                await updateDoc(doc(db, "uzytkownicy", uid), { osiagniecia: arrayRemove(achKey) });
-                window.loadAdminUsers();
-            }
-        };
-
-        window.publishPatchNotes = async () => {
-            const text = document.getElementById('adminPatchText').value;
-            if(!text) return alert("Wpisz treść nowości!");
-            const newVersion = Date.now().toString(); // Zawsze wymusi pokazanie u userow
-            await setDoc(doc(db, "ustawienia", "patchnotes"), { text: text, version: newVersion });
-            alert("Opublikowano! Wszyscy gracze zobaczą to przy logowaniu.");
-        };
-        
-        // ZAMYKANIE MODALI (Klik w "X" lub w konkretne tło)
-        window.closeModal = (modalId) => { document.getElementById(modalId).classList.remove('active'); };
-        const modalsArr = ['garageModal', 'settingsModal', 'userProfileModal', 'allCarsModal', 'usersListModal', 'changelogModal', 'adminModal', 'trophiesModal'];
-        modalsArr.forEach(m => { document.getElementById(m).addEventListener('click', (e) => { if(e.target.id === m) window.closeModal(m); }); });
-
-        document.getElementById('newCarFuel').addEventListener('change', function() { if(this.value === 'Diesel') { document.getElementById('trollModal').classList.add('active'); } });
-
-        window.saveSettings = async () => { 
-            const nick = document.getElementById('settingsNick').value; const url = document.getElementById('settingsAvatar').value; const dob = document.getElementById('settingsDob').value; const city = document.getElementById('settingsCity').value; const desc = document.getElementById('settingsDesc').value; 
-            try { 
-                if(url !== auth.currentUser.photoURL) await updateProfile(auth.currentUser, { photoURL: url }); 
-                await setDoc(doc(db, "uzytkownicy", window.currentUserAlias), { nick: nick, dataUrodzenia: dob, miejscowosc: city, opis: desc, avatar: url }, { merge: true }); 
-                window.currentUserNick = nick || window.currentUserAlias;
-                document.getElementById('greetingAlias').innerText = window.currentUserNick.toUpperCase();
-                alert("Profil zaktualizowany!"); updateAvatarUI(auth.currentUser); window.closeModal('settingsModal'); 
-            } catch(e) { alert("Błąd: " + e.message); } 
-        };
-
-        function updateAvatarUI(user) { 
-            if(user.photoURL) document.getElementById('avatarIcon').innerHTML = `<img src="${user.photoURL}" style="width:100%; height:100%; border-radius:50%; object-fit:cover;">`; 
-            else document.getElementById('avatarIcon').innerText = window.currentUserAlias.charAt(0).toUpperCase(); 
-        }
-        
-        window.showUserProfile = async (driverAlias) => { 
-            document.getElementById('userProfileModal').classList.add('active'); document.getElementById('pubProfileAlias').innerText = driverAlias; document.getElementById('pubProfileAvatar').innerHTML = driverAlias.charAt(0).toUpperCase(); document.getElementById('pubProfileAvatar').style.backgroundImage = 'none'; document.getElementById('pubProfileAge').innerText = "Ładowanie..."; document.getElementById('pubProfileCity').innerText = "Ładowanie..."; document.getElementById('pubProfileDesc').innerText = "Ładowanie..."; 
-            document.getElementById('pubProfileAchievements').innerHTML = "Ładowanie odznak...";
-            const adminBadge = document.getElementById('pubProfileAdminBadge'); if(driverAlias.toLowerCase() === 'pancerny') { adminBadge.style.display = 'block'; } else { adminBadge.style.display = 'none'; } 
-            const docSnap = await getDoc(doc(db, "uzytkownicy", driverAlias)); 
-            
-            if(docSnap.exists()) { 
-                const data = docSnap.data(); 
-                document.getElementById('pubProfileAlias').innerText = data.nick || driverAlias;
-                if(data.avatar) { document.getElementById('pubProfileAvatar').innerHTML = ""; document.getElementById('pubProfileAvatar').style.backgroundImage = `url('${data.avatar}')`; } 
-                if(data.dataUrodzenia) { const birthDate = new Date(data.dataUrodzenia); const today = new Date(); let age = today.getFullYear() - birthDate.getFullYear(); const m = today.getMonth() - birthDate.getMonth(); if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) { age--; } document.getElementById('pubProfileAge').innerText = age + " lat"; } else { document.getElementById('pubProfileAge').innerText = "Nie podano"; } 
-                document.getElementById('pubProfileCity').innerText = data.miejscowosc || "Nie podano"; document.getElementById('pubProfileDesc').innerText = data.opis || "Brak opisu."; 
-                
-                const achBox = document.getElementById('pubProfileAchievements'); achBox.innerHTML = '';
-                if(data.osiagniecia && data.osiagniecia.length > 0) {
-                    data.osiagniecia.forEach(key => { const achInfo = window.bazaOsiagniec[key]; if(achInfo) achBox.innerHTML += `<img src="${achInfo.img}" class="achievement-icon" title="${achInfo.nazwa}: ${achInfo.opis}">`; });
-                } else { achBox.innerHTML = `<span style="color:#aaa; font-size:12px; font-weight:bold;">Brak odznak w klaserze.</span>`; }
-            } else { 
-                document.getElementById('pubProfileAge').innerText = "Nie podano"; document.getElementById('pubProfileCity').innerText = "Nie podano"; document.getElementById('pubProfileDesc').innerText = "Konto założone, ale gracz nie zapisał profilu."; 
-                document.getElementById('pubProfileAchievements').innerHTML = `<span style="color:#aaa; font-size:12px; font-weight:bold;">Brak odznak w klaserze.</span>`;
-            } 
-        };
-
-        window.openUsersList = async () => { userMenu.classList.remove('active'); document.getElementById('usersListModal').classList.add('active'); const list = document.getElementById('usersListRender'); list.innerHTML = "Ładowanie..."; const snapshot = await getDocs(collection(db, "uzytkownicy")); list.innerHTML = ""; if(snapshot.empty) { list.innerHTML = "Brak graczy."; return; } snapshot.forEach(doc => { const data = doc.data(); const alias = doc.id; const dispName = data.nick || alias; let bgImage = data.avatar ? `background-image: url('${data.avatar}')` : ''; let adminTag = alias.toLowerCase() === 'pancerny' ? `<span class="admin-badge">ADMIN</span>` : ''; list.innerHTML += `<li class="list-item" style="cursor:pointer;" onclick="window.showUserProfile('${alias}')"><div style="display:flex; align-items:center;"><div class="user-list-avatar" style="${bgImage}">${data.avatar ? '' : alias.charAt(0).toUpperCase()}</div><div><b style="color:#333; font-size:15px;">${dispName.toUpperCase()}</b> ${adminTag}<br><span style="font-size:11px; color:#888; font-weight:bold;">${data.miejscowosc || 'Nieznane Miasto'}</span></div></div></li>`; }); };
-        
-        window.openAllCarsList = async () => { userMenu.classList.remove('active'); document.getElementById('allCarsModal').classList.add('active'); const list = document.getElementById('allCarsListRender'); list.innerHTML = "Ładowanie..."; const snapshot = await getDocs(collection(db, "fury")); list.innerHTML = ""; if(snapshot.empty) { list.innerHTML = "Brak aut w bazie."; return; } snapshot.forEach(doc => { const data = doc.data(); const safeName = data.name.replace(/'/g, "\\'"); const safePhoto = data.photo.replace(/'/g, "\\'"); const safeEngine = data.engine.replace(/'/g, "\\'"); const safeFuel = data.fuel || ""; const safeAccel = data.accel.replace(/'/g, "\\'"); const safeTires = data.tires.replace(/'/g, "\\'"); let actionBtns = `<button class="btn-view" onclick="window.showCarCard('${safeName}', '${data.driver}')">KARTA</button>`; if(data.driver === window.currentUserAlias) { actionBtns += `<button class="btn-edit" onclick="window.closeModal('allCarsModal'); window.openGarage(); setTimeout(()=>window.triggerEditCar('${doc.id}', '${safeName}', '${safePhoto}', '${safeEngine}', '${safeFuel}', '${safeAccel}', '${safeTires}'), 500)">EDYCJA</button><button class="btn-del" onclick="window.deleteCar('${doc.id}'); document.getElementById('allCarsModal').classList.remove('active');">USUŃ</button>`; } list.innerHTML += `<li class="list-item"><div><b style="color:#5ac313; font-size:13px;">[${data.driver.toUpperCase()}]</b><br><b style="color:#333; font-size:15px;">${data.name}</b> <span style="font-size:11px; color:#888;">(${data.engine})</span></div><div class="list-item-btns">${actionBtns}</div></li>`; }); };
-
-        window.saveNewCar = async () => { const editId = document.getElementById('editCarId').value; const name = document.getElementById('newCarName').value; const photo = document.getElementById('newCarPhoto').value || "https://via.placeholder.com/400x250/222/ff4500?text=Brak+Zdjecia"; const engine = document.getElementById('newCarEngine').value || "Nieznany"; const fuel = document.getElementById('newCarFuel').value || "?"; const accel = document.getElementById('newCarAccel').value || "? s"; const tires = document.getElementById('newCarTires').value || "Drogowe"; if(!name) return alert("Podaj chociaż nazwę fury!"); if(editId) { await updateDoc(doc(db, "fury", editId), { name: name, photo: photo, engine: engine, fuel: fuel, accel: accel, tires: tires }); window.cancelEdit(); } else { await addDoc(collection(db, "fury"), { driver: window.currentUserAlias, name: name, photo: photo, engine: engine, fuel: fuel, accel: accel, tires: tires }); window.cancelEdit(); } await loadMyGarage(); };
-        window.triggerEditCar = (id, name, photo, engine, fuel, accel, tires) => { document.getElementById('editCarId').value = id; document.getElementById('newCarName').value = name; document.getElementById('newCarPhoto').value = photo; document.getElementById('newCarEngine').value = engine; document.getElementById('newCarFuel').value = fuel; document.getElementById('newCarAccel').value = accel; document.getElementById('newCarTires').value = tires; document.getElementById('garageFormTitle').innerText = "Edytuj furę:"; document.getElementById('saveCarBtn').innerText = "Zapisz Zmiany"; document.getElementById('saveCarBtn').style.background = "linear-gradient(180deg, #ffb72b 0%, #f38815 100%)"; document.getElementById('saveCarBtn').style.boxShadow = "inset 0px 4px 5px rgba(255,255,255,0.6), 0 5px 0 #c76505, 0 8px 10px rgba(0,0,0,0.3)"; document.getElementById('cancelEditBtn').classList.remove('hidden'); };
-        window.cancelEdit = () => { document.getElementById('editCarId').value = ""; document.getElementById('newCarName').value = ''; document.getElementById('newCarPhoto').value = ''; document.getElementById('newCarEngine').value = ''; document.getElementById('newCarFuel').value = ''; document.getElementById('newCarAccel').value = ''; document.getElementById('newCarTires').value = ''; document.getElementById('garageFormTitle').innerText = "Dodaj nową furę:"; document.getElementById('saveCarBtn').innerText = "Dodaj do garażu!"; document.getElementById('saveCarBtn').style.background = "linear-gradient(180deg, #a3f740 0%, #5ac313 100%)"; document.getElementById('saveCarBtn').style.boxShadow = "inset 0px 4px 5px rgba(255,255,255,0.6), 0 5px 0 #3a8a0b, 0 8px 10px rgba(0,0,0,0.3)"; document.getElementById('cancelEditBtn').classList.add('hidden'); };
-        window.deleteCar = async (docId) => { if(confirm("Na pewno chcesz zezłomować?")) { await deleteDoc(doc(db, "fury", docId)); await loadMyGarage(); } };
-        async function loadMyGarage() { const q = query(collection(db, "fury"), where("driver", "==", window.currentUserAlias)); const snapshot = await getDocs(q); const list = document.getElementById('myCarsList'); window.myCars = []; list.innerHTML = ""; if(snapshot.empty) { list.innerHTML = "Brak aut."; return; } snapshot.forEach(doc => { const data = doc.data(); window.myCars.push(data.name); const safeName = data.name.replace(/'/g, "\\'"); const safePhoto = data.photo.replace(/'/g, "\\'"); const safeEngine = data.engine.replace(/'/g, "\\'"); const safeFuel = data.fuel || ""; const safeAccel = data.accel.replace(/'/g, "\\'"); const safeTires = data.tires.replace(/'/g, "\\'"); list.innerHTML += `<li class="list-item"><div><b style="color:#333;">${data.name}</b></div><div class="list-item-btns"><button class="btn-view" onclick="window.showCarCard('${safeName}', '${window.currentUserAlias}')">KARTA</button><button class="btn-edit" onclick="window.triggerEditCar('${doc.id}', '${safeName}', '${safePhoto}', '${safeEngine}', '${safeFuel}', '${safeAccel}', '${safeTires}')">EDYCJA</button><button class="btn-del" onclick="window.deleteCar('${doc.id}')">USUŃ</button></div></li>`; }); }
-
-        window.showCarCard = async (carName, driverName) => { 
-            // Ta funkcja buduje cały overlay na nowo, bo nie ma go standardowo w HTML. Zeby dzialalo klikanie poza ekran, dodajemy id w glownym divie okna.
-            const existingModal = document.getElementById('dynamicUmaModal'); if(existingModal) existingModal.remove();
-            
-            const modalHtml = `<div class="modal-overlay active" id="dynamicUmaModal"><div class="modal-content" style="padding: 0; border: none; background: transparent; width: 100%; max-width: 340px; overflow-x: hidden; box-shadow: none;" id="dynamicUmaInner"><div style="padding: 40px; text-align: center; background: #f0f3f5; border-radius: 10px; color: #333; font-weight: bold;">Ładowanie...</div></div></div>`;
-            document.body.insertAdjacentHTML('beforeend', modalHtml);
-            
-            document.getElementById('dynamicUmaModal').addEventListener('click', (e) => { if(e.target.id === 'dynamicUmaModal') { document.getElementById('dynamicUmaModal').remove(); } });
-
-            const q = query(collection(db, "fury"), where("driver", "==", driverName), where("name", "==", carName)); const snapshot = await getDocs(q); 
-            if(snapshot.empty) { document.getElementById('dynamicUmaInner').innerHTML = `<div style="padding: 40px; text-align: center; background: #f0f3f5; border-radius: 10px; color: #333;">Brak danych.</div>`; return; } 
-            const carData = snapshot.docs[0].data(); const fuelDisplay = carData.fuel ? carData.fuel : "Brak danych"; 
-            document.getElementById('dynamicUmaInner').innerHTML = `<div style="position: relative; width: 100%; max-width: 340px; height: 500px; margin: auto; background: #000; border-radius: 20px; overflow: hidden; box-shadow: 0 0 30px rgba(79, 172, 254, 0.8), inset 0 0 0 3px #fff;"><span onclick="document.getElementById('dynamicUmaModal').remove()" style="position: absolute; top: 15px; right: 20px; font-size: 32px; color: #fff; cursor: pointer; z-index: 10; text-shadow: 2px 2px 4px #000; font-weight: bold;">×</span><div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-image: url('${carData.photo}'); background-size: cover; background-position: center; z-index: 1;"></div><div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-image: url('https://pbs.twimg.com/media/GxszfaMawAE5j4G.png'); background-size: 100% 100%; z-index: 2; pointer-events: none;"></div><div style="position: absolute; bottom: 0; left: 0; width: 100%; height: 170px; background: linear-gradient(to top, rgba(0,0,0,1) 5%, rgba(0,0,0,0.8) 50%, transparent); z-index: 3; display: flex; flex-direction: column; justify-content: flex-end; padding: 12px; box-sizing: border-box;"><h2 style="font-size: 22px; color: #ffeb3b; margin: 0 0 2px 0; text-transform: uppercase; text-align: center; text-shadow: 2px 2px 4px #000;">${carData.name}</h2><div style="text-align: center; color: #fff; font-size: 12px; margin-bottom: 8px; text-shadow: 1px 1px 3px #000; font-weight: bold;">WŁAŚCICIEL: <b>${carData.driver.toUpperCase()}</b></div><div class="stat-row" style="border-bottom: 1px solid rgba(255,255,255,0.2); display:flex; justify-content:space-between; padding:4px 0;"><span style="color:#ccc; font-weight:bold; font-size:13px; text-shadow: 1px 1px 2px #000;">SILNIK:</span><span style="color:#fff; font-weight:bold; font-size:14px; text-shadow: 1px 1px 2px #000;">${carData.engine}</span></div><div class="stat-row" style="border-bottom: 1px solid rgba(255,255,255,0.2); display:flex; justify-content:space-between; padding:4px 0;"><span style="color:#ccc; font-weight:bold; font-size:13px; text-shadow: 1px 1px 2px #000;">PALIWO:</span><span style="color:#4facfe; font-weight:bold; font-size:14px; text-shadow: 1px 1px 2px #000;">${fuelDisplay}</span></div><div class="stat-row" style="border-bottom: 1px solid rgba(255,255,255,0.2); display:flex; justify-content:space-between; padding:4px 0;"><span style="color:#ccc; font-weight:bold; font-size:13px; text-shadow: 1px 1px 2px #000;">0-100 km/h:</span><span style="color:#fff; font-weight:bold; font-size:14px; text-shadow: 1px 1px 2px #000;">${carData.accel}</span></div><div class="stat-row" style="border-bottom: 1px solid rgba(255,255,255,0.2); display:flex; justify-content:space-between; padding:4px 0;"><span style="color:#ccc; font-weight:bold; font-size:13px; text-shadow: 1px 1px 2px #000;">OPONY:</span><span style="color:#4cd137; font-weight:bold; font-size:14px; text-shadow: 1px 1px 2px #000;">${carData.tires}</span></div></div></div>`; 
-        };
-
-        tory.forEach(tor => { 
-            const marker = L.marker([tor.lat, tor.lng]).addTo(map); 
-            const safeId = tor.nazwa.replace(/\s+/g, ''); 
-            marker.bindPopup(`<div id="popup-content-${safeId}">Ładowanie...</div>`, { minWidth: 380 }); 
-            marker.on('popupopen', () => { 
-                let carSelectHTML = `<select id="carSelect-${safeId}" style="width:100%; border: 3px solid #ccc; border-radius: 15px; padding: 10px; font-weight: bold;">`; 
-                if(window.myCars.length === 0) carSelectHTML += `<option value="" disabled selected>Brak aut!</option>`; 
-                else { window.myCars.forEach(car => { carSelectHTML += `<option value="${car}">${car}</option>`; }); } 
-                carSelectHTML += `</select>`; 
-                const timeInputHTML = `<div class="time-inputs-container"><input type="number" id="timeM-${safeId}" placeholder="Min" min="0" max="99" style="width: 30%; text-align: center;"> : <input type="number" id="timeS-${safeId}" placeholder="Sek" min="0" max="59" style="width: 30%; text-align: center;"> . <input type="number" id="timeMS-${safeId}" placeholder="MS" min="0" max="999" style="width: 35%; text-align: center;"></div>`; 
-                let trackImgHTML = tor.foto ? `<img src="${tor.foto}" class="track-img-header">` : ''; 
-                const fullHTML = `${trackImgHTML}<div class="popup-inner-pad"><h2>${tor.nazwa}</h2><table><thead><tr><th>Kierowca</th><th>Fura</th><th>Czas</th></tr></thead><tbody id="table-${safeId}"><tr><td colspan='3'>Ładowanie...</td></tr></tbody></table><hr style="border-color:#444; margin:15px 0;">${carSelectHTML}${timeInputHTML}<button onclick="window.saveTime('${tor.nazwa}')" class="btn-submit">Zapisz wynik</button></div>`; 
-                document.getElementById(`popup-content-${safeId}`).innerHTML = fullHTML; 
-                window.loadLeaderboard(tor.nazwa); 
-            }); 
-        });
-
+        // ==========================================
+        // RESZTA FUNKCJI (Tabela, czasy, profile itp)
+        // ==========================================
         window.loadLeaderboard = async (trackName) => { 
             const safeId = trackName.replace(/\s+/g, ''); const tbody = document.getElementById(`table-${safeId}`); if(!tbody) return; 
             const q = query(collection(db, "czasy"), where("track", "==", trackName), orderBy("time", "asc")); const snapshot = await getDocs(q); 
             tbody.innerHTML = ""; if (snapshot.empty) { tbody.innerHTML = "<tr><td colspan='3'>Brak czasów. Bądź pierwszy!</td></tr>"; window.bestTimesForTracks[trackName] = "99:99.999"; return; } 
             let currentRank = 1; let firstPlaceTime = ""; 
-            snapshot.forEach((doc) => { 
-                const data = doc.data(); const safeCar = data.car.replace(/'/g, "\\'"); 
+            snapshot.forEach(async (docSnap) => { 
+                const data = docSnap.data(); const safeCar = data.car.replace(/'/g, "\\'"); 
                 if(currentRank === 1) { firstPlaceTime = data.time; window.bestTimesForTracks[trackName] = firstPlaceTime; } 
-                let rankDisplay = ""; let rankClass = "rank-other"; 
-                if(currentRank === 1) { rankDisplay = `<img src="1st.png" style="height: 22px; vertical-align: middle; margin-right: 3px; border-radius: 5px;">`; rankClass = "rank-1"; } 
-                else if(currentRank === 2) { rankDisplay = "🥈"; rankClass = "rank-2"; } 
-                else if(currentRank === 3) { rankDisplay = "🥉"; rankClass = "rank-3"; } 
-                else { rankDisplay = currentRank + "."; } 
-                let adminTag = data.driver.toLowerCase() === 'pancerny' ? `<span class="admin-badge">ADMIN</span>` : ''; 
+                let rankDisplay = currentRank === 1 ? `<img src="1st.png" style="height: 22px; vertical-align: middle; margin-right: 3px; border-radius: 5px;">` : (currentRank === 2 ? "🥈" : (currentRank === 3 ? "🥉" : currentRank+"."));
+                let rankClass = currentRank === 1 ? "rank-1" : "rank-other"; 
                 
-                // ADMIN MA MOŻLIWOŚĆ EDYCJI WSZYSTKICH
+                // Fetch roles for leaderboard tags (quick hack to save reads: assume admins are known or tag is saved in times)
+                // For optimal Firebase reads, we just check if it's pancerny. Realistically we'd duplicate role to the "czasy" doc.
+                let tag = data.driver.toLowerCase() === 'pancerny' ? `<span class="admin-badge">ADMIN</span>` : ''; 
+                
                 let actionBtns = ""; 
-                if(data.driver === window.currentUserAlias || window.currentUserAlias.toLowerCase() === 'pancerny') { 
-                    actionBtns = `<br><span onclick="window.editLapTime('${doc.id}', '${data.time}', '${trackName}')" style="cursor:pointer; font-size:10px; margin-right:3px; background: #f39c12; color:#fff; padding:2px 6px; border-radius:10px;">EDYTUJ</span> <span onclick="window.deleteLapTime('${doc.id}', '${trackName}')" style="cursor:pointer; font-size:10px; background:#e74c3c; color:#fff; padding:2px 6px; border-radius:10px;">USUŃ</span>`; 
+                if(data.driver === window.currentUserAlias || window.userRole === 'admin' || window.userRole === 'mod') { 
+                    actionBtns = `<br><span onclick="window.deleteLapTime('${docSnap.id}', '${trackName}')" style="cursor:pointer; font-size:10px; background:#e74c3c; color:#fff; padding:2px 6px; border-radius:10px;">USUŃ</span>`; 
                 } 
-                tbody.innerHTML += `<tr><td style="text-align: left; padding-left: 10px;"><span class="${rankClass}" style="margin-right: 5px;">${rankDisplay}</span><span class="user-link" onclick="window.showUserProfile('${data.driver}')">${data.driver.toUpperCase()}</span><br><div style="text-align: center; margin-top:2px;">${adminTag}</div></td><td><span class="car-link" onclick="window.showCarCard('${safeCar}', '${data.driver}')">${data.car}</span></td><td><b style="color:#128c3a; font-size: 16px;">${data.time}</b>${actionBtns}</td></tr>`; currentRank++; 
+                tbody.innerHTML += `<tr><td style="text-align: left; padding-left: 10px;"><span class="${rankClass}" style="margin-right: 5px;">${rankDisplay}</span><span class="user-link" style="cursor:pointer; color:#168bd8;" onclick="window.showUserProfile('${data.driver}')">${data.driver.toUpperCase()}</span><br><div style="text-align: center; margin-top:2px;">${tag}</div></td><td><span class="car-link" style="cursor:pointer; font-weight:bold; color:#f38815;" onclick="window.showCarCard('${safeCar}', '${data.driver}')">${data.car}</span></td><td><b style="color:#128c3a; font-size: 16px;">${data.time}</b>${actionBtns}</td></tr>`; currentRank++; 
             }); 
         };
         
-        window.editLapTime = async (docId, oldTime, trackName) => { let valid = false; let newTime = oldTime; while(!valid) { newTime = prompt("Podaj nowy czas w formacie MM:SS.MS (np. 01:45.336):", newTime); if(newTime === null) return; const regex = /^\d{1,2}:\d{2}[\.\:]\d{1,3}$/; if(regex.test(newTime)) { valid = true; newTime = newTime.replace(/:(\d{1,3})$/, '.$1'); } else { alert("Zły format! Wpisz czas okrążenia np. 01:45.336"); } } if(newTime && newTime !== oldTime) { await updateDoc(doc(db, "czasy", docId), { time: newTime }); window.loadLeaderboard(trackName); } };
         window.deleteLapTime = async (docId, trackName) => { if(confirm("Usunąć ten wynik?")) { await deleteDoc(doc(db, "czasy", docId)); window.loadLeaderboard(trackName); } };
         window.saveTime = async (trackName) => { const safeId = trackName.replace(/\s+/g, ''); const car = document.getElementById(`carSelect-${safeId}`)?.value; const m = document.getElementById(`timeM-${safeId}`).value; const s = document.getElementById(`timeS-${safeId}`).value; const ms = document.getElementById(`timeMS-${safeId}`).value; if(!car) return alert("Wybierz auto z Garażu!"); if(!m && !s && !ms) return alert("Wpisz czas!"); const formattedTime = `${(m||'0').toString().padStart(2, '0')}:${(s||'0').toString().padStart(2, '0')}.${(ms||'0').toString().padStart(3, '0')}`; const currentBest = window.bestTimesForTracks[trackName] || "99:99.999"; await addDoc(collection(db, "czasy"), { driver: window.currentUserAlias, car: car, track: trackName, time: formattedTime }); document.getElementById(`timeM-${safeId}`).value = ''; document.getElementById(`timeS-${safeId}`).value = ''; document.getElementById(`timeMS-${safeId}`).value = ''; if (formattedTime < currentBest) { const randomIndex = Math.floor(Math.random() * window.victoryGifs.length); document.getElementById('victoryImgRender').src = window.victoryGifs[randomIndex]; setTimeout(() => { document.getElementById('victoryModal').classList.add('active'); }, 500); } window.loadLeaderboard(trackName); };
 
+        // AUTH & BOOT
         document.getElementById('loginBtn').addEventListener('click', async () => { const e = document.getElementById('email').value; const p = document.getElementById('password').value; if(!e || !p) return alert("Wpisz dane!"); try { const user = await signInWithEmailAndPassword(auth, e, p); if(!user.user.emailVerified) { alert("Potwierdź e-mail!"); signOut(auth); } } catch (err) { try { const user = await createUserWithEmailAndPassword(auth, e, p); await sendEmailVerification(user.user); alert("Konto założone! Sprawdź mail."); signOut(auth); } catch(err2) { alert(err2.message); } } });
-        document.getElementById('forgotPwdBtn').addEventListener('click', async (e) => { e.preventDefault(); const em = document.getElementById('email').value; if(!em) return alert("Wpisz mail!"); try { await sendPasswordResetEmail(auth, em); alert("Wysłano link!"); } catch(x) { alert(x.message); } });
         document.getElementById('logoutBtn').addEventListener('click', () => { signOut(auth); });
 
         onAuthStateChanged(auth, async (user) => { 
             if (user && user.emailVerified) { 
                 window.currentUserAlias = user.email.split('@')[0]; 
+                document.getElementById('authOverlay').classList.add('hidden'); document.getElementById('appUI').classList.remove('hidden'); map.invalidateSize(); 
                 
-                const docSnap = await getDoc(doc(db, "uzytkownicy", window.currentUserAlias));
-                if(docSnap.exists() && docSnap.data().nick) { window.currentUserNick = docSnap.data().nick; } 
-                else { window.currentUserNick = window.currentUserAlias; }
+                if(user.photoURL) document.getElementById('avatarIcon').innerHTML = `<img src="${user.photoURL}" style="width:100%; height:100%; border-radius:50%; object-fit:cover;">`;
                 
-                document.getElementById('greetingAlias').innerText = window.currentUserNick.toUpperCase(); 
+                await initializeAppAfterLogin();
                 
-                if(window.currentUserAlias.toLowerCase() === 'pancerny') { document.getElementById('adminMenuBtn').classList.remove('hidden'); }
-
-                updateAvatarUI(user); 
-                document.getElementById('authOverlay').classList.add('hidden'); document.getElementById('appUI').classList.remove('hidden'); map.invalidateSize(); await loadMyGarage(); 
-                
-                // ODCZYTANIE PATCH NOTES Z BAZY DANYCH
                 const patchSnap = await getDoc(doc(db, "ustawienia", "patchnotes"));
                 if(patchSnap.exists()) {
                     const pData = patchSnap.data();
-                    if(localStorage.getItem("trackday_version") !== pData.version) {
-                        document.getElementById("changelogText").innerHTML = pData.text;
-                        document.getElementById("changelogModal").classList.add("active");
-                        localStorage.setItem("trackday_version", pData.version);
-                    }
+                    if(localStorage.getItem("trackday_version") !== pData.version) { document.getElementById("changelogText").innerHTML = pData.text; document.getElementById("changelogModal").classList.add("active"); localStorage.setItem("trackday_version", pData.version); }
                 }
-
-                // Odpalenie radia na zyczenie przycisku - omijamy problemy autoodtwarzania z przegladarki
-                if(window.ytPlayer && typeof window.ytPlayer.playVideo === 'function') {
-                    // Browsers strictly block unmuted autoplay. The user must click the button.
-                    document.getElementById('radioBtnToggle').innerText = "🎵 Włącz Audio";
-                    window.isRadioPlaying = false;
-                } 
             } 
-            else { document.getElementById('authOverlay').classList.remove('hidden'); document.getElementById('appUI').classList.add('hidden'); if(window.ytPlayer && typeof window.ytPlayer.pauseVideo === 'function') { window.ytPlayer.pauseVideo(); window.isRadioPlaying = false; } } 
+            else { document.getElementById('authOverlay').classList.remove('hidden'); document.getElementById('appUI').classList.add('hidden'); } 
         });
+
+        // ==========================================
+        // PROFIL / GARAZ / AUTA - SKROCONE DLA MIEJSCA
+        // ==========================================
+        window.openGarage = async () => { userMenu.classList.remove('active'); document.getElementById('garageModal').classList.add('active'); await loadMyGarage(); };
+        window.openAllCarsList = async () => { userMenu.classList.remove('active'); document.getElementById('allCarsModal').classList.add('active'); const list = document.getElementById('allCarsListRender'); list.innerHTML = "Ładowanie..."; const snapshot = await getDocs(collection(db, "fury")); list.innerHTML = ""; snapshot.forEach(doc => { const d = doc.data(); list.innerHTML += `<li class="list-item"><b>[${d.driver.toUpperCase()}]</b> ${d.name} <button class="btn-view list-item-btns" style="margin-left:auto;" onclick="window.showCarCard('${d.name.replace(/'/g, "\\'")}', '${d.driver}')">KARTA</button></li>`; }); };
+        window.openUsersList = async () => { userMenu.classList.remove('active'); document.getElementById('usersListModal').classList.add('active'); const list = document.getElementById('usersListRender'); list.innerHTML = "Ładowanie..."; const snapshot = await getDocs(collection(db, "uzytkownicy")); list.innerHTML = ""; snapshot.forEach(doc => { const d = doc.data(); const rTag = doc.id==='pancerny' ? '<span class="admin-badge">ADMIN</span>' : (d.role==='mod'?'<span class="mod-badge">MOD</span>':''); list.innerHTML += `<li class="list-item" style="cursor:pointer;" onclick="window.showUserProfile('${doc.id}')"><b>${(d.nick||doc.id).toUpperCase()}</b> ${rTag}</li>`; }); };
+        async function loadMyGarage() { const q = query(collection(db, "fury"), where("driver", "==", window.currentUserAlias)); const snapshot = await getDocs(q); const list = document.getElementById('myCarsList'); window.myCars = []; list.innerHTML = ""; snapshot.forEach(doc => { const d = doc.data(); window.myCars.push(d.name); list.innerHTML += `<li class="list-item"><b>${d.name}</b><div class="list-item-btns"><button class="btn-view" onclick="window.showCarCard('${d.name.replace(/'/g, "\\'")}', '${window.currentUserAlias}')">KARTA</button><button class="btn-del" onclick="deleteDoc(doc(db, 'fury', '${doc.id}')); setTimeout(loadMyGarage, 500);">USUŃ</button></div></li>`; }); }
+        window.saveNewCar = async () => { const n = document.getElementById('newCarName').value; if(!n) return alert("Podaj nazwę!"); await addDoc(collection(db, "fury"), { driver: window.currentUserAlias, name: n, photo: document.getElementById('newCarPhoto').value||"https://via.placeholder.com/400x250/222/ff4500?text=Brak+Zdjecia", engine: document.getElementById('newCarEngine').value||"?", fuel: document.getElementById('newCarFuel').value||"?", accel: document.getElementById('newCarAccel').value||"?", tires: document.getElementById('newCarTires').value||"?" }); document.getElementById('newCarName').value=''; document.getElementById('newCarPhoto').value=''; await loadMyGarage(); };
+        window.showCarCard = async (carName, driverName) => { const existingModal = document.getElementById('dynamicUmaModal'); if(existingModal) existingModal.remove(); document.body.insertAdjacentHTML('beforeend', `<div class="modal-overlay active" id="dynamicUmaModal" onclick="this.remove()"><div class="modal-content" style="padding:0; border:none; background:transparent; width:100%; max-width:340px;" id="dynamicUmaInner"><div style="padding:40px; text-align:center; background:#f0f3f5; border-radius:10px;">Ładowanie...</div></div></div>`); const q = query(collection(db, "fury"), where("driver", "==", driverName), where("name", "==", carName)); const snapshot = await getDocs(q); if(snapshot.empty) return; const carData = snapshot.docs[0].data(); document.getElementById('dynamicUmaInner').innerHTML = `<div style="position:relative; width:100%; height:500px; background:#000; border-radius:20px; overflow:hidden; box-shadow:0 0 30px rgba(79,172,254,0.8), inset 0 0 0 3px #fff;"><div style="position:absolute; top:0; left:0; width:100%; height:100%; background-image:url('${carData.photo}'); background-size:cover; background-position:center;"></div><div style="position:absolute; bottom:0; left:0; width:100%; height:170px; background:linear-gradient(to top, rgba(0,0,0,1) 5%, transparent); padding:12px; box-sizing:border-box; display:flex; flex-direction:column; justify-content:flex-end;"><h2 style="color:#ffeb3b; margin:0; text-align:center;">${carData.name}</h2><div style="text-align:center; color:#fff; font-size:12px; margin-bottom:8px;">WŁAŚCICIEL: <b>${carData.driver.toUpperCase()}</b></div><div style="color:#ccc; font-size:13px; display:flex; justify-content:space-between;"><span>SILNIK:</span> <span style="color:#fff;">${carData.engine}</span></div><div style="color:#ccc; font-size:13px; display:flex; justify-content:space-between;"><span>PALIWO:</span> <span style="color:#4facfe;">${carData.fuel||'Brak'}</span></div></div></div>`; };
+        window.showUserProfile = async (alias) => { document.getElementById('userProfileModal').classList.add('active'); document.getElementById('pubProfileAlias').innerText = alias; const docSnap = await getDoc(doc(db, "uzytkownicy", alias)); const adminB = document.getElementById('pubProfileAdminBadge'); adminB.style.display='none'; if(docSnap.exists()) { const d = docSnap.data(); document.getElementById('pubProfileAlias').innerText = d.nick||alias; if(alias==='pancerny') { adminB.innerHTML='<span class="admin-badge">ADMINISTRATOR</span>'; adminB.style.display='block'; } else if (d.role==='mod') { adminB.innerHTML='<span class="mod-badge">MODERATOR</span>'; adminB.style.display='block'; } document.getElementById('pubProfileCity').innerText=d.miejscowosc||"Nie podano"; document.getElementById('pubProfileDesc').innerText=d.opis||"Brak opisu."; const achBox = document.getElementById('pubProfileAchievements'); achBox.innerHTML=''; if(d.osiagniecia) { d.osiagniecia.forEach(key => { if(window.bazaOsiagniec[key]) achBox.innerHTML += `<img src="${window.bazaOsiagniec[key].img}" class="achievement-icon" title="${window.bazaOsiagniec[key].nazwa}">`; }); } } };
     </script>
+    
     <script>
+        // YOUTUBE RADIO ORAZ EASTER EGG UMAUMA
         window.ytPlayer; window.isRadioPlaying = false;
         function onYouTubeIframeAPIReady() { 
             window.ytPlayer = new YT.Player('youtubePlayer', { 
@@ -675,14 +673,44 @@
             }); 
         }
         document.getElementById('radioBtnToggle').addEventListener('click', (e) => { 
-            if(!window.ytPlayer || typeof window.ytPlayer.playVideo !== 'function') return alert("Audio się jeszcze ładuje, poczekaj chwileczkę!"); 
-            if (!window.isRadioPlaying) { 
-                window.ytPlayer.playVideo(); e.target.innerHTML = "🔇 Wyłącz Audio"; window.isRadioPlaying = true; 
-            } else { 
-                window.ytPlayer.pauseVideo(); e.target.innerHTML = "🎵 Włącz Audio"; window.isRadioPlaying = false; 
-            } 
+            if(!window.ytPlayer || typeof window.ytPlayer.playVideo !== 'function') return alert("Audio się ładuje!"); 
+            if (!window.isRadioPlaying) { window.ytPlayer.playVideo(); e.target.innerHTML = "🔇 Wyłącz Audio"; window.isRadioPlaying = true; } 
+            else { window.ytPlayer.pauseVideo(); e.target.innerHTML = "🎵 Włącz Audio"; window.isRadioPlaying = false; } 
             document.getElementById('userMenu').classList.remove('active'); 
         });
+
+        // EASTER EGG LOGIC
+        let keysBuffer = "";
+        document.addEventListener("keydown", (e) => {
+            if(document.activeElement.tagName === "INPUT" || document.activeElement.tagName === "TEXTAREA") return; // Nie reaguj gdy user pisze w polu tekstowym
+            keysBuffer += e.key.toLowerCase();
+            if (keysBuffer.length > 10) keysBuffer = keysBuffer.slice(-10);
+            
+            if (keysBuffer.includes("umauma")) {
+                keysBuffer = ""; // Reset
+                activateEasterEgg();
+            }
+        });
+
+        function activateEasterEgg() {
+            document.body.classList.add('easter-egg-active');
+            document.getElementById('headerTitle').innerText = "UMAPYOI!";
+            
+            // Zmiana gifów na tachyon.gif
+            document.querySelectorAll('.header-gif').forEach(img => {
+                img.src = "tachyon.gif";
+            });
+
+            // Youtube Audio Switch
+            if(window.ytPlayer && typeof window.ytPlayer.loadVideoById === 'function') {
+                window.ytPlayer.loadVideoById('CpKi1BKLNY0');
+                window.ytPlayer.setVolume(40); // Uma Musume trzeba słuchać głośniej!
+                window.ytPlayer.playVideo();
+                window.isRadioPlaying = true;
+                document.getElementById('radioBtnToggle').innerHTML = "🔇 Wyłącz Umapyoi";
+            }
+            console.log("EASTER EGG ACTIVATED: UMAPYOI!");
+        }
     </script>
 </body>
 </html>
