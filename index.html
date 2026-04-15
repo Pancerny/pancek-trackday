@@ -50,29 +50,17 @@
 
         .btn-auth-submit { 
             background: linear-gradient(180deg, #5865F2 0%, #4752C4 100%); 
-            border: 3px solid #ffffff; 
-            border-radius: 30px;
+            border: 3px solid #ffffff; border-radius: 30px;
             box-shadow: inset 0px 4px 5px rgba(255,255,255,0.4), 0 5px 0 #3c45a5, 0 8px 10px rgba(0,0,0,0.3); 
-            color: #ffffff; 
-            font-size: 16px; 
-            font-weight: 900; 
-            text-transform: uppercase;
+            color: #ffffff; font-size: 16px; font-weight: 900; text-transform: uppercase;
             text-shadow: 1px 1px 0px #2f3688, -1px -1px 0px #2f3688, 1px -1px 0px #2f3688, -1px 1px 0px #2f3688; 
-            padding: 12px 20px; 
-            cursor: pointer; 
-            transition: 0.1s ease; 
-            width: 100%; 
-            margin-top: 15px; 
+            padding: 12px 20px; cursor: pointer; transition: 0.1s ease; width: 100%; margin-top: 15px; 
         }
-        .btn-auth-submit:active { 
-            transform: translateY(4px); 
-            box-shadow: inset 0px 2px 2px rgba(255,255,255,0.4), 0 1px 0 #3c45a5, 0 3px 5px rgba(0,0,0,0.3); 
-        }
+        .btn-auth-submit:active { transform: translateY(4px); box-shadow: inset 0px 2px 2px rgba(255,255,255,0.4), 0 1px 0 #3c45a5, 0 3px 5px rgba(0,0,0,0.3); }
         
         .btn-cancel { background: linear-gradient(180deg, #d3d9dc 0%, #a6b1b5 100%); box-shadow: inset 0px 4px 5px rgba(255,255,255,0.6), 0 5px 0 #6e767a, 0 8px 10px rgba(0,0,0,0.3); text-shadow: 1px 1px 0px #444, -1px -1px 0px #444, 1px -1px 0px #444, -1px 1px 0px #444; }
         .btn-cancel:active { box-shadow: inset 0px 2px 2px rgba(255,255,255,0.6), 0 1px 0 #6e767a, 0 3px 5px rgba(0,0,0,0.3); }
 
-        /* UPLOAD PRZYCISKI STYL */
         .file-upload-btn {
             background: linear-gradient(180deg, #2bc2ff, #168bd8); border: 2px solid #fff; border-radius: 20px;
             color: white; font-weight: 900; padding: 10px; cursor: pointer; text-align: center; margin-bottom: 10px;
@@ -85,18 +73,15 @@
            ========================================== */
         #map { width: 100vw; height: 100vh; position: absolute; top: 0; left: 0; z-index: 1; }
         
-        /* POPRAWKA MAPY - Przesunięcie kontrolek pod hamburgera */
-        .leaflet-top.leaflet-left { padding-top: 80px; }
-        
         .floating-header { 
             position: absolute; top: 20px; left: 50%; transform: translateX(-50%); z-index: 1000; 
             background: linear-gradient(180deg, #ffb72b 0%, #f38815 100%);
-            padding: 10px 40px; border-radius: 50px; border: 4px solid #fff; 
+            padding: 10px 25px; border-radius: 50px; border: 4px solid #fff; 
             box-shadow: 0 5px 0 #c76505, 0 8px 15px rgba(0,0,0,0.4); 
-            text-align: center; pointer-events: none; display: flex; align-items: center; gap: 20px; 
+            text-align: center; pointer-events: none; display: flex; align-items: center; gap: 15px; 
         }
-        .floating-header h1 { margin: 0; color: #fff; letter-spacing: 2px; font-size: 32px; font-weight: 900; text-shadow: 2px 2px 0 #c76505, -1px -1px 0 #c76505, 1px -1px 0 #c76505, -1px 1px 0 #c76505; }
-        .floating-header img { height: 90px; width: auto; object-fit: contain; filter: drop-shadow(0 2px 2px rgba(0,0,0,0.5)); margin: -15px -10px; }
+        .floating-header h1 { margin: 0; color: #fff; letter-spacing: 2px; font-size: 30px; font-weight: 900; text-shadow: 2px 2px 0 #c76505, -1px -1px 0 #c76505, 1px -1px 0 #c76505, -1px 1px 0 #c76505; }
+        .floating-header img { height: 80px; width: auto; object-fit: contain; filter: drop-shadow(0 2px 2px rgba(0,0,0,0.5)); margin: -10px -25px; } /* Przesunięte do krawędzi */
         
         .user-widget { 
             position: absolute; top: 20px; right: 20px; z-index: 1000; display: flex; align-items: center; gap: 10px; 
@@ -106,7 +91,7 @@
         }
         .user-widget:active { transform: translateY(3px); box-shadow: 0 1px 0 #aaa, 0 3px 5px rgba(0,0,0,0.3); }
         .greeting { font-weight: 900; color: #333; font-size: 14px; }
-        .greeting span { color: #f38815; text-decoration: none; }
+        .greeting span { color: #f38815; text-decoration: none; } /* WYŁĄCZONE PODKREŚLENIE */
         .user-avatar { width: 40px; height: 40px; border-radius: 50%; background: #f38815; display: flex; justify-content: center; align-items: center; font-weight: 900; font-size: 18px; color: #fff; border: 2px solid #fff; overflow: hidden; box-shadow: inset 0 2px 4px rgba(0,0,0,0.2); }
 
         .dropdown-menu { position: absolute; top: 80px; right: 20px; background: #fff; border-radius: 15px; border: 3px solid #ddd; box-shadow: 0 8px 20px rgba(0,0,0,0.4); width: 250px; display: none; flex-direction: column; overflow: hidden; z-index: 1001; }
@@ -176,14 +161,10 @@
         .garage-form-box { background: #fff; padding: 20px; border-radius: 15px; margin-bottom: 20px; border: 2px solid #ddd; box-shadow: 0 4px 10px rgba(0,0,0,0.05);}
         .garage-form-box h3 { color: #5ac313; font-weight: 900; margin-top: 0; text-transform: uppercase;}
 
-        /* LISTY MINI-GUZIKI ORAZ OSIĄGNIĘCIA */
         .list-item { display: flex; justify-content: flex-start; align-items: center; padding: 12px; background: #fff; margin-bottom: 10px; border-radius: 15px; border: 2px solid #ddd; box-shadow: 0 3px 0 #ccc;}
         .list-item b { color: #333; font-size: 15px; font-weight: 900;}
         .list-item-btns { display: flex; gap: 5px; flex-wrap: wrap; justify-content: flex-end; margin-left: auto;}
-        .list-item-btns button { 
-            border: 2px solid #fff; border-radius: 20px; padding: 6px 10px; cursor: pointer; color: white; font-weight: 900; font-size: 11px;
-            box-shadow: 0 3px 0 rgba(0,0,0,0.2); transition: 0.1s; text-transform: uppercase;
-        }
+        .list-item-btns button { border: 2px solid #fff; border-radius: 20px; padding: 6px 10px; cursor: pointer; color: white; font-weight: 900; font-size: 11px; box-shadow: 0 3px 0 rgba(0,0,0,0.2); transition: 0.1s; text-transform: uppercase;}
         .list-item-btns button:active { transform: translateY(2px); box-shadow: 0 1px 0 rgba(0,0,0,0.2); }
         .btn-view { background: linear-gradient(180deg, #2bc2ff, #168bd8); }
         .btn-edit { background: linear-gradient(180deg, #ffb72b, #f38815); }
@@ -196,18 +177,17 @@
         .achievement-icon { width: 50px; height: 50px; border-radius: 10px; border: 2px solid #fff; background: #fff; box-shadow: 0 0 0 2px #f38815, 0 4px 6px rgba(0,0,0,0.2); object-fit: contain;}
 
         /* ==========================================
-           DYMKI MAPY I TABELE (ZMNIEJSZONE I ZOPTYMALIZOWANE)
+           DYMKI MAPY I TABELE (ZMNIEJSZONE)
            ========================================== */
         .leaflet-popup-content-wrapper { background: #f0f3f5; border: 4px solid #fff; border-radius: 20px; box-shadow: 0 0 0 3px #ccc, 0 10px 20px rgba(0,0,0,0.3); padding: 0; overflow: hidden; }
         .leaflet-popup-tip { background: #ccc; }
-        .leaflet-popup-content { margin: 0 !important; width: 320px !important; }
+        .leaflet-popup-content { margin: 0 !important; width: 300px !important; } /* Zmniejszone */
         
-        .track-img-header { width: 100%; height: 120px; object-fit: cover; background-color: #222; border-bottom: 4px solid #fff; display: block; }
+        .track-img-header { width: 100%; height: 110px; object-fit: cover; background-color: #222; border-bottom: 4px solid #fff; display: block; }
         
         .popup-inner-pad { padding: 12px; }
         .popup-inner-pad h2 { color: #fff; text-shadow: 2px 2px 0 #3a8a0b, -1px -1px 0 #3a8a0b, 1px -1px 0 #3a8a0b, -1px 1px 0 #3a8a0b; font-size: 20px; font-weight: 900; text-transform: uppercase; text-align: center; margin-top: 0; margin-bottom: 10px; background: linear-gradient(180deg, #a3f740 0%, #5ac313 100%); padding: 5px; border-radius: 20px; border: 2px solid #fff;}
 
-        /* SEKCJA DETALI TORU W DYMKU */
         .track-details-box { background: #fff; border-radius: 10px; padding: 10px; margin-bottom: 10px; border: 2px solid #ddd; font-size: 13px; text-align: left;}
         .track-details-box p { margin: 5px 0; color: #555; font-weight: bold;}
         .track-details-box strong { color: #333; }
@@ -234,52 +214,23 @@
         .troll-popup { background: #2a2c33; border: 6px solid #e74c3c; text-align: center; padding: 30px; border-radius: 30px; box-shadow: 0 0 0 6px #fff, 0 0 50px rgba(231, 76, 60, 0.8); z-index: 6000; max-width: 420px; display: flex; flex-direction: column; align-items: center; cursor: default;}
         .troll-popup h2 { margin-top: 0; color: #fff; text-transform: uppercase; font-weight: 900; text-shadow: 2px 2px 0 #c0392b, -1px -1px 0 #c0392b, 1px -1px 0 #c0392b, -1px 1px 0 #c0392b; font-size: 32px;}
         .troll-img { max-width: 100%; border-radius: 15px; margin-bottom: 15px; border: 4px solid #fff; box-shadow: 0 10px 20px rgba(0,0,0,0.5);}
-        
         .victory-popup { border-color: gold; box-shadow: 0 0 0 6px #fff, 0 0 50px rgba(255, 215, 0, 0.8); }
         .victory-popup h2 { color: #fff; text-shadow: 2px 2px 0 #b8860b, -1px -1px 0 #b8860b, 1px -1px 0 #b8860b, -1px 1px 0 #b8860b; }
 
         /* ==========================================
-           EASTER EGG (UMAUMA) ANIMATIONS - FULL RAINBOW
+           EASTER EGG (UMAUMA) ANIMATIONS - FULL RAINBOW HUE ROTATE
            ========================================== */
-        body.easter-egg-active * { transition: background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease; }
+        body.easter-egg-active {
+            animation: rainbowHue 5s linear infinite !important;
+        }
+        @keyframes rainbowHue {
+            0% { filter: hue-rotate(0deg) saturate(150%); }
+            100% { filter: hue-rotate(360deg) saturate(150%); }
+        }
         body.easter-egg-active .floating-header { animation: bounceInterface 0.5s infinite alternate; }
         body.easter-egg-active .user-widget { animation: bounceSimple 0.6s infinite alternate-reverse; }
         body.easter-egg-active #hamburgerBtn { animation: bounceSimple 0.55s infinite alternate; }
         
-        /* Tęczowe obramowania głównych paneli */
-        body.easter-egg-active .modal-content, 
-        body.easter-egg-active .auth-card, 
-        body.easter-egg-active .floating-header, 
-        body.easter-egg-active .user-widget, 
-        body.easter-egg-active #sideMenu, 
-        body.easter-egg-active .troll-popup {
-            animation: rainbowBorder 2s linear infinite !important;
-            border-width: 4px !important;
-            border-style: solid !important;
-        }
-
-        /* Tęczowe tła przycisków */
-        body.easter-egg-active button, 
-        body.easter-egg-active .dropdown-item, 
-        body.easter-egg-active .file-upload-btn,
-        body.easter-egg-active .admin-badge,
-        body.easter-egg-active .mod-badge {
-            background: linear-gradient(45deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #9400d3) !important;
-            background-size: 400% 400% !important;
-            animation: rainbowBG 3s ease infinite !important;
-            color: #fff !important; text-shadow: 1px 1px 2px #000 !important;
-            border-color: #fff !important;
-        }
-
-        @keyframes rainbowBG { 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} }
-        @keyframes rainbowBorder {
-            0% { border-color: #ff0000; box-shadow: 0 0 30px #ff0000; }
-            20% { border-color: #ff7f00; box-shadow: 0 0 30px #ff7f00; }
-            40% { border-color: #ffff00; box-shadow: 0 0 30px #ffff00; }
-            60% { border-color: #00ff00; box-shadow: 0 0 30px #00ff00; }
-            80% { border-color: #0000ff; box-shadow: 0 0 30px #0000ff; }
-            100% { border-color: #ff0000; box-shadow: 0 0 30px #ff0000; }
-        }
         @keyframes bounceInterface { from { transform: translateY(0) translateX(-50%); } to { transform: translateY(-15px) translateX(-50%); } }
         @keyframes bounceSimple { from { transform: translateY(0); } to { transform: translateY(-15px); } }
 
@@ -289,7 +240,7 @@
         @media screen and (max-width: 600px) {
             .floating-header { top: 10px; padding: 5px 15px; flex-direction: row; width: auto; white-space: nowrap;}
             .floating-header h1 { font-size: 20px; letter-spacing: 1px; }
-            .floating-header img { height: 50px; margin: 0; }
+            .floating-header img { height: 50px; margin: 0 -15px; }
             #hamburgerBtn { top: 10px; left: 10px; width: 40px; height: 40px; font-size: 20px;}
 
             .user-widget { top: 10px; padding: 2px; right: 10px; border-radius: 50%; }
@@ -298,7 +249,7 @@
             .auth-card { width: 95%; flex-direction: column; height: auto; }
             .auth-card-image { display: none; }
             .modal-content { width: 95%; padding: 15px; }
-            .leaflet-popup-content { width: 280px !important; }
+            .leaflet-popup-content { width: 260px !important; }
         }
     </style>
     <script src="https://www.youtube.com/iframe_api"></script>
@@ -581,7 +532,7 @@
         const darkMap = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png');
         const satelliteMap = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}');
         const map = L.map('map', { zoomControl: false, layers: [satelliteMap] }).setView([51.8, 20.5], 7);
-        L.control.zoom({ position: 'topleft' }).addTo(map);
+        L.control.zoom({ position: 'bottomright' }).addTo(map); // Przesunięto w prawy dół
         L.control.layers({ "Tryb Nocny": darkMap, "Satelita": satelliteMap }, null, {position: 'bottomleft'}).addTo(map);
 
         let tory = [
@@ -613,7 +564,7 @@
         window.openSettings = async () => { 
             userMenu.classList.remove('active'); document.getElementById('settingsModal').classList.add('active'); 
             document.getElementById('settingsAvatar').value = auth.currentUser.photoURL || ''; 
-            document.getElementById('uploadStatusAvatar').innerText = ''; // Czyszczenie statusu
+            document.getElementById('uploadStatusAvatar').innerText = ''; 
             const docSnap = await getDoc(doc(db, "uzytkownicy", window.currentUserAlias)); 
             if(docSnap.exists()) { 
                 const data = docSnap.data(); 
@@ -669,6 +620,7 @@
         window.openGarage = async () => { 
             userMenu.classList.remove('active'); 
             document.getElementById('garageModal').classList.add('active'); 
+            window.cancelEdit(); // CZYSZCZENIE FORMULARZA PRZED OTWARCIEM
             await loadMyGarage(); 
         };
         
@@ -817,16 +769,15 @@
             } 
         };
 
+        // NOWY, ŚLICZNY DESIGN KARTY UMA MUSUME
         window.showCarCard = async (carName, driverName) => { 
             const existingModal = document.getElementById('dynamicUmaModal'); 
             if(existingModal) existingModal.remove(); 
             
-            document.body.insertAdjacentHTML('beforeend', `<div class="modal-overlay active" id="dynamicUmaModal"><div class="modal-content" style="padding:0; border:none; background:transparent; width:100%; max-width:340px;" id="dynamicUmaInner"><div style="padding:40px; text-align:center; background:#f0f3f5; border-radius:10px;">Ładowanie...</div></div></div>`); 
+            document.body.insertAdjacentHTML('beforeend', `<div class="modal-overlay active" id="dynamicUmaModal"><div class="modal-content" style="padding:0; border:none; background:transparent; width:100%; max-width:340px; box-shadow:none;" id="dynamicUmaInner"><div style="padding:40px; text-align:center; background:#f0f3f5; border-radius:10px;">Ładowanie...</div></div></div>`); 
             
             document.getElementById('dynamicUmaModal').addEventListener('click', (e) => { 
-                if(e.target.id === 'dynamicUmaModal') { 
-                    document.getElementById('dynamicUmaModal').remove(); 
-                } 
+                if(e.target.id === 'dynamicUmaModal') { document.getElementById('dynamicUmaModal').remove(); } 
             });
 
             const q = query(collection(db, "fury"), where("driver", "==", driverName), where("name", "==", carName)); 
@@ -837,16 +788,39 @@
             const fuelDisplay = carData.fuel ? carData.fuel : "Brak danych";
             
             document.getElementById('dynamicUmaInner').innerHTML = `
-                <div style="position:relative; width:100%; height:500px; background:#000; border-radius:20px; overflow:hidden; box-shadow:0 0 30px rgba(79,172,254,0.8), inset 0 0 0 3px #fff;">
-                    <span onclick="document.getElementById('dynamicUmaModal').remove()" style="position: absolute; top: 15px; right: 20px; font-size: 32px; color: #fff; cursor: pointer; z-index: 10; text-shadow: 2px 2px 4px #000; font-weight: bold;">×</span>
-                    <div style="position:absolute; top:0; left:0; width:100%; height:100%; background-image:url('${carData.photo}'); background-size:cover; background-position:center;"></div>
-                    <div style="position:absolute; bottom:0; left:0; width:100%; height:170px; background:linear-gradient(to top, rgba(0,0,0,1) 5%, rgba(0,0,0,0.8) 50%, transparent); padding:12px; box-sizing:border-box; display:flex; flex-direction:column; justify-content:flex-end;">
-                        <h2 style="color:#ffeb3b; margin:0; text-align:center;">${carData.name}</h2>
-                        <div style="text-align:center; color:#fff; font-size:12px; margin-bottom:8px;">WŁAŚCICIEL: <b>${carData.driver.toUpperCase()}</b></div>
-                        <div style="color:#ccc; font-size:13px; display:flex; justify-content:space-between;"><span>SILNIK:</span> <span style="color:#fff;">${carData.engine}</span></div>
-                        <div style="color:#ccc; font-size:13px; display:flex; justify-content:space-between;"><span>PALIWO:</span> <span style="color:#4facfe;">${fuelDisplay}</span></div>
-                        <div style="color:#ccc; font-size:13px; display:flex; justify-content:space-between;"><span>0-100 km/h:</span> <span style="color:#fff;">${carData.accel}</span></div>
-                        <div style="color:#ccc; font-size:13px; display:flex; justify-content:space-between;"><span>OPONY:</span> <span style="color:#4cd137;">${carData.tires}</span></div>
+                <div style="width: 100%; background: #f0f3f5; border-radius: 20px; overflow: hidden; border: 4px solid #fff; box-shadow: 0 10px 25px rgba(0,0,0,0.5); position: relative;">
+                    <span onclick="document.getElementById('dynamicUmaModal').remove()" style="position: absolute; top: 10px; right: 15px; font-size: 28px; color: #fff; cursor: pointer; z-index: 10; font-weight: 900; text-shadow: 1px 1px 2px rgba(0,0,0,0.5);">×</span>
+                    
+                    <div style="background: linear-gradient(180deg, #2bc2ff, #168bd8); padding: 15px; text-align: center; border-bottom: 4px solid #fff;">
+                        <div style="color: #fff; font-size: 12px; font-weight: bold; text-transform: uppercase; text-shadow: 1px 1px 0 #0d6299;">Właściciel Maszyny</div>
+                        <div style="color: #fff; font-size: 20px; font-weight: 900; text-transform: uppercase; text-shadow: 2px 2px 0 #0d6299;">${carData.driver.toUpperCase()}</div>
+                    </div>
+
+                    <div style="width: 100%; height: 200px; background-color: #222; background-image: url('${carData.photo}'); background-size: cover; background-position: center; border-bottom: 4px solid #fff;"></div>
+
+                    <div style="padding: 15px 20px 5px 20px; text-align: center;">
+                        <h2 style="margin: 0; color: #f38815; font-size: 24px; font-weight: 900; text-transform: uppercase; text-shadow: 1px 1px 0 #fff, -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff;">${carData.name}</h2>
+                    </div>
+
+                    <div style="padding: 15px 20px 25px 20px;">
+                        <div style="background: #fff; border-radius: 15px; border: 2px solid #ddd; padding: 15px; display: flex; flex-direction: column; gap: 10px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #eee; padding-bottom: 5px;">
+                                <span style="color: #888; font-weight: 900; font-size: 12px; text-transform: uppercase;">Silnik</span>
+                                <span style="color: #333; font-weight: 900; font-size: 14px;">${carData.engine}</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #eee; padding-bottom: 5px;">
+                                <span style="color: #888; font-weight: 900; font-size: 12px; text-transform: uppercase;">Paliwo</span>
+                                <span style="color: #4facfe; font-weight: 900; font-size: 14px;">${fuelDisplay}</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #eee; padding-bottom: 5px;">
+                                <span style="color: #888; font-weight: 900; font-size: 12px; text-transform: uppercase;">0-100 km/h</span>
+                                <span style="color: #5ac313; font-weight: 900; font-size: 14px;">${carData.accel}</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <span style="color: #888; font-weight: 900; font-size: 12px; text-transform: uppercase;">Opony</span>
+                                <span style="color: #e74c3c; font-weight: 900; font-size: 14px;">${carData.tires}</span>
+                            </div>
+                        </div>
                     </div>
                 </div>`; 
         };
@@ -869,7 +843,6 @@
                 const d = docSnap.data(); 
                 document.getElementById('pubProfileAlias').innerText = d.nick||alias; 
                 
-                // PRZYWRÓCENIE AWATARA W PROFILU
                 if(d.avatar) { 
                     document.getElementById('pubProfileAvatar').innerHTML = ""; 
                     document.getElementById('pubProfileAvatar').style.backgroundImage = `url('${d.avatar}')`; 
@@ -923,7 +896,6 @@
             userMenu.classList.remove('active'); 
             document.getElementById('adminModal').classList.add('active'); 
             
-            // Ladowanie Patch notes
             const patchSnap = await getDoc(doc(db, "ustawienia", "patchnotes"));
             if(patchSnap.exists()) { 
                 document.getElementById('adminPatchText').value = patchSnap.data().text || ""; 
@@ -1026,7 +998,7 @@
         window.publishPatchNotes = async () => {
             const text = document.getElementById('adminPatchText').value;
             if(!text) return alert("Wpisz treść nowości!");
-            const newVersion = Date.now().toString(); // Zawsze wymusi pokazanie u userow
+            const newVersion = Date.now().toString(); 
             await setDoc(doc(db, "ustawienia", "patchnotes"), { text: text, version: newVersion });
             alert("Opublikowano! Wszyscy gracze zobaczą to przy logowaniu.");
         };
@@ -1036,7 +1008,6 @@
         // ==========================================
 
         async function initializeAppAfterLogin() {
-            // Check Admin / Mod
             window.userRole = "user";
             if(window.currentUserAlias.toLowerCase() === 'pancerny') { window.userRole = "admin"; }
             const uSnap = await getDoc(doc(db, "uzytkownicy", window.currentUserAlias));
@@ -1052,7 +1023,6 @@
                 document.getElementById('adminMenuBtn').classList.remove('hidden'); 
             }
 
-            // Pobierz Custom Tory z Bazy
             const customTracksSnap = await getDocs(collection(db, "tory_custom"));
             customTracksSnap.forEach(d => {
                 const td = d.data();
@@ -1094,14 +1064,12 @@
                         </div>`; 
                     document.getElementById(`popup-content-${safeId}`).innerHTML = fullHTML; 
                     
-                    // Wypełnienie garażu (Select)
                     let carSelectHTML = `<select id="carSelect-${safeId}" style="width:100%; border: 3px solid #ccc; border-radius: 15px; padding: 10px; font-weight: bold;">`; 
                     if(window.myCars.length === 0) carSelectHTML += `<option value="" disabled selected>Brak aut!</option>`; 
                     else { window.myCars.forEach(car => { carSelectHTML += `<option value="${car}">${car}</option>`; }); } 
                     carSelectHTML += `</select>`; 
                     document.getElementById(`carSelectContainer-${safeId}`).innerHTML = carSelectHTML;
 
-                    // Pobranie Detali Toru (Opis, Ceny)
                     const infoBox = document.getElementById(`trackInfoRender-${safeId}`);
                     const infoSnap = await getDoc(doc(db, "tory_detale", safeId));
                     let infoData = { opis: "Brak opisu.", kontakt: "Brak", email: "Brak", ceny: "Brak info" };
@@ -1120,7 +1088,6 @@
                     window.loadLeaderboard(tor.nazwa); 
                 }); 
 
-                // Menu Boczne
                 let listImg = tor.foto ? `<img src="${tor.foto}" class="track-list-icon">` : `<div class="track-list-icon"></div>`;
                 sideMenuList.innerHTML += `
                     <li class="track-list-item" onclick="window.focusTrack('${safeId}', ${tor.lat}, ${tor.lng})">
@@ -1256,7 +1223,6 @@
             window.loadLeaderboard(trackName); 
         };
 
-        // ZAMYKANIE MODALI
         window.closeModal = (modalId) => { document.getElementById(modalId).classList.remove('active'); };
         const modalsArr = ['garageModal', 'settingsModal', 'userProfileModal', 'allCarsModal', 'usersListModal', 'changelogModal', 'adminModal', 'trophiesModal', 'trackInfoEditModal'];
         modalsArr.forEach(m => { 
@@ -1303,28 +1269,20 @@
         async function uploadToStorage(file) {
             if (!file) return null;
             
-            // 1. Kompresja (nasz skrypt)
             const compressedBlob = await compressImage(file);
-            
-            // 2. Paczka dla Cloudinary
             const formData = new FormData();
             formData.append("file", compressedBlob);
             
-            // Twoje dokładne dane z Cloudinary:
             const cloudName = "drsjcdklu"; 
             formData.append("upload_preset", "trackday_preset"); 
             
             try {
-                // 3. Wysyłamy prosto do Twojej darmowej chmury
                 const response = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, {
                     method: 'POST',
                     body: formData
                 });
-                
                 const data = await response.json();
-                
                 if(data.secure_url) {
-                    // 4. Mamy to! Cloudinary zwraca gotowy, bezpieczny link
                     return data.secure_url; 
                 } else {
                     alert("Błąd serwera zdjęć: " + (data.error ? data.error.message : "Nieznany błąd"));
@@ -1337,14 +1295,11 @@
             }
         }
 
-        // Listener dla wgrywania Awatara
         document.getElementById('avatarFile').addEventListener('change', async (e) => {
             const file = e.target.files[0];
             if(!file) return;
-            
             const status = document.getElementById('uploadStatusAvatar');
             status.innerText = "⏳ Kompresja i wgrywanie... Proszę czekać.";
-            
             const url = await uploadToStorage(file);
             if(url) {
                 document.getElementById('settingsAvatar').value = url;
@@ -1354,14 +1309,11 @@
             }
         });
 
-        // Listener dla wgrywania zdjęcia fury
         document.getElementById('carPhotoFile').addEventListener('change', async (e) => {
             const file = e.target.files[0];
             if(!file) return;
-            
             const status = document.getElementById('uploadStatusCar');
             status.innerText = "⏳ Kompresja i wgrywanie... Proszę czekać.";
-            
             const url = await uploadToStorage(file);
             if(url) {
                 document.getElementById('newCarPhoto').value = url;
@@ -1379,22 +1331,15 @@
             const e = document.getElementById('email').value; 
             const p = document.getElementById('password').value; 
             if(!e || !p) return alert("Wpisz dane!"); 
-            
             try { 
                 const user = await signInWithEmailAndPassword(auth, e, p); 
-                if(!user.user.emailVerified) { 
-                    alert("Potwierdź e-mail!"); 
-                    signOut(auth); 
-                } 
+                if(!user.user.emailVerified) { alert("Potwierdź e-mail!"); signOut(auth); } 
             } catch (err) { 
                 try { 
                     const user = await createUserWithEmailAndPassword(auth, e, p); 
                     await sendEmailVerification(user.user); 
-                    alert("Konto założone! Sprawdź mail."); 
-                    signOut(auth); 
-                } catch(err2) { 
-                    alert(err2.message); 
-                } 
+                    alert("Konto założone! Sprawdź mail."); signOut(auth); 
+                } catch(err2) { alert(err2.message); } 
             } 
         });
 
@@ -1402,12 +1347,7 @@
             e.preventDefault(); 
             const em = document.getElementById('email').value; 
             if(!em) return alert("Wpisz mail!"); 
-            try { 
-                await sendPasswordResetEmail(auth, em); 
-                alert("Wysłano link!"); 
-            } catch(x) { 
-                alert(x.message); 
-            } 
+            try { await sendPasswordResetEmail(auth, em); alert("Wysłano link!"); } catch(x) { alert(x.message); } 
         });
 
         document.getElementById('logoutBtn').addEventListener('click', () => { signOut(auth); });
@@ -1415,24 +1355,16 @@
         onAuthStateChanged(auth, async (user) => { 
             if (user && user.emailVerified) { 
                 window.currentUserAlias = user.email.split('@')[0]; 
-
                 const docSnap = await getDoc(doc(db, "uzytkownicy", window.currentUserAlias));
-                if(docSnap.exists() && docSnap.data().nick) { 
-                    window.currentUserNick = docSnap.data().nick; 
-                } else { 
-                    window.currentUserNick = window.currentUserAlias; 
-                }
-                
+                if(docSnap.exists() && docSnap.data().nick) { window.currentUserNick = docSnap.data().nick; } 
+                else { window.currentUserNick = window.currentUserAlias; }
                 document.getElementById('greetingAlias').innerText = window.currentUserNick.toUpperCase(); 
-
                 updateAvatarUI(user); 
                 document.getElementById('authOverlay').classList.add('hidden'); 
                 document.getElementById('appUI').classList.remove('hidden'); 
                 map.invalidateSize(); 
-                
                 await initializeAppAfterLogin();
 
-                // ODCZYTANIE PATCH NOTES Z BAZY DANYCH
                 const patchSnap = await getDoc(doc(db, "ustawienia", "patchnotes"));
                 if(patchSnap.exists()) {
                     const pData = patchSnap.data();
@@ -1442,8 +1374,6 @@
                         localStorage.setItem("trackday_version", pData.version);
                     }
                 }
-
-                // Odpalenie radia
                 if(window.ytPlayer && typeof window.ytPlayer.playVideo === 'function') {
                     document.getElementById('radioBtnToggle').innerText = "🎵 Włącz Audio";
                     window.isRadioPlaying = false;
@@ -1491,7 +1421,6 @@
             document.getElementById('userMenu').classList.remove('active'); 
         });
 
-        // EASTER EGG LOGIC
         let keysBuffer = "";
         document.addEventListener("keydown", (e) => {
             if(document.activeElement.tagName === "INPUT" || document.activeElement.tagName === "TEXTAREA") return; 
@@ -1508,15 +1437,13 @@
             document.body.classList.add('easter-egg-active');
             document.getElementById('headerTitle').innerText = "UMAPYOI!";
             
-            // Zmiana gifów na tachyon.gif
             document.querySelectorAll('.header-gif').forEach(img => {
                 img.src = "tachyon.gif";
             });
 
-            // Youtube Audio Switch
             if(window.ytPlayer && typeof window.ytPlayer.loadVideoById === 'function') {
                 window.ytPlayer.loadVideoById('CpKi1BKLNY0');
-                window.ytPlayer.setVolume(40); // Uma Musume trzeba słuchać głośniej!
+                window.ytPlayer.setVolume(40);
                 window.ytPlayer.playVideo();
                 window.isRadioPlaying = true;
                 document.getElementById('radioBtnToggle').innerHTML = "🔇 Wyłącz Umapyoi";
