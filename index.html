@@ -85,6 +85,9 @@
            ========================================== */
         #map { width: 100vw; height: 100vh; position: absolute; top: 0; left: 0; z-index: 1; }
         
+        /* POPRAWKA MAPY - Przesunięcie kontrolek pod hamburgera */
+        .leaflet-top.leaflet-left { padding-top: 80px; }
+        
         .floating-header { 
             position: absolute; top: 20px; left: 50%; transform: translateX(-50%); z-index: 1000; 
             background: linear-gradient(180deg, #ffb72b 0%, #f38815 100%);
@@ -93,7 +96,7 @@
             text-align: center; pointer-events: none; display: flex; align-items: center; gap: 20px; 
         }
         .floating-header h1 { margin: 0; color: #fff; letter-spacing: 2px; font-size: 32px; font-weight: 900; text-shadow: 2px 2px 0 #c76505, -1px -1px 0 #c76505, 1px -1px 0 #c76505, -1px 1px 0 #c76505; }
-        .floating-header img { height: 90px; width: auto; object-fit: contain; filter: drop-shadow(0 2px 2px rgba(0,0,0,0.5)); margin: -15px 0; }
+        .floating-header img { height: 90px; width: auto; object-fit: contain; filter: drop-shadow(0 2px 2px rgba(0,0,0,0.5)); margin: -15px -10px; }
         
         .user-widget { 
             position: absolute; top: 20px; right: 20px; z-index: 1000; display: flex; align-items: center; gap: 10px; 
@@ -103,7 +106,7 @@
         }
         .user-widget:active { transform: translateY(3px); box-shadow: 0 1px 0 #aaa, 0 3px 5px rgba(0,0,0,0.3); }
         .greeting { font-weight: 900; color: #333; font-size: 14px; }
-        .greeting span { color: #f38815; text-decoration: underline; }
+        .greeting span { color: #f38815; text-decoration: none; }
         .user-avatar { width: 40px; height: 40px; border-radius: 50%; background: #f38815; display: flex; justify-content: center; align-items: center; font-weight: 900; font-size: 18px; color: #fff; border: 2px solid #fff; overflow: hidden; box-shadow: inset 0 2px 4px rgba(0,0,0,0.2); }
 
         .dropdown-menu { position: absolute; top: 80px; right: 20px; background: #fff; border-radius: 15px; border: 3px solid #ddd; box-shadow: 0 8px 20px rgba(0,0,0,0.4); width: 250px; display: none; flex-direction: column; overflow: hidden; z-index: 1001; }
@@ -193,16 +196,16 @@
         .achievement-icon { width: 50px; height: 50px; border-radius: 10px; border: 2px solid #fff; background: #fff; box-shadow: 0 0 0 2px #f38815, 0 4px 6px rgba(0,0,0,0.2); object-fit: contain;}
 
         /* ==========================================
-           DYMKI MAPY I TABELE
+           DYMKI MAPY I TABELE (ZMNIEJSZONE I ZOPTYMALIZOWANE)
            ========================================== */
         .leaflet-popup-content-wrapper { background: #f0f3f5; border: 4px solid #fff; border-radius: 20px; box-shadow: 0 0 0 3px #ccc, 0 10px 20px rgba(0,0,0,0.3); padding: 0; overflow: hidden; }
         .leaflet-popup-tip { background: #ccc; }
-        .leaflet-popup-content { margin: 0 !important; width: 380px !important; }
+        .leaflet-popup-content { margin: 0 !important; width: 320px !important; }
         
-        .track-img-header { width: 100%; height: 140px; object-fit: contain; background-color: #222; border-bottom: 4px solid #fff; display: block; }
+        .track-img-header { width: 100%; height: 120px; object-fit: cover; background-color: #222; border-bottom: 4px solid #fff; display: block; }
         
-        .popup-inner-pad { padding: 15px; }
-        .popup-inner-pad h2 { color: #fff; text-shadow: 2px 2px 0 #3a8a0b, -1px -1px 0 #3a8a0b, 1px -1px 0 #3a8a0b, -1px 1px 0 #3a8a0b; font-size: 22px; font-weight: 900; text-transform: uppercase; text-align: center; margin-top: 0; margin-bottom: 10px; background: linear-gradient(180deg, #a3f740 0%, #5ac313 100%); padding: 5px; border-radius: 20px; border: 2px solid #fff;}
+        .popup-inner-pad { padding: 12px; }
+        .popup-inner-pad h2 { color: #fff; text-shadow: 2px 2px 0 #3a8a0b, -1px -1px 0 #3a8a0b, 1px -1px 0 #3a8a0b, -1px 1px 0 #3a8a0b; font-size: 20px; font-weight: 900; text-transform: uppercase; text-align: center; margin-top: 0; margin-bottom: 10px; background: linear-gradient(180deg, #a3f740 0%, #5ac313 100%); padding: 5px; border-radius: 20px; border: 2px solid #fff;}
 
         /* SEKCJA DETALI TORU W DYMKU */
         .track-details-box { background: #fff; border-radius: 10px; padding: 10px; margin-bottom: 10px; border: 2px solid #ddd; font-size: 13px; text-align: left;}
@@ -236,24 +239,49 @@
         .victory-popup h2 { color: #fff; text-shadow: 2px 2px 0 #b8860b, -1px -1px 0 #b8860b, 1px -1px 0 #b8860b, -1px 1px 0 #b8860b; }
 
         /* ==========================================
-           EASTER EGG (UMAUMA) ANIMATIONS
+           EASTER EGG (UMAUMA) ANIMATIONS - FULL RAINBOW
            ========================================== */
+        body.easter-egg-active * { transition: background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease; }
         body.easter-egg-active .floating-header { animation: bounceInterface 0.5s infinite alternate; }
-        body.easter-egg-active .user-widget { animation: bounceInterface 0.6s infinite alternate-reverse; }
-        body.easter-egg-active #hamburgerBtn { animation: bounceInterface 0.55s infinite alternate; }
-        body.easter-egg-active .btn-submit, body.easter-egg-active .btn-view, body.easter-egg-active .btn-edit, body.easter-egg-active .btn-del {
-            background: linear-gradient(45deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #9400d3);
-            background-size: 400% 400%;
-            animation: rainbowBG 3s ease infinite;
-            color: #fff !important; text-shadow: 1px 1px 2px #000 !important; border-color: #fff !important;
+        body.easter-egg-active .user-widget { animation: bounceSimple 0.6s infinite alternate-reverse; }
+        body.easter-egg-active #hamburgerBtn { animation: bounceSimple 0.55s infinite alternate; }
+        
+        /* Tęczowe obramowania głównych paneli */
+        body.easter-egg-active .modal-content, 
+        body.easter-egg-active .auth-card, 
+        body.easter-egg-active .floating-header, 
+        body.easter-egg-active .user-widget, 
+        body.easter-egg-active #sideMenu, 
+        body.easter-egg-active .troll-popup {
+            animation: rainbowBorder 2s linear infinite !important;
+            border-width: 4px !important;
+            border-style: solid !important;
+        }
+
+        /* Tęczowe tła przycisków */
+        body.easter-egg-active button, 
+        body.easter-egg-active .dropdown-item, 
+        body.easter-egg-active .file-upload-btn,
+        body.easter-egg-active .admin-badge,
+        body.easter-egg-active .mod-badge {
+            background: linear-gradient(45deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #9400d3) !important;
+            background-size: 400% 400% !important;
+            animation: rainbowBG 3s ease infinite !important;
+            color: #fff !important; text-shadow: 1px 1px 2px #000 !important;
+            border-color: #fff !important;
         }
 
         @keyframes rainbowBG { 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} }
+        @keyframes rainbowBorder {
+            0% { border-color: #ff0000; box-shadow: 0 0 30px #ff0000; }
+            20% { border-color: #ff7f00; box-shadow: 0 0 30px #ff7f00; }
+            40% { border-color: #ffff00; box-shadow: 0 0 30px #ffff00; }
+            60% { border-color: #00ff00; box-shadow: 0 0 30px #00ff00; }
+            80% { border-color: #0000ff; box-shadow: 0 0 30px #0000ff; }
+            100% { border-color: #ff0000; box-shadow: 0 0 30px #ff0000; }
+        }
         @keyframes bounceInterface { from { transform: translateY(0) translateX(-50%); } to { transform: translateY(-15px) translateX(-50%); } }
-        /* Dla elementów bez translateX w oryginale: */
-        body.easter-egg-active .user-widget, body.easter-egg-active #hamburgerBtn { animation-name: bounceSimple; }
         @keyframes bounceSimple { from { transform: translateY(0); } to { transform: translateY(-15px); } }
-
 
         /* ==========================================
            RESPONSYWNOŚĆ (TELEFONY)
@@ -270,7 +298,7 @@
             .auth-card { width: 95%; flex-direction: column; height: auto; }
             .auth-card-image { display: none; }
             .modal-content { width: 95%; padding: 15px; }
-            .leaflet-popup-content { width: 300px !important; }
+            .leaflet-popup-content { width: 280px !important; }
         }
     </style>
     <script src="https://www.youtube.com/iframe_api"></script>
@@ -311,7 +339,7 @@
         </div>
 
         <div class="user-widget" id="avatarBtn">
-            <div class="greeting">Hej <span id="greetingAlias">Kierowca</span>!</div>
+            <div class="greeting">Hejka <span id="greetingAlias">Kierowca</span>!</div>
             <div class="user-avatar" id="avatarIcon">P</div> 
         </div>
         
@@ -553,8 +581,8 @@
         const darkMap = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png');
         const satelliteMap = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}');
         const map = L.map('map', { zoomControl: false, layers: [satelliteMap] }).setView([51.8, 20.5], 7);
-        L.control.zoom({ position: 'topright' }).addTo(map);
-        L.control.layers({ "Tryb Nocny": darkMap, "Satelita": satelliteMap }, null, {position: 'bottomright'}).addTo(map);
+        L.control.zoom({ position: 'topleft' }).addTo(map);
+        L.control.layers({ "Tryb Nocny": darkMap, "Satelita": satelliteMap }, null, {position: 'bottomleft'}).addTo(map);
 
         let tory = [
             { nazwa: "Autodrom Bemowo", lat: 52.265, lng: 20.912, foto: "track/torbemowo.jpeg" },
@@ -757,7 +785,7 @@
             document.getElementById('newCarAccel').value = accel; 
             document.getElementById('newCarTires').value = tires; 
             
-            document.getElementById('uploadStatusCar').innerText = ''; // czyszczenie statusu
+            document.getElementById('uploadStatusCar').innerText = ''; 
             document.getElementById('garageFormTitle').innerText = "Edytuj furę:"; 
             document.getElementById('saveCarBtn').innerText = "Zapisz Zmiany"; 
             document.getElementById('saveCarBtn').style.background = "linear-gradient(180deg, #ffb72b 0%, #f38815 100%)"; 
@@ -905,7 +933,7 @@
         };
 
         window.addNewCustomTrack = async () => {
-            if(window.userRole !== 'admin') return alert("Tylko główny Admin może dodawać tory do bazy!");
+            if(window.userRole !== 'admin' && window.userRole !== 'mod') return alert("Tylko Admin i Mod mogą dodawać tory do bazy!");
             const n = document.getElementById('newPinName').value;
             const lat = parseFloat(document.getElementById('newPinLat').value);
             const lng = parseFloat(document.getElementById('newPinLng').value);
@@ -1044,7 +1072,7 @@
                 const safeId = tor.nazwa.replace(/\s+/g, ''); 
                 window.allMarkers[safeId] = marker;
                 
-                marker.bindPopup(`<div id="popup-content-${safeId}"><div style="padding:20px; text-align:center;">Ładowanie...</div></div>`, { minWidth: 380 }); 
+                marker.bindPopup(`<div id="popup-content-${safeId}"><div style="padding:20px; text-align:center;">Ładowanie...</div></div>`); 
                 
                 marker.on('popupopen', async () => { 
                     let trackImgHTML = tor.foto ? `<img src="${tor.foto}" class="track-img-header">` : ''; 
@@ -1099,6 +1127,14 @@
                         ${listImg} ${tor.nazwa}
                     </li>`;
             });
+
+            // PRZYCISK DODAJ TOR (Tylko dla Admina i Moda)
+            if(window.userRole === 'admin' || window.userRole === 'mod') {
+                sideMenuList.innerHTML += `
+                    <li class="track-list-item" style="background:#e8f8f5; color:#128c3a; justify-content:center; margin-top:10px; border-top: 4px solid #128c3a;" onclick="window.openAdminPanel()">
+                        ➕ DODAJ NOWY TOR
+                    </li>`;
+            }
         }
 
         window.focusTrack = (safeId, lat, lng) => {
@@ -1267,7 +1303,7 @@
         async function uploadToStorage(file) {
             if (!file) return null;
             
-            // 1. Kompresja (nasz skrypt z poprzedniego kodu)
+            // 1. Kompresja (nasz skrypt)
             const compressedBlob = await compressImage(file);
             
             // 2. Paczka dla Cloudinary
