@@ -9,9 +9,18 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <style>
         /* ==========================================
-           GLOBALNE USTAWIENIA I TŁO
+           CZCIONKA UMA MUSUME I GLOBALNE TŁO
            ========================================== */
-        body, html { margin: 0; padding: 0; width: 100%; height: 100%; font-family: 'Arial', sans-serif; background-color: #1a1a1a; color: #333; overflow: hidden; }
+        @font-face {
+            font-family: 'UmaFont';
+            src: url('FOT-RodinWanpaku Pro EB.otf') format('opentype');
+        }
+
+        body, html { 
+            margin: 0; padding: 0; width: 100%; height: 100%; 
+            font-family: 'UmaFont', 'Arial', sans-serif; 
+            background-color: #1a1a1a; color: #333; overflow: hidden; 
+        }
         
         /* ==========================================
            LOGOWANIE (DISCORD STYLE)
@@ -33,7 +42,7 @@
             width: 100%; background: #ffffff !important; color: #333 !important; border: 3px solid #dcdcdc !important;
             border-radius: 15px !important; padding: 12px 15px !important; margin: 8px 0 !important;
             font-weight: bold !important; font-size: 14px !important; box-shadow: inset 0 3px 5px rgba(0,0,0,0.1) !important;
-            box-sizing: border-box; outline: none; transition: 0.2s;
+            box-sizing: border-box; outline: none; transition: 0.2s; font-family: 'UmaFont', 'Arial', sans-serif;
         }
         input:focus, select:focus, textarea:focus { border-color: #74eb34 !important; box-shadow: inset 0 3px 5px rgba(0,0,0,0.1), 0 0 0 4px rgba(116, 235, 52, 0.3) !important; }
         input[type="number"]::-webkit-inner-spin-button, input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
@@ -44,7 +53,7 @@
             box-shadow: inset 0px 4px 5px rgba(255,255,255,0.6), 0 5px 0 #3a8a0b, 0 8px 10px rgba(0,0,0,0.3);
             color: #ffffff; font-size: 16px; font-weight: 900; text-transform: uppercase;
             text-shadow: 1px 1px 0px #2b6e06, -1px -1px 0px #2b6e06, 1px -1px 0px #2b6e06, -1px 1px 0px #2b6e06;
-            padding: 12px 20px; cursor: pointer; transition: 0.1s ease; width: 100%; margin-top: 15px; font-family: 'Arial', sans-serif;
+            padding: 12px 20px; cursor: pointer; transition: 0.1s ease; width: 100%; margin-top: 15px; font-family: 'UmaFont', 'Arial', sans-serif;
         }
         .btn-submit:active { transform: translateY(4px); box-shadow: inset 0px 2px 2px rgba(255,255,255,0.6), 0 1px 0 #3a8a0b, 0 3px 5px rgba(0,0,0,0.3); }
 
@@ -54,7 +63,7 @@
             box-shadow: inset 0px 4px 5px rgba(255,255,255,0.4), 0 5px 0 #3c45a5, 0 8px 10px rgba(0,0,0,0.3); 
             color: #ffffff; font-size: 16px; font-weight: 900; text-transform: uppercase;
             text-shadow: 1px 1px 0px #2f3688, -1px -1px 0px #2f3688, 1px -1px 0px #2f3688, -1px 1px 0px #2f3688; 
-            padding: 12px 20px; cursor: pointer; transition: 0.1s ease; width: 100%; margin-top: 15px; 
+            padding: 12px 20px; cursor: pointer; transition: 0.1s ease; width: 100%; margin-top: 15px; font-family: 'UmaFont', 'Arial', sans-serif;
         }
         .btn-auth-submit:active { transform: translateY(4px); box-shadow: inset 0px 2px 2px rgba(255,255,255,0.4), 0 1px 0 #3c45a5, 0 3px 5px rgba(0,0,0,0.3); }
         
@@ -72,6 +81,7 @@
            UI GŁÓWNE I MAPA
            ========================================== */
         #map { width: 100vw; height: 100vh; position: absolute; top: 0; left: 0; z-index: 1; }
+        .leaflet-top.leaflet-left { padding-top: 80px; }
         
         .floating-header { 
             position: absolute; top: 20px; left: 50%; transform: translateX(-50%); z-index: 1000; 
@@ -81,7 +91,7 @@
             text-align: center; pointer-events: none; display: flex; align-items: center; gap: 15px; 
         }
         .floating-header h1 { margin: 0; color: #fff; letter-spacing: 2px; font-size: 30px; font-weight: 900; text-shadow: 2px 2px 0 #c76505, -1px -1px 0 #c76505, 1px -1px 0 #c76505, -1px 1px 0 #c76505; }
-        .floating-header img { height: 80px; width: auto; object-fit: contain; filter: drop-shadow(0 2px 2px rgba(0,0,0,0.5)); margin: -10px -25px; } /* Przesunięte do krawędzi */
+        .floating-header img { height: 80px; width: auto; object-fit: contain; filter: drop-shadow(0 2px 2px rgba(0,0,0,0.5)); margin: -10px -25px; } 
         
         .user-widget { 
             position: absolute; top: 20px; right: 20px; z-index: 1000; display: flex; align-items: center; gap: 10px; 
@@ -91,7 +101,7 @@
         }
         .user-widget:active { transform: translateY(3px); box-shadow: 0 1px 0 #aaa, 0 3px 5px rgba(0,0,0,0.3); }
         .greeting { font-weight: 900; color: #333; font-size: 14px; }
-        .greeting span { color: #f38815; text-decoration: none; } /* WYŁĄCZONE PODKREŚLENIE */
+        .greeting span { color: #f38815; text-decoration: none; } 
         .user-avatar { width: 40px; height: 40px; border-radius: 50%; background: #f38815; display: flex; justify-content: center; align-items: center; font-weight: 900; font-size: 18px; color: #fff; border: 2px solid #fff; overflow: hidden; box-shadow: inset 0 2px 4px rgba(0,0,0,0.2); }
 
         .dropdown-menu { position: absolute; top: 80px; right: 20px; background: #fff; border-radius: 15px; border: 3px solid #ddd; box-shadow: 0 8px 20px rgba(0,0,0,0.4); width: 250px; display: none; flex-direction: column; overflow: hidden; z-index: 1001; }
@@ -164,7 +174,7 @@
         .list-item { display: flex; justify-content: flex-start; align-items: center; padding: 12px; background: #fff; margin-bottom: 10px; border-radius: 15px; border: 2px solid #ddd; box-shadow: 0 3px 0 #ccc;}
         .list-item b { color: #333; font-size: 15px; font-weight: 900;}
         .list-item-btns { display: flex; gap: 5px; flex-wrap: wrap; justify-content: flex-end; margin-left: auto;}
-        .list-item-btns button { border: 2px solid #fff; border-radius: 20px; padding: 6px 10px; cursor: pointer; color: white; font-weight: 900; font-size: 11px; box-shadow: 0 3px 0 rgba(0,0,0,0.2); transition: 0.1s; text-transform: uppercase;}
+        .list-item-btns button { border: 2px solid #fff; border-radius: 20px; padding: 6px 10px; cursor: pointer; color: white; font-weight: 900; font-size: 11px; box-shadow: 0 3px 0 rgba(0,0,0,0.2); transition: 0.1s; text-transform: uppercase; font-family: 'UmaFont', 'Arial', sans-serif;}
         .list-item-btns button:active { transform: translateY(2px); box-shadow: 0 1px 0 rgba(0,0,0,0.2); }
         .btn-view { background: linear-gradient(180deg, #2bc2ff, #168bd8); }
         .btn-edit { background: linear-gradient(180deg, #ffb72b, #f38815); }
@@ -177,11 +187,22 @@
         .achievement-icon { width: 50px; height: 50px; border-radius: 10px; border: 2px solid #fff; background: #fff; box-shadow: 0 0 0 2px #f38815, 0 4px 6px rgba(0,0,0,0.2); object-fit: contain;}
 
         /* ==========================================
-           DYMKI MAPY I TABELE (ZMNIEJSZONE)
+           DYMKI MAPY I TABELE (ZMNIEJSZONE Z POPRAWIONYM KRZYŻYKIEM I POLAMI)
            ========================================== */
         .leaflet-popup-content-wrapper { background: #f0f3f5; border: 4px solid #fff; border-radius: 20px; box-shadow: 0 0 0 3px #ccc, 0 10px 20px rgba(0,0,0,0.3); padding: 0; overflow: hidden; }
         .leaflet-popup-tip { background: #ccc; }
-        .leaflet-popup-content { margin: 0 !important; width: 300px !important; } /* Zmniejszone */
+        .leaflet-popup-content { margin: 0 !important; width: 320px !important; font-family: 'UmaFont', 'Arial', sans-serif; } 
+        
+        /* NAPRAWA KRZYŻYKA ZAMYKANIA W DYMKU LEAFLETA */
+        .leaflet-popup-close-button {
+            color: #fff !important;
+            font-size: 28px !important;
+            font-weight: 900 !important;
+            top: 5px !important;
+            right: 15px !important;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8) !important;
+            z-index: 100;
+        }
         
         .track-img-header { width: 100%; height: 110px; object-fit: cover; background-color: #222; border-bottom: 4px solid #fff; display: block; }
         
@@ -197,8 +218,10 @@
         td { border-bottom: 1px solid #eee; padding: 8px; color: #333; font-weight: 900; font-size: 13px; text-align: center; vertical-align: middle;}
         tr:last-child td { border-bottom: none; }
         
+        /* NAPRAWA PÓL CZASU (FLEX) */
         .time-inputs-container { background: #fff; border-radius: 15px; padding: 8px; border: 2px solid #ddd; display: flex; gap: 5px; align-items: center; justify-content: center; margin: 10px 0; }
-        .time-inputs-container input { border: none !important; background: #f9f9f9 !important; box-shadow: inset 0 2px 4px rgba(0,0,0,0.05) !important; padding: 8px !important; margin: 0 !important; font-size: 16px !important;}
+        .time-inputs-container input { border: 2px solid #eee !important; background: #f9f9f9 !important; box-shadow: inset 0 2px 4px rgba(0,0,0,0.05) !important; padding: 8px 5px !important; margin: 0 !important; font-size: 16px !important; flex: 1; text-align: center; font-weight: 900;}
+        .time-inputs-container span { font-weight: 900; color: #333; font-size: 16px; }
 
         .rank-1 { color: #fff; text-shadow: 1px 1px 0 #b8860b, -1px -1px 0 #b8860b, 1px -1px 0 #b8860b, -1px 1px 0 #b8860b; font-weight: 900; font-size: 16px; background: gold; padding: 2px 6px; border-radius: 10px;}
         .rank-2 { color: #fff; text-shadow: 1px 1px 0 #666; font-weight: 900; font-size: 14px; background: silver; padding: 2px 6px; border-radius: 10px;}
@@ -209,7 +232,7 @@
         .mod-badge { background-color: #3498db; color: white; font-size: 9px; padding: 2px 5px; border-radius: 5px; margin-left: 5px; font-weight: 900; text-transform: uppercase; box-shadow: 0 2px 0 #2980b9;}
 
         /* ==========================================
-           TROLL POPUPS ZMIENIONE NA ZWYKŁY MODAL STYLE
+           TROLL POPUPS I VICTORY (ZMODYFIKOWANE)
            ========================================== */
         .troll-popup { background: #2a2c33; border: 6px solid #e74c3c; text-align: center; padding: 30px; border-radius: 30px; box-shadow: 0 0 0 6px #fff, 0 0 50px rgba(231, 76, 60, 0.8); z-index: 6000; max-width: 420px; display: flex; flex-direction: column; align-items: center; cursor: default;}
         .troll-popup h2 { margin-top: 0; color: #fff; text-transform: uppercase; font-weight: 900; text-shadow: 2px 2px 0 #c0392b, -1px -1px 0 #c0392b, 1px -1px 0 #c0392b, -1px 1px 0 #c0392b; font-size: 32px;}
@@ -843,6 +866,7 @@
                 const d = docSnap.data(); 
                 document.getElementById('pubProfileAlias').innerText = d.nick||alias; 
                 
+                // PRZYWRÓCENIE AWATARA W PROFILU
                 if(d.avatar) { 
                     document.getElementById('pubProfileAvatar').innerHTML = ""; 
                     document.getElementById('pubProfileAvatar').style.backgroundImage = `url('${d.avatar}')`; 
@@ -1042,7 +1066,12 @@
                 const safeId = tor.nazwa.replace(/\s+/g, ''); 
                 window.allMarkers[safeId] = marker;
                 
-                marker.bindPopup(`<div id="popup-content-${safeId}"><div style="padding:20px; text-align:center;">Ładowanie...</div></div>`); 
+                // DODANE AUTO PAN PADDING 
+                marker.bindPopup(`<div id="popup-content-${safeId}"><div style="padding:20px; text-align:center;">Ładowanie...</div></div>`, {
+                    minWidth: 320,
+                    maxWidth: 320,
+                    autoPanPaddingTopLeft: [0, 100] // <-- TO CHRONI PRZED WCHODZENIEM POD NAGŁÓWEK!
+                }); 
                 
                 marker.on('popupopen', async () => { 
                     let trackImgHTML = tor.foto ? `<img src="${tor.foto}" class="track-img-header">` : ''; 
@@ -1056,9 +1085,9 @@
                             <hr style="border-color:#444; margin:15px 0;">
                             <div id="carSelectContainer-${safeId}"></div>
                             <div class="time-inputs-container">
-                                <input type="number" id="timeM-${safeId}" placeholder="Min" min="0" max="99" style="width: 30%; text-align: center;"> : 
-                                <input type="number" id="timeS-${safeId}" placeholder="Sek" min="0" max="59" style="width: 30%; text-align: center;"> . 
-                                <input type="number" id="timeMS-${safeId}" placeholder="MS" min="0" max="999" style="width: 35%; text-align: center;">
+                                <input type="number" id="timeM-${safeId}" placeholder="Min" min="0" max="99"> <span>:</span> 
+                                <input type="number" id="timeS-${safeId}" placeholder="Sek" min="0" max="59"> <span>.</span> 
+                                <input type="number" id="timeMS-${safeId}" placeholder="MS" min="0" max="999">
                             </div>
                             <button onclick="window.saveTime('${tor.nazwa}')" class="btn-submit">Zapisz wynik</button>
                         </div>`; 
@@ -1075,7 +1104,7 @@
                     let infoData = { opis: "Brak opisu.", kontakt: "Brak", email: "Brak", ceny: "Brak info" };
                     if(infoSnap.exists()) infoData = infoSnap.data();
 
-                    let editBtnHTML = (window.userRole === 'admin' || window.userRole === 'mod') ? `<button class="btn-view" style="width:100%; margin-top:5px;" onclick="window.openTrackEditModal('${safeId}', '${tor.nazwa}')">✏️ Edytuj Informacje (Tylko Admin/Mod)</button>` : '';
+                    let editBtnHTML = (window.userRole === 'admin' || window.userRole === 'mod') ? `<button class="btn-view" style="width:100%; margin-top:5px;" onclick="window.openTrackEditModal('${safeId}', '${tor.nazwa}')">✏️ Edytuj Informacje</button>` : '';
 
                     infoBox.innerHTML = `
                         <p>${infoData.opis}</p>
@@ -1095,7 +1124,6 @@
                     </li>`;
             });
 
-            // PRZYCISK DODAJ TOR (Tylko dla Admina i Moda)
             if(window.userRole === 'admin' || window.userRole === 'mod') {
                 sideMenuList.innerHTML += `
                     <li class="track-list-item" style="background:#e8f8f5; color:#128c3a; justify-content:center; margin-top:10px; border-top: 4px solid #128c3a;" onclick="window.openAdminPanel()">
