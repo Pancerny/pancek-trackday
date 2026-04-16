@@ -1646,7 +1646,7 @@
             overlay.classList.add('show');
             
             if(window.ytPlayer && typeof window.ytPlayer.loadVideoById === 'function') {
-                window.ytPlayer.loadVideoById('dv13gl0a-FA');
+                window.ytPlayer.loadVideoById('VY8pupVRbcc');
                 window.ytPlayer.setVolume(50);
                 window.ytPlayer.playVideo();
                 window.isRadioPlaying = true;
@@ -1660,6 +1660,9 @@
                 
                 document.getElementById('headerTitle').innerText = "INICJALNY GAZ...";
                 document.querySelectorAll('.header-gif').forEach(img => img.style.display = 'none');
+
+                // ZAMIANA HAMBURGERA NA OBRACAJĄCĄ SIĘ AE86
+                document.getElementById('hamburgerBtn').innerHTML = '<img src="secret2.gif" style="width: 100%; height: 100%; object-fit: contain;">';
 
                 map.addLayer(darkMap);
                 map.removeLayer(satelliteMap);
