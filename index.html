@@ -1,4 +1,4 @@
-!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pl">
 <head>
     <meta charset="UTF-8">
@@ -110,10 +110,12 @@
             background: linear-gradient(180deg, #ffb72b 0%, #f38815 100%);
             padding: 10px 25px; border-radius: 50px; border: 4px solid #fff; 
             box-shadow: 0 5px 0 #c76505, 0 8px 15px rgba(0,0,0,0.4); 
-            text-align: center; pointer-events: none; display: flex; align-items: center; gap: 15px; 
+            text-align: center; cursor: pointer; display: flex; align-items: center; gap: 15px; 
+            transition: 0.1s ease;
         }
-        .floating-header h1 { margin: 0; color: #fff; letter-spacing: 2px; font-size: 30px; font-weight: 900; text-shadow: 2px 2px 0 #c76505, -1px -1px 0 #c76505, 1px -1px 0 #c76505, -1px 1px 0 #c76505; }
-        .floating-header img { height: 80px; width: auto; object-fit: contain; filter: drop-shadow(0 2px 2px rgba(0,0,0,0.5)); margin: -10px -25px; } 
+        .floating-header:active { transform: translateX(-50%) translateY(4px); box-shadow: 0 1px 0 #c76505, 0 3px 5px rgba(0,0,0,0.4); }
+        .floating-header h1 { margin: 0; color: #fff; letter-spacing: 2px; font-size: 30px; font-weight: 900; text-shadow: 2px 2px 0 #c76505, -1px -1px 0 #c76505, 1px -1px 0 #c76505, -1px 1px 0 #c76505; pointer-events: none;}
+        .floating-header img { height: 80px; width: auto; object-fit: contain; filter: drop-shadow(0 2px 2px rgba(0,0,0,0.5)); margin: -10px -25px; pointer-events: none;} 
         
         .user-widget { 
             position: absolute; top: 20px; right: 20px; z-index: 1000; display: flex; align-items: center; gap: 10px; 
@@ -187,7 +189,6 @@
             margin: 0; font-weight: 900; text-transform: uppercase; 
             font-size: 20px; text-align: center; padding: 15px; 
             border-bottom: 4px solid #fff;
-            /* Zastosowanie klasycznego nagłówka z patternem */
             background-color: #79d81d;
             background-image: 
               linear-gradient(45deg, #8cf02e 25%, transparent 25%, transparent 75%, #8cf02e 75%, #8cf02e),
@@ -223,19 +224,35 @@
            DYMKI MAPY I TABELE
            ========================================== */
         .leaflet-popup-content-wrapper { background: #f0f3f5; border: 4px solid #fff; border-radius: 16px; box-shadow: 0 0 0 2px #ccc, 0 10px 20px rgba(0,0,0,0.3); padding: 0; overflow: hidden; }
-        .leaflet-popup-tip { background: #ccc; }
+        .leaflet-popup-tip { background: #fff; }
         .leaflet-popup-content { margin: 0 !important; width: 320px !important; font-family: 'M PLUS Rounded 1c', sans-serif; } 
         
-        .leaflet-popup-close-button { color: #fff !important; font-size: 28px !important; font-weight: 900 !important; top: 5px !important; right: 15px !important; text-shadow: 2px 2px 4px rgba(0,0,0,0.8) !important; z-index: 100; }
+        .leaflet-popup-close-button { 
+            background: rgba(0,0,0,0.6) !important; 
+            color: #fff !important; 
+            font-size: 20px !important; 
+            font-weight: 900 !important; 
+            top: 8px !important; 
+            right: 8px !important; 
+            width: 30px !important; 
+            height: 30px !important; 
+            line-height: 30px !important; 
+            text-align: center !important; 
+            border-radius: 50% !important;
+            text-shadow: none !important; 
+            z-index: 100; 
+            border: 2px solid #fff !important;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.5) !important;
+            transition: 0.2s;
+        }
+        .leaflet-popup-close-button:hover { background: #ffe600 !important; color: #333 !important; transform: scale(1.1); }
         
-        .track-img-header { width: 100%; height: 110px; object-fit: cover; background-color: #222; border-bottom: 4px solid #fff; display: block; }
+        .track-img-header { width: 100%; height: 130px; object-fit: cover; background-color: #222; border-bottom: 4px solid #fff; display: block; margin: 0; padding: 0; }
         
         .popup-inner-pad { padding: 12px; }
         .popup-inner-pad h2 { color: #fff; text-shadow: 1px 1px 0 #3b900b, -1px -1px 0 #3b900b, 1px -1px 0 #3b900b, -1px 1px 0 #3b900b; font-size: 20px; font-weight: 900; text-transform: uppercase; text-align: center; margin-top: 0; margin-bottom: 10px; background: linear-gradient(180deg, #9ae73a 0%, #68cc14 100%); padding: 5px; border-radius: 12px; border: 2px solid #fff;}
 
         .track-details-box { background: #fff; border-radius: 10px; padding: 10px; margin-bottom: 10px; border: 2px solid #ddd; font-size: 13px; text-align: left; color:#5a4b41;}
-        .track-details-box p { margin: 5px 0; font-weight: bold;}
-        .track-details-box strong { color: #333; }
 
         table { width: 100%; border-collapse: separate; border-spacing: 0; margin: 10px 0; background: #fff; border-radius: 10px; border: 2px solid #ddd; overflow: hidden; }
         th { background: linear-gradient(180deg, #f0f0f0, #e0e0e0); color: #8a7b71; font-weight: 900; padding: 8px; text-transform: uppercase; font-size: 11px; border-bottom: 2px solid #ddd;}
@@ -264,6 +281,44 @@
         .victory-popup h2 { background: gold; color: #fff; text-shadow: 2px 2px 0 #b8860b, -1px -1px 0 #b8860b, 1px -1px 0 #b8860b, -1px 1px 0 #b8860b; border-color: #fff;}
 
         /* ==========================================
+           TOAST EASTER EGG (TACHYON)
+           ========================================== */
+        #tachyonToast {
+            position: fixed;
+            bottom: -150px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #fff;
+            border: 4px solid #168bd8;
+            border-radius: 20px;
+            padding: 10px 20px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.4);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            z-index: 8000;
+            transition: bottom 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            pointer-events: none; /* Nie blokuje kliknięć na mapie pod spodem */
+            width: 90%;
+            max-width: 450px;
+        }
+        #tachyonToast.show {
+            bottom: 30px;
+        }
+        #tachyonToast img {
+            width: 80px;
+            height: auto;
+            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3));
+        }
+        #tachyonText {
+            font-size: 14px;
+            font-weight: 900;
+            color: #5a4b41;
+            margin: 0;
+            line-height: 1.4;
+        }
+
+        /* ==========================================
            EASTER EGG (UMAUMA) ANIMATIONS
            ========================================== */
         body.easter-egg-active { animation: rainbowHue 5s linear infinite !important; }
@@ -273,6 +328,96 @@
         body.easter-egg-active #hamburgerBtn { animation: bounceSimple 0.55s infinite alternate; }
         @keyframes bounceInterface { from { transform: translateY(0) translateX(-50%); } to { transform: translateY(-15px) translateX(-50%); } }
         @keyframes bounceSimple { from { transform: translateY(0); } to { transform: translateY(-15px); } }
+
+        /* ==========================================
+           EASTER EGG (INITIAL D MODE)
+           ========================================== */
+        #secretGifOverlay {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(0,0,0,0.9); z-index: 9999;
+            display: flex; justify-content: center; align-items: center;
+            opacity: 0; pointer-events: none; transition: opacity 0.5s ease-in-out;
+        }
+        #secretGifOverlay.show { opacity: 1; pointer-events: all; }
+        #secretGifOverlay img { max-width: 90%; max-height: 90%; filter: drop-shadow(0 0 20px #e74c3c); }
+
+        /* Twarde, ostre, szare przejścia */
+        body.initial-d-active .modal-content, 
+        body.initial-d-active .btn-submit, 
+        body.initial-d-active .btn-auth-submit,
+        body.initial-d-active input, 
+        body.initial-d-active select, 
+        body.initial-d-active textarea,
+        body.initial-d-active .garage-form-box, 
+        body.initial-d-active .floating-header,
+        body.initial-d-active .user-widget,
+        body.initial-d-active #hamburgerBtn,
+        body.initial-d-active .dropdown-menu,
+        body.initial-d-active .leaflet-popup-content-wrapper,
+        body.initial-d-active .auth-card,
+        body.initial-d-active .list-item,
+        body.initial-d-active button,
+        body.initial-d-active .troll-popup,
+        body.initial-d-active #tachyonToast,
+        body.initial-d-active .achievement-icon {
+            border-radius: 0 !important;
+            transition: border-radius 1.5s ease-in-out, background 1.5s ease-in-out, border-color 1.5s ease-in-out, box-shadow 1.5s ease-in-out, color 1.5s ease-in-out;
+        }
+        
+        body.initial-d-active {
+            font-family: 'Arial', sans-serif;
+        }
+        body.initial-d-active .uma-pattern-green {
+            background-color: #1a1a1a !important;
+            background-image: none !important;
+            border-bottom: 4px solid #e74c3c !important;
+            color: #fff !important;
+            text-shadow: none !important;
+            transition: background-color 1.5s ease-in-out;
+        }
+        body.initial-d-active .btn-submit, body.initial-d-active .btn-auth-submit {
+            background: #2a2a2a !important;
+            border-color: #e74c3c !important;
+            box-shadow: 0 4px 0 #800000, 0 6px 10px rgba(0,0,0,0.5) !important;
+            color: #fff !important;
+            text-shadow: none !important;
+        }
+        body.initial-d-active .floating-header {
+            background: #1a1a1a !important;
+            border-color: #e74c3c !important;
+            box-shadow: 0 5px 0 #800000, 0 8px 15px rgba(0,0,0,0.6) !important;
+        }
+        body.initial-d-active .floating-header h1 {
+            color: #fff !important;
+            text-shadow: 2px 2px 0 #e74c3c !important;
+            font-style: italic;
+            letter-spacing: 4px;
+        }
+        body.initial-d-active .user-widget, body.initial-d-active #hamburgerBtn {
+            background: #1a1a1a !important;
+            border-color: #e74c3c !important;
+            color: #fff !important;
+            box-shadow: 0 4px 0 #800000 !important;
+        }
+        body.initial-d-active .greeting, body.initial-d-active .greeting span { color: #fff !important; text-shadow: none; }
+        body.initial-d-active .dropdown-menu { background: #111 !important; border-color: #e74c3c !important; }
+        body.initial-d-active .dropdown-item { color: #ccc !important; border-bottom: 1px solid #333; }
+        body.initial-d-active .dropdown-item:hover { background: #e74c3c !important; color: #fff !important; padding-left: 20px; }
+        body.initial-d-active .modal-content { background: #222 !important; border-color: #e74c3c !important; color: #ddd !important; }
+        body.initial-d-active .garage-form-box, body.initial-d-active .list-item, body.initial-d-active table, body.initial-d-active .time-inputs-container, body.initial-d-active .track-details-box {
+            background: #333 !important;
+            border-color: #555 !important;
+            color: #fff !important;
+        }
+        body.initial-d-active .garage-form-box h3, body.initial-d-active .list-item b, body.initial-d-active td, body.initial-d-active span, body.initial-d-active p {
+            color: #eee !important;
+        }
+        body.initial-d-active input, body.initial-d-active select, body.initial-d-active textarea {
+            background: #444 !important;
+            color: #fff !important;
+            border-color: #666 !important;
+        }
+        body.initial-d-active th { background: #111 !important; border-color: #555 !important; color: #aaa !important; }
 
         /* ==========================================
            RESPONSYWNOŚĆ (TELEFONY)
@@ -296,6 +441,11 @@
 </head>
 <body>
 
+    <!-- OVERLAY NA GIFY INITIAL D -->
+    <div id="secretGifOverlay">
+        <img src="secret.gif" alt="Secret Touge Animation">
+    </div>
+
     <div id="authOverlay">
         <div class="auth-card">
             <div class="auth-card-form">
@@ -303,7 +453,7 @@
                 <p>Trackday - Zmierz się z nami na torze!</p>
                 <input type="email" id="email" placeholder="Adres e-mail">
                 <input type="password" id="password" placeholder="Hasło">
-                <button id="loginBtn" class="btn-auth-submit">Odpal silnik 🏁</button>
+                <button id="loginBtn" class="btn-auth-submit">Rura! 🏎️💨</button>
                 <a href="#" id="forgotPwdBtn">Zapomniałeś hasła?</a>
             </div>
             <div class="auth-card-image"></div>
@@ -323,7 +473,7 @@
             <ul id="sideMenuList"></ul>
         </div>
 
-        <div class="floating-header">
+        <div class="floating-header" id="headerTitleContainer">
             <img src="oguri.gif" class="header-gif">
             <h1 id="headerTitle">TRACKDAY</h1>
             <img src="oguri.gif" class="header-gif" style="transform: scaleX(-1);">
@@ -545,9 +695,14 @@
         </div>
     </div>
 
+    <!-- TACHYON TOAST EASTER EGG (Nie blokuje ekranu!) -->
+    <div id="tachyonToast">
+        <img src="tachyon2.gif" alt="Tachyon">
+        <p id="tachyonText"></p>
+    </div>
+
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script type="module">
-        // POZOSTAWIONE IDEALNIE TAK SAMO ABY LOGOWANIE DZIAŁAŁO!
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
         import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, sendEmailVerification, sendPasswordResetEmail, updateProfile } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
         import { getFirestore, collection, addDoc, getDocs, query, where, orderBy, deleteDoc, doc, updateDoc, setDoc, getDoc, arrayUnion, arrayRemove } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
@@ -569,6 +724,7 @@
         const db = getFirestore(app);
 
         window.myCars = []; 
+        window.myFullCars = []; // Dodane na potrzeby Easter Egga i lepszego śledzenia
         window.currentUserAlias = "";
         window.currentUserNick = ""; 
         window.userRole = "user"; // "user", "mod", "admin"
@@ -734,6 +890,7 @@
             const snapshot = await getDocs(q); 
             const list = document.getElementById('myCarsList'); 
             window.myCars = []; 
+            window.myFullCars = []; // Przechowujemy pełne dane dla Easter Egga
             list.innerHTML = ""; 
 
             if(snapshot.empty) { 
@@ -744,6 +901,8 @@
             snapshot.forEach(doc => { 
                 const d = doc.data(); 
                 window.myCars.push(d.name); 
+                window.myFullCars.push(d); 
+
                 const safeName = d.name.replace(/'/g, "\\'"); 
                 const safePhoto = d.photo.replace(/'/g, "\\'"); 
                 const safeEngine = d.engine.replace(/'/g, "\\'"); 
@@ -796,7 +955,6 @@
             document.getElementById('uploadStatusCar').innerText = ''; 
             document.getElementById('garageFormTitle').innerText = "Edytuj furę:"; 
             document.getElementById('saveCarBtn').innerText = "Zapisz Zmiany"; 
-            // Zmodyfikowany kolor pod nowy theme
             document.getElementById('saveCarBtn').style.background = "linear-gradient(180deg, #ffb72b 0%, #f38815 100%)"; 
             document.getElementById('saveCarBtn').style.boxShadow = "0 4px 0 #c76505, 0 6px 10px rgba(0,0,0,0.2)"; 
             document.getElementById('cancelEditBtn').classList.remove('hidden'); 
@@ -814,7 +972,6 @@
             
             document.getElementById('garageFormTitle').innerText = "Dodaj nową furę:"; 
             document.getElementById('saveCarBtn').innerText = "Dodaj do garażu!"; 
-            // Powrót do nowego zielonego theme
             document.getElementById('saveCarBtn').style.background = "linear-gradient(180deg, #9ae73a 0%, #68cc14 100%)"; 
             document.getElementById('saveCarBtn').style.boxShadow = "0 4px 0 #3b900b, 0 6px 10px rgba(0,0,0,0.2)"; 
             document.getElementById('cancelEditBtn').classList.add('hidden'); 
@@ -831,7 +988,7 @@
             const existingModal = document.getElementById('dynamicUmaModal'); 
             if(existingModal) existingModal.remove(); 
             
-            document.body.insertAdjacentHTML('beforeend', `<div class="modal-overlay active" id="dynamicUmaModal"><div class="modal-content" style="padding:0; border:none; background:transparent; width:100%; max-width:340px; box-shadow:none;" id="dynamicUmaInner"><div style="padding:40px; text-align:center; background:#f0f3f5; border-radius:10px;">Ładowanie...</div></div></div>`); 
+            document.body.insertAdjacentHTML('beforeend', `<div class="modal-overlay active" id="dynamicUmaModal"><div class="modal-content transition-shape" style="padding:0; border:none; background:transparent; width:100%; max-width:340px; box-shadow:none;" id="dynamicUmaInner"><div class="transition-shape" style="padding:40px; text-align:center; background:#f0f3f5; border-radius:10px;">Ładowanie...</div></div></div>`); 
             
             document.getElementById('dynamicUmaModal').addEventListener('click', (e) => { 
                 if(e.target.id === 'dynamicUmaModal') { document.getElementById('dynamicUmaModal').remove(); } 
@@ -845,10 +1002,10 @@
             const fuelDisplay = carData.fuel ? carData.fuel : "Brak danych";
             
             document.getElementById('dynamicUmaInner').innerHTML = `
-                <div style="width: 100%; background: #f0f3f5; border-radius: 16px; overflow: hidden; border: 4px solid #fff; box-shadow: 0 10px 25px rgba(0,0,0,0.5); position: relative;">
+                <div class="transition-shape garage-form-box" style="width: 100%; background: #f0f3f5; border-radius: 16px; overflow: hidden; border: 4px solid #fff; box-shadow: 0 10px 25px rgba(0,0,0,0.5); position: relative; padding:0; margin:0;">
                     <span onclick="document.getElementById('dynamicUmaModal').remove()" style="position: absolute; top: 10px; right: 15px; font-size: 28px; color: #fff; cursor: pointer; z-index: 10; font-weight: 900; text-shadow: 1px 1px 2px rgba(0,0,0,0.5);">×</span>
                     
-                    <div style="background: linear-gradient(180deg, #2bc2ff, #168bd8); padding: 15px; text-align: center; border-bottom: 4px solid #fff;">
+                    <div class="transition-shape uma-pattern-green" style="background: linear-gradient(180deg, #2bc2ff, #168bd8); padding: 15px; text-align: center; border-bottom: 4px solid #fff;">
                         <div style="color: #fff; font-size: 12px; font-weight: bold; text-transform: uppercase; text-shadow: 1px 1px 0 #0d6299;">Właściciel Maszyny</div>
                         <div style="color: #fff; font-size: 20px; font-weight: 900; text-transform: uppercase; text-shadow: 2px 2px 0 #0d6299;">${carData.driver.toUpperCase()}</div>
                     </div>
@@ -860,22 +1017,22 @@
                     </div>
 
                     <div style="padding: 15px 20px 25px 20px;">
-                        <div style="background: #fff; border-radius: 12px; border: 2px solid #ddd; padding: 15px; display: flex; flex-direction: column; gap: 10px;">
-                            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #eee; padding-bottom: 5px;">
-                                <span style="color: #8a7b71; font-weight: 900; font-size: 12px; text-transform: uppercase;">Silnik</span>
-                                <span style="color: #5a4b41; font-weight: 900; font-size: 14px;">${carData.engine}</span>
+                        <div class="transition-shape" style="background: #fff; border-radius: 12px; border: 2px solid #ddd; padding: 15px; display: flex; flex-direction: column; gap: 10px;">
+                            <div style="display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 1px solid #eee; padding-bottom: 8px;">
+                                <span style="color: #8a7b71; font-weight: 900; font-size: 12px; text-transform: uppercase; margin-right: 15px; flex-shrink: 0;">⚙️ Silnik</span>
+                                <span style="color: #5a4b41; font-weight: 900; font-size: 14px; text-align: right; word-break: break-word;">${carData.engine}</span>
                             </div>
-                            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #eee; padding-bottom: 5px;">
-                                <span style="color: #8a7b71; font-weight: 900; font-size: 12px; text-transform: uppercase;">Paliwo</span>
-                                <span style="color: #4facfe; font-weight: 900; font-size: 14px;">${fuelDisplay}</span>
+                            <div style="display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 1px solid #eee; padding-bottom: 8px;">
+                                <span style="color: #8a7b71; font-weight: 900; font-size: 12px; text-transform: uppercase; margin-right: 15px; flex-shrink: 0;">⛽ Paliwo</span>
+                                <span style="color: #4facfe; font-weight: 900; font-size: 14px; text-align: right; word-break: break-word;">${fuelDisplay}</span>
                             </div>
-                            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #eee; padding-bottom: 5px;">
-                                <span style="color: #8a7b71; font-weight: 900; font-size: 12px; text-transform: uppercase;">0-100 km/h</span>
-                                <span style="color: #68cc14; font-weight: 900; font-size: 14px;">${carData.accel}</span>
+                            <div style="display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 1px solid #eee; padding-bottom: 8px;">
+                                <span style="color: #8a7b71; font-weight: 900; font-size: 12px; text-transform: uppercase; margin-right: 15px; flex-shrink: 0;">⏱️ 0-100 km/h</span>
+                                <span style="color: #68cc14; font-weight: 900; font-size: 14px; text-align: right; word-break: break-word;">${carData.accel}</span>
                             </div>
-                            <div style="display: flex; justify-content: space-between; align-items: center;">
-                                <span style="color: #8a7b71; font-weight: 900; font-size: 12px; text-transform: uppercase;">Opony</span>
-                                <span style="color: #e74c3c; font-weight: 900; font-size: 14px;">${carData.tires}</span>
+                            <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                                <span style="color: #8a7b71; font-weight: 900; font-size: 12px; text-transform: uppercase; margin-right: 15px; flex-shrink: 0;">🛞 Opony</span>
+                                <span style="color: #e74c3c; font-weight: 900; font-size: 14px; text-align: right; word-break: break-word;">${carData.tires}</span>
                             </div>
                         </div>
                     </div>
@@ -1013,7 +1170,7 @@
                 if(uid === 'pancerny') roleTag = `<span class="admin-badge">ADMIN</span>`;
 
                 render.innerHTML += `
-                    <div style="background:#fff; padding:10px; margin-bottom:10px; border-radius:10px; border:2px solid #eee;">
+                    <div class="list-item" style="padding:10px; margin-bottom:10px; display:block;">
                         <div style="display:flex; justify-content:space-between;">
                             <div><b style="color:#5a4b41;">${nick.toUpperCase()}</b> ${roleTag} <span style="font-size:10px; color:#8a7b71;">(${uid})</span></div>
                             ${modBtn}
@@ -1090,7 +1247,7 @@
             await loadMyGarage(); 
         }
 
-        function renderTracksOnMapAndMenu() {
+        window.renderTracksOnMapAndMenu = () => {
             const sideMenuList = document.getElementById('sideMenuList');
             sideMenuList.innerHTML = "";
             
@@ -1108,22 +1265,22 @@
                     
                     const fullHTML = `
                         ${trackImgHTML}
-                        <div class="popup-inner-pad">
-                            <h2>${tor.nazwa}</h2>
-                            <div id="trackInfoRender-${safeId}" class="track-details-box">Ładowanie informacji...</div>
-                            <table><thead><tr><th>Kierowca</th><th>Fura</th><th>Czas</th></tr></thead><tbody id="table-${safeId}"><tr><td colspan='3'>Ładowanie...</td></tr></tbody></table>
+                        <div class="popup-inner-pad transition-shape">
+                            <h2 class="transition-shape uma-pattern-green">${tor.nazwa}</h2>
+                            <div id="trackInfoRender-${safeId}" class="track-details-box transition-shape">Ładowanie informacji...</div>
+                            <table class="transition-shape"><thead><tr><th>Kierowca</th><th>Fura</th><th>Czas</th></tr></thead><tbody id="table-${safeId}"><tr><td colspan='3'>Ładowanie...</td></tr></tbody></table>
                             <hr style="border-color:#ddd; margin:15px 0;">
                             <div id="carSelectContainer-${safeId}"></div>
-                            <div class="time-inputs-container">
+                            <div class="time-inputs-container transition-shape">
                                 <input type="number" id="timeM-${safeId}" placeholder="Min" min="0" max="99"> <span>:</span> 
                                 <input type="number" id="timeS-${safeId}" placeholder="Sek" min="0" max="59"> <span>.</span> 
                                 <input type="number" id="timeMS-${safeId}" placeholder="MS" min="0" max="999">
                             </div>
-                            <button onclick="window.saveTime('${tor.nazwa}')" class="btn-submit">Zapisz wynik</button>
+                            <button onclick="window.saveTime('${tor.nazwa}')" class="btn-submit transition-shape">Zapisz wynik</button>
                         </div>`; 
                     document.getElementById(`popup-content-${safeId}`).innerHTML = fullHTML; 
                     
-                    let carSelectHTML = `<select id="carSelect-${safeId}" style="width:100%; border: 3px solid #ccc; border-radius: 12px; padding: 10px; font-weight: bold;">`; 
+                    let carSelectHTML = `<select id="carSelect-${safeId}" class="transition-shape" style="width:100%; border: 3px solid #ccc; border-radius: 12px; padding: 10px; font-weight: bold;">`; 
                     if(window.myCars.length === 0) carSelectHTML += `<option value="" disabled selected>Brak aut!</option>`; 
                     else { window.myCars.forEach(car => { carSelectHTML += `<option value="${car}">${car}</option>`; }); } 
                     carSelectHTML += `</select>`; 
@@ -1134,29 +1291,39 @@
                     let infoData = { opis: "Brak opisu.", kontakt: "Brak", email: "Brak", ceny: "Brak info" };
                     if(infoSnap.exists()) infoData = infoSnap.data();
 
-                    let editBtnHTML = (window.userRole === 'admin' || window.userRole === 'mod') ? `<button class="btn-view" style="width:100%; margin-top:5px;" onclick="window.openTrackEditModal('${safeId}', '${tor.nazwa}')">✏️ Edytuj Informacje</button>` : '';
+                    // Nowy, zmodernizowany przycisk "Ustawienia Toru"
+                    let editBtnHTML = (window.userRole === 'admin' || window.userRole === 'mod') ? `<button class="btn-submit transition-shape" style="width:100%; margin-top:15px; background: linear-gradient(180deg, #2bc2ff, #168bd8); box-shadow: 0 4px 0 #0d6299, 0 6px 10px rgba(0,0,0,0.2); text-shadow: 1px 1px 0 #0d6299;" onclick="window.openTrackEditModal('${safeId}', '${tor.nazwa}')">🔧 Ustawienia Toru</button>` : '';
 
                     infoBox.innerHTML = `
-                        <p>${infoData.opis}</p>
-                        <p>☎️ Kontakt: <strong>${infoData.kontakt}</strong></p>
-                        <p>📧 E-mail: <strong>${infoData.email}</strong></p>
-                        <p>💲 Ceny: <strong>${infoData.ceny}</strong></p>
+                        <div style="margin-bottom: 10px; font-weight: bold; text-align: center; border-bottom: 2px dashed #ddd; padding-bottom: 8px;">${infoData.opis}</div>
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px;">
+                            <span style="font-weight: 900; font-size: 12px; text-transform: uppercase;"><span style="font-size:16px;">☎️</span> Kontakt</span>
+                            <span style="font-weight: 900; font-size: 13px; text-align: right; max-width: 60%; word-break: break-word;">${infoData.kontakt}</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px;">
+                            <span style="font-weight: 900; font-size: 12px; text-transform: uppercase;"><span style="font-size:16px;">📧</span> E-mail</span>
+                            <span style="font-weight: 900; font-size: 13px; text-align: right; max-width: 60%; word-break: break-word;">${infoData.email}</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                            <span style="font-weight: 900; font-size: 12px; text-transform: uppercase;"><span style="font-size:16px;">💲</span> Ceny</span>
+                            <span style="font-weight: 900; font-size: 13px; text-align: right; max-width: 60%; word-break: break-word;">${infoData.ceny}</span>
+                        </div>
                         ${editBtnHTML}
                     `;
 
                     window.loadLeaderboard(tor.nazwa); 
                 }); 
 
-                let listImg = tor.foto ? `<img src="${tor.foto}" class="track-list-icon">` : `<div class="track-list-icon"></div>`;
+                let listImg = tor.foto ? `<img src="${tor.foto}" class="track-list-icon transition-shape">` : `<div class="track-list-icon transition-shape"></div>`;
                 sideMenuList.innerHTML += `
-                    <li class="track-list-item" onclick="window.focusTrack('${safeId}', ${tor.lat}, ${tor.lng})">
+                    <li class="track-list-item transition-shape" onclick="window.focusTrack('${safeId}', ${tor.lat}, ${tor.lng})">
                         ${listImg} ${tor.nazwa}
                     </li>`;
             });
 
             if(window.userRole === 'admin' || window.userRole === 'mod') {
                 sideMenuList.innerHTML += `
-                    <li class="track-list-item" style="background:#e8f8f5; color:#128c3a; justify-content:center; margin-top:10px; border-top: 4px solid #128c3a;" onclick="window.openAdminPanel()">
+                    <li class="track-list-item transition-shape" style="background:#e8f8f5; color:#128c3a; justify-content:center; margin-top:10px; border-top: 4px solid #128c3a;" onclick="window.openAdminPanel()">
                         ➕ DODAJ NOWY TOR
                     </li>`;
             }
@@ -1381,7 +1548,7 @@
         });
 
         // ==========================================
-        // AUTHENTICATION LOGIC (BEZ ZMIAN!)
+        // AUTHENTICATION LOGIC
         // ==========================================
 
         document.getElementById('loginBtn').addEventListener('click', async () => { 
@@ -1478,15 +1645,23 @@
             document.getElementById('userMenu').classList.remove('active'); 
         });
 
+        // UMAPYOI Z KLAWIATURY
         let keysBuffer = "";
         document.addEventListener("keydown", (e) => {
             if(document.activeElement.tagName === "INPUT" || document.activeElement.tagName === "TEXTAREA") return; 
             keysBuffer += e.key.toLowerCase();
-            if (keysBuffer.length > 10) keysBuffer = keysBuffer.slice(-10);
+            // Bufor na 15 klawiszy by złapać wwssadadb (9 znaków)
+            if (keysBuffer.length > 15) keysBuffer = keysBuffer.slice(-15);
             
             if (keysBuffer.includes("umauma")) {
                 keysBuffer = ""; 
                 activateEasterEgg();
+            }
+
+            // NOWY EASTER EGG (INITIAL D)
+            if (keysBuffer.includes("wwssadadb")) {
+                keysBuffer = "";
+                activateInitialDMode();
             }
         });
 
@@ -1505,7 +1680,110 @@
                 window.isRadioPlaying = true;
                 document.getElementById('radioBtnToggle').innerHTML = "🔇 Wyłącz Umapyoi";
             }
-            console.log("EASTER EGG ACTIVATED: UMAPYOI!");
+        }
+
+        // TACHYON EASTER EGG (KLIKNIĘCIE 3 RAZY W TRACKDAY)
+        let tachyonClickCount = 0;
+        let tachyonClickTimer;
+        let tachyonToastTimer; // Nowy timer do chowania toasta
+        
+        document.getElementById('headerTitleContainer').addEventListener('click', () => {
+            tachyonClickCount++;
+            clearTimeout(tachyonClickTimer);
+            
+            if (tachyonClickCount >= 3) {
+                tachyonClickCount = 0;
+                triggerTachyonEvent();
+            } else {
+                tachyonClickTimer = setTimeout(() => { tachyonClickCount = 0; }, 1000);
+            }
+        });
+
+        function triggerTachyonEvent() {
+            const messages = [
+                "Nudzi ci się? a do kiedy masz przegląd?",
+                "Protip! Sprawdzaj po wulkanizatorze czy koło dokręcił jadąc 140 km/h!",
+                "Pamiętaj jak ci zgaśnie elektronika w furce w lesie po hopce to musisz dodać gazu, niech nie zatrzymują cię ograniczenia.",
+                "Sześć Siedem Sześć Siedem Rekord toru!!!"
+            ];
+            
+            // Sprawdzenie czy gracz ma Diesla
+            let hasDiesel = false;
+            if (window.myFullCars && window.myFullCars.some(car => car.fuel === 'Diesel')) {
+                hasDiesel = true;
+            }
+            
+            if (hasDiesel) {
+                messages.push("Weź idź tam sprawdź czy masz EGR ogarnięty, bo pewnie ślepy jest jak kret");
+            }
+
+            const randomMsg = messages[Math.floor(Math.random() * messages.length)];
+
+            document.getElementById('tachyonText').innerText = randomMsg;
+            const toast = document.getElementById('tachyonToast');
+            
+            // Pokazujemy toast
+            toast.classList.add('show');
+            
+            // Resetujemy ewentualnie wcześniej odpalony czas i ustawiamy nowy (6 sekund na ekranie)
+            clearTimeout(tachyonToastTimer);
+            tachyonToastTimer = setTimeout(() => {
+                toast.classList.remove('show');
+            }, 6000);
+        }
+
+        // FUNKCJA URUCHAMIAJĄCA INITIAL D
+        function activateInitialDMode() {
+            if(document.body.classList.contains('initial-d-active')) return;
+            
+            // Pokazanie secret gifa
+            const overlay = document.getElementById('secretGifOverlay');
+            overlay.classList.add('show');
+            
+            // Opcjonalnie wrzucenie Eurobeatu (Deja Vu)
+            if(window.ytPlayer && typeof window.ytPlayer.loadVideoById === 'function') {
+                window.ytPlayer.loadVideoById('dv13gl0a-FA');
+                window.ytPlayer.setVolume(50);
+                window.ytPlayer.playVideo();
+                window.isRadioPlaying = true;
+                document.getElementById('radioBtnToggle').innerHTML = "🔇 Wyłącz Eurobeat";
+            }
+
+            // Odczekaj 2.5 sekundy podczas wyświetlania gif i wtedy zmień stronę
+            setTimeout(() => {
+                overlay.classList.remove('show');
+                
+                // Odpal klasę wyzwalającą przejścia CSS do poważnego stylu
+                document.body.classList.add('initial-d-active');
+                
+                // Zmiana tekstu nagłówka i ukrycie cukierkowych gifów (Oguri)
+                document.getElementById('headerTitle').innerText = "INICJALNY GAZ...";
+                document.querySelectorAll('.header-gif').forEach(img => img.style.display = 'none');
+
+                // Zamiana mapy na dark mode
+                map.addLayer(darkMap);
+                map.removeLayer(satelliteMap);
+
+                // Wyczyszczenie standardowych torów
+                for(let id in window.allMarkers) {
+                    map.removeLayer(window.allMarkers[id]);
+                }
+                window.allMarkers = {};
+                
+                // Nowa lista "nieoficjalnych tras"
+                tory = [
+                    { nazwa: "Przełęcz Salmopolska (Touge)", lat: 49.664, lng: 18.966, foto: "" },
+                    { nazwa: "Góry Sowie (Patelnie)", lat: 50.648, lng: 16.486, foto: "" },
+                    { nazwa: "Droga Stu Zakrętów", lat: 50.477, lng: 16.347, foto: "" },
+                    { nazwa: "Przełęcz Roztoka", lat: 49.734, lng: 19.141, foto: "" },
+                    { nazwa: "Odcinek Testowy Kłodzko", lat: 50.432, lng: 16.654, foto: "" }
+                ];
+                
+                window.renderTracksOnMapAndMenu();
+                
+            }, 2500);
+            
+            console.log("INITIAL D MODE ACTIVATED: Touge loaded.");
         }
 
     </script>
