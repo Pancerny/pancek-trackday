@@ -330,7 +330,7 @@
         @keyframes bounceSimple { from { transform: translateY(0); } to { transform: translateY(-15px); } }
 
         /* ==========================================
-           EASTER EGG (INITIAL D MODE)
+           EASTER EGG (INITIAL D MODE) ORAZ POPRAWKI KONTROLEK
            ========================================== */
         #secretGifOverlay {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
@@ -418,6 +418,28 @@
             border-color: #666 !important;
         }
         body.initial-d-active th { background: #111 !important; border-color: #555 !important; color: #aaa !important; }
+
+        /* Łatka dla Leafleta na białe teksty na białym tle */
+        body.initial-d-active .leaflet-control-layers,
+        body.initial-d-active .leaflet-control-layers-expanded {
+            background: #222 !important;
+            border: 2px solid #e74c3c !important;
+            color: #fff !important;
+            border-radius: 0 !important;
+        }
+        body.initial-d-active .leaflet-control-layers label {
+            color: #fff !important;
+        }
+        body.initial-d-active .leaflet-control-zoom a {
+            background: #222 !important;
+            color: #fff !important;
+            border: 1px solid #555 !important;
+            border-radius: 0 !important;
+        }
+        body.initial-d-active .leaflet-control-zoom a:hover {
+            background: #e74c3c !important;
+            color: #fff !important;
+        }
 
         /* ==========================================
            RESPONSYWNOŚĆ (TELEFONY)
@@ -1613,11 +1635,61 @@
             } 
         });
 
+        // ==========================================
+        // NOWY EASTER EGG (INITIAL D MODE)
+        // Definiowane wewnątrz modułu by mieć dostęp do "map", "darkMap" itd.
+        // ==========================================
+        window.activateInitialDMode = () => {
+            if(document.body.classList.contains('initial-d-active')) return;
+            
+            const overlay = document.getElementById('secretGifOverlay');
+            overlay.classList.add('show');
+            
+            if(window.ytPlayer && typeof window.ytPlayer.loadVideoById === 'function') {
+                window.ytPlayer.loadVideoById('dv13gl0a-FA');
+                window.ytPlayer.setVolume(50);
+                window.ytPlayer.playVideo();
+                window.isRadioPlaying = true;
+                document.getElementById('radioBtnToggle').innerHTML = "🔇 Wyłącz Eurobeat";
+            }
+
+            setTimeout(() => {
+                overlay.classList.remove('show');
+                
+                document.body.classList.add('initial-d-active');
+                
+                document.getElementById('headerTitle').innerText = "INICJALNY GAZ...";
+                document.querySelectorAll('.header-gif').forEach(img => img.style.display = 'none');
+
+                map.addLayer(darkMap);
+                map.removeLayer(satelliteMap);
+
+                for(let id in window.allMarkers) {
+                    map.removeLayer(window.allMarkers[id]);
+                }
+                window.allMarkers = {};
+                
+                tory.length = 0; 
+                tory.push(
+                    { nazwa: "Przełęcz Salmopolska (Touge)", lat: 49.664, lng: 18.966, foto: "" },
+                    { nazwa: "Góry Sowie (Patelnie)", lat: 50.648, lng: 16.486, foto: "" },
+                    { nazwa: "Droga Stu Zakrętów", lat: 50.477, lng: 16.347, foto: "" },
+                    { nazwa: "Przełęcz Roztoka", lat: 49.734, lng: 19.141, foto: "" },
+                    { nazwa: "Odcinek Testowy Kłodzko", lat: 50.432, lng: 16.654, foto: "" }
+                );
+                
+                window.renderTracksOnMapAndMenu();
+                
+            }, 2500);
+            
+            console.log("INITIAL D MODE ACTIVATED: Touge loaded.");
+        };
+
     </script>
 
     <script>
         // ==========================================
-        // YOUTUBE RADIO ORAZ EASTER EGG UMAUMA
+        // YOUTUBE RADIO ORAZ LOGIKA KLAWIATURY (EASTER EGG)
         // ==========================================
 
         window.ytPlayer; 
@@ -1645,12 +1717,11 @@
             document.getElementById('userMenu').classList.remove('active'); 
         });
 
-        // UMAPYOI Z KLAWIATURY
+        // KODY Z KLAWIATURY
         let keysBuffer = "";
         document.addEventListener("keydown", (e) => {
             if(document.activeElement.tagName === "INPUT" || document.activeElement.tagName === "TEXTAREA") return; 
             keysBuffer += e.key.toLowerCase();
-            // Bufor na 15 klawiszy by złapać wwssadadb (9 znaków)
             if (keysBuffer.length > 15) keysBuffer = keysBuffer.slice(-15);
             
             if (keysBuffer.includes("umauma")) {
@@ -1658,10 +1729,11 @@
                 activateEasterEgg();
             }
 
-            // NOWY EASTER EGG (INITIAL D)
             if (keysBuffer.includes("wwssadadb")) {
                 keysBuffer = "";
-                activateInitialDMode();
+                if(typeof window.activateInitialDMode === 'function') {
+                    window.activateInitialDMode();
+                }
             }
         });
 
@@ -1685,7 +1757,7 @@
         // TACHYON EASTER EGG (KLIKNIĘCIE 3 RAZY W TRACKDAY)
         let tachyonClickCount = 0;
         let tachyonClickTimer;
-        let tachyonToastTimer; // Nowy timer do chowania toasta
+        let tachyonToastTimer;
         
         document.getElementById('headerTitleContainer').addEventListener('click', () => {
             tachyonClickCount++;
@@ -1707,7 +1779,6 @@
                 "Sześć Siedem Sześć Siedem Rekord toru!!!"
             ];
             
-            // Sprawdzenie czy gracz ma Diesla
             let hasDiesel = false;
             if (window.myFullCars && window.myFullCars.some(car => car.fuel === 'Diesel')) {
                 hasDiesel = true;
@@ -1722,68 +1793,12 @@
             document.getElementById('tachyonText').innerText = randomMsg;
             const toast = document.getElementById('tachyonToast');
             
-            // Pokazujemy toast
             toast.classList.add('show');
             
-            // Resetujemy ewentualnie wcześniej odpalony czas i ustawiamy nowy (6 sekund na ekranie)
             clearTimeout(tachyonToastTimer);
             tachyonToastTimer = setTimeout(() => {
                 toast.classList.remove('show');
             }, 6000);
-        }
-
-        // FUNKCJA URUCHAMIAJĄCA INITIAL D
-        function activateInitialDMode() {
-            if(document.body.classList.contains('initial-d-active')) return;
-            
-            // Pokazanie secret gifa
-            const overlay = document.getElementById('secretGifOverlay');
-            overlay.classList.add('show');
-            
-            // Opcjonalnie wrzucenie Eurobeatu (Deja Vu)
-            if(window.ytPlayer && typeof window.ytPlayer.loadVideoById === 'function') {
-                window.ytPlayer.loadVideoById('dv13gl0a-FA');
-                window.ytPlayer.setVolume(50);
-                window.ytPlayer.playVideo();
-                window.isRadioPlaying = true;
-                document.getElementById('radioBtnToggle').innerHTML = "🔇 Wyłącz Eurobeat";
-            }
-
-            // Odczekaj 2.5 sekundy podczas wyświetlania gif i wtedy zmień stronę
-            setTimeout(() => {
-                overlay.classList.remove('show');
-                
-                // Odpal klasę wyzwalającą przejścia CSS do poważnego stylu
-                document.body.classList.add('initial-d-active');
-                
-                // Zmiana tekstu nagłówka i ukrycie cukierkowych gifów (Oguri)
-                document.getElementById('headerTitle').innerText = "INICJALNY GAZ...";
-                document.querySelectorAll('.header-gif').forEach(img => img.style.display = 'none');
-
-                // Zamiana mapy na dark mode
-                map.addLayer(darkMap);
-                map.removeLayer(satelliteMap);
-
-                // Wyczyszczenie standardowych torów
-                for(let id in window.allMarkers) {
-                    map.removeLayer(window.allMarkers[id]);
-                }
-                window.allMarkers = {};
-                
-                // Nowa lista "nieoficjalnych tras"
-                tory = [
-                    { nazwa: "Przełęcz Salmopolska (Touge)", lat: 49.664, lng: 18.966, foto: "" },
-                    { nazwa: "Góry Sowie (Patelnie)", lat: 50.648, lng: 16.486, foto: "" },
-                    { nazwa: "Droga Stu Zakrętów", lat: 50.477, lng: 16.347, foto: "" },
-                    { nazwa: "Przełęcz Roztoka", lat: 49.734, lng: 19.141, foto: "" },
-                    { nazwa: "Odcinek Testowy Kłodzko", lat: 50.432, lng: 16.654, foto: "" }
-                ];
-                
-                window.renderTracksOnMapAndMenu();
-                
-            }, 2500);
-            
-            console.log("INITIAL D MODE ACTIVATED: Touge loaded.");
         }
 
     </script>
