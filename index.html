@@ -1775,27 +1775,52 @@
         });
 
         function triggerTachyonEvent() {
-            const messages = [
-                "Nudzi ci się? a do kiedy masz przegląd?",
-                "Protip! Sprawdzaj po wulkanizatorze czy koło dokręcił jadąc 140 km/h!",
-                "Pamiętaj jak ci zgaśnie elektronika w furce w lesie po hopce to musisz dodać gazu, niech nie zatrzymują cię ograniczenia.",
-                "Sześć Siedem Sześć Siedem Rekord toru!!!"
-            ];
-            
-            let hasDiesel = false;
-            if (window.myFullCars && window.myFullCars.some(car => car.fuel === 'Diesel')) {
-                hasDiesel = true;
-            }
-            
-            if (hasDiesel) {
-                messages.push("Weź idź tam sprawdź czy masz EGR ogarnięty, bo pewnie ślepy jest jak kret");
+            let messages = [];
+            let imgSrc = "tachyon2.gif";
+
+            // Sprawdzamy czy aktywny jest tryb Initial D
+            if (document.body.classList.contains('initial-d-active')) {
+                messages = [
+                    "Ściganci nie potrzebują dziewczyn...",
+                    "Kupuję praktyczne i łatwe auto. Subaru WRX.",
+                    "Wow.. zamierza tym latać czy co?",
+                    "Co do wała, od kiedy moja 85' jest 86'?!"
+                ];
+                imgSrc = "id.gif";
+            } else {
+                // Podstawowy tryb Umapyoi (Tachyon)
+                messages = [
+                    "Nudzi ci się? a do kiedy masz przegląd?",
+                    "Protip! Sprawdzaj po wulkanizatorze czy koło dokręcił jadąc 140 km/h!",
+                    "Pamiętaj jak ci zgaśnie elektronika w furce w lesie po hopce to musisz dodać gazu, niech nie zatrzymują cię ograniczenia.",
+                    "Sześć Siedem Sześć Siedem Rekord toru!!!",
+                    "ma 4 koła i jeździ w czym problem? drzwi to dodatek.",
+                    "Pamiętaj! jak masz dziurawy wydech to masz darmową terapię w kabinie!",
+                    "Jak już tu kliknąłeś to rozumiem że auto w warsztacie?",
+                    "Opel Asterka ma 1 miejsce w rankingu! Najczęściej złomowanych aut.",
+                    "OMODA? Xiaomi? Tesla? telefonem jeździsz? odważnie.",
+                    "W celu zwiększenia ryżu należy ujebać rurę wydechową do zera, niech usłyszą twoją bestię na wysokich",
+                    "Jak zaświeci się kontrolka Check Engine to stuknij w deskę rozdzielczą - to tylko fatamorgana",
+                    "Wpisz sobie Forda T na czas do okrążenia a nie tu klikasz jak jakiś bambik."
+                ];
+                
+                // Sprawdzenie czy gracz ma Diesla
+                let hasDiesel = false;
+                if (window.myFullCars && window.myFullCars.some(car => car.fuel === 'Diesel')) {
+                    hasDiesel = true;
+                }
+                
+                if (hasDiesel) {
+                    messages.push("Weź idź tam sprawdź czy masz EGR ogarnięty, bo pewnie ślepy jest jak kret");
+                }
             }
 
             const randomMsg = messages[Math.floor(Math.random() * messages.length)];
 
             document.getElementById('tachyonText').innerText = randomMsg;
-            const toast = document.getElementById('tachyonToast');
+            document.querySelector('#tachyonToast img').src = imgSrc; // Podmiana gifa w locie
             
+            const toast = document.getElementById('tachyonToast');
             toast.classList.add('show');
             
             clearTimeout(tachyonToastTimer);
