@@ -195,8 +195,14 @@
 
         .chat-header {
             padding: 12px 15px; font-weight: 900; color: #fff; font-size: 16px;
-            display: flex; justify-content: space-between; border-bottom: 4px solid #fff;
+            display: flex; justify-content: space-between; border-bottom: 4px solid #fff; align-items: center;
         }
+        .chat-clear-btn {
+            background: #e74c3c; color: #fff; border: none; border-radius: 8px; padding: 3px 8px; font-size: 10px; cursor: pointer; margin-left: 10px;
+            box-shadow: 0 2px 0 #c0392b; font-weight: bold; text-transform: uppercase; transition: 0.1s; font-family: 'M PLUS Rounded 1c', sans-serif;
+        }
+        .chat-clear-btn:active { transform: translateY(2px); box-shadow: none; }
+        
         #chatMessages {
             flex: 1; padding: 10px; overflow-y: auto; background: #fff;
             display: flex; flex-direction: column; gap: 8px;
@@ -205,6 +211,10 @@
             background: #f9f9f9; padding: 8px 12px; border-radius: 12px; border: 2px solid #eee;
             box-shadow: 0 2px 5px rgba(0,0,0,0.02);
         }
+        .chat-msg-delete {
+            color: #e74c3c; cursor: pointer; float: right; font-weight: 900; font-size: 14px; transition: 0.1s;
+        }
+        .chat-msg-delete:hover { color: #c0392b; transform: scale(1.2); }
         .chat-nick {
             color: #168bd8; font-weight: 900; font-size: 12px; cursor: pointer; display: inline-block; margin-bottom: 2px;
             transition: 0.1s;
@@ -412,7 +422,8 @@
         body.initial-d-active .achievement-icon,
         body.initial-d-active #chatToggleBtn,
         body.initial-d-active #chatWindow,
-        body.initial-d-active .chat-msg {
+        body.initial-d-active .chat-msg,
+        body.initial-d-active .chat-clear-btn {
             border-radius: 0 !important;
             transition: border-radius 1.5s ease-in-out, background 1.5s ease-in-out, border-color 1.5s ease-in-out, box-shadow 1.5s ease-in-out, color 1.5s ease-in-out;
         }
@@ -428,7 +439,7 @@
             text-shadow: none !important;
             transition: background-color 1.5s ease-in-out;
         }
-        body.initial-d-active .btn-submit, body.initial-d-active .btn-auth-submit {
+        body.initial-d-active .btn-submit, body.initial-d-active .btn-auth-submit, body.initial-d-active .chat-clear-btn {
             background: #2a2a2a !important;
             border-color: #e74c3c !important;
             box-shadow: 0 4px 0 #800000, 0 6px 10px rgba(0,0,0,0.5) !important;
@@ -582,7 +593,7 @@
         <div id="chatToggleBtn" onclick="toggleChat()">💬 Czat Lobby</div>
         <div id="chatWindow" class="hidden">
             <div class="chat-header uma-pattern-green">
-                <span>Lobby</span>
+                <span style="display: flex; align-items: center;">Lobby <button id="clearChatBtn" class="chat-clear-btn hidden" onclick="window.clearEntireChat()">Wyczyść czat</button></span>
                 <span onclick="toggleChat()" style="cursor:pointer; color:#fff; text-shadow: 1px 1px 2px rgba(0,0,0,0.5);">×</span>
             </div>
             <div id="chatMessages"></div>
@@ -1349,6 +1360,41 @@
             }
         };
 
+        // Dodane globalne funkcje administracyjne dla czatu
+        window.deleteChatMessage = async (msgId) => {
+            if(confirm("Usunąć tę wiadomość?")) {
+                try {
+                    await deleteDoc(doc(db, "czat", msgId));
+                } catch(e) {
+                    alert("Błąd usuwania wiadomości: " + e.message);
+                }
+            }
+        };
+
+        window.clearEntireChat = async () => {
+            if(window.userRole !== 'admin' && window.userRole !== 'mod') return;
+            if(!confirm("UWAGA! Usunąć CAŁĄ historię czatu dla wszystkich? Tego nie da się cofnąć!")) return;
+            
+            try {
+                const chatSnap = await getDocs(collection(db, "czat"));
+                // Usuwamy równolegle dla szybkości
+                const deletePromises = [];
+                chatSnap.forEach(document => {
+                    deletePromises.push(deleteDoc(doc(db, "czat", document.id)));
+                });
+                await Promise.all(deletePromises);
+                
+                await addDoc(collection(db, "czat"), {
+                    uid: "system",
+                    nick: "SYSTEM",
+                    text: `🧹 Czat został wyczyszczony przez: ${window.currentUserNick || window.currentUserAlias}`,
+                    timestamp: Date.now()
+                });
+            } catch(e) {
+                alert("Błąd czyszczenia czatu: " + e.message);
+            }
+        };
+
         async function initializeAppAfterLogin() {
             window.userRole = "user";
             if(window.currentUserAlias.toLowerCase() === 'pancerny') { window.userRole = "admin"; }
@@ -1363,6 +1409,8 @@
             
             if(window.userRole === 'admin' || window.userRole === 'mod') { 
                 document.getElementById('adminMenuBtn').classList.remove('hidden'); 
+                const clearBtn = document.getElementById('clearChatBtn');
+                if(clearBtn) clearBtn.classList.remove('hidden');
             }
 
             const customTracksSnap = await getDocs(collection(db, "tory_custom"));
@@ -1745,8 +1793,16 @@
                         msgs.reverse(); // Odwracamy, by najnowsze było na dole
                         msgs.forEach(msg => {
                             const time = msg.timestamp ? new Date(msg.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : '';
+                            
+                            // Przycisk usuwania dla Admina/Moda
+                            let deleteBtnHTML = '';
+                            if (window.userRole === 'admin' || window.userRole === 'mod') {
+                                deleteBtnHTML = `<span class="chat-msg-delete" onclick="window.deleteChatMessage('${msg.id}')">×</span>`;
+                            }
+
                             chatBox.innerHTML += `
                             <div class="chat-msg">
+                                ${deleteBtnHTML}
                                 <span class="chat-nick" onclick="window.showUserProfile('${msg.uid}')">[${time}] ${msg.nick.toUpperCase()}:</span>
                                 <span class="chat-text">${msg.text}</span>
                             </div>`;
@@ -1771,6 +1827,59 @@
                 }
             } 
         });
+
+        // ==========================================
+        // EASTER EGG (INITIAL D MODE)
+        // Definiowane wewnątrz modułu by mieć dostęp do "map", "darkMap" itd.
+        // ==========================================
+        window.activateInitialDMode = () => {
+            if(document.body.classList.contains('initial-d-active')) return;
+            
+            const overlay = document.getElementById('secretGifOverlay');
+            overlay.classList.add('show');
+            
+            if(window.ytPlayer && typeof window.ytPlayer.loadVideoById === 'function') {
+                window.ytPlayer.loadVideoById('VY8pupVRbcc');
+                window.ytPlayer.setVolume(50);
+                window.ytPlayer.playVideo();
+                window.isRadioPlaying = true;
+                document.getElementById('radioBtnToggle').innerHTML = "🔇 Wyłącz Eurobeat";
+            }
+
+            setTimeout(() => {
+                overlay.classList.remove('show');
+                
+                document.body.classList.add('initial-d-active');
+                
+                document.getElementById('headerTitle').innerText = "INICJALNY GAZ...";
+                document.querySelectorAll('.header-gif').forEach(img => img.style.display = 'none');
+
+                // ZAMIANA HAMBURGERA NA OBRACAJĄCĄ SIĘ AE86
+                document.getElementById('hamburgerBtn').innerHTML = '<img src="secret2.gif" style="width: 100%; height: 100%; object-fit: contain;">';
+
+                map.addLayer(darkMap);
+                map.removeLayer(satelliteMap);
+
+                for(let id in window.allMarkers) {
+                    map.removeLayer(window.allMarkers[id]);
+                }
+                window.allMarkers = {};
+                
+                tory.length = 0; 
+                tory.push(
+                    { nazwa: "Przełęcz Salmopolska (Touge)", lat: 49.664, lng: 18.966, foto: "" },
+                    { nazwa: "Góry Sowie (Patelnie)", lat: 50.648, lng: 16.486, foto: "" },
+                    { nazwa: "Droga Stu Zakrętów", lat: 50.477, lng: 16.347, foto: "" },
+                    { nazwa: "Przełęcz Roztoka", lat: 49.734, lng: 19.141, foto: "" },
+                    { nazwa: "Odcinek Testowy Kłodzko", lat: 50.432, lng: 16.654, foto: "" }
+                );
+                
+                window.renderTracksOnMapAndMenu();
+                
+            }, 2500);
+            
+            console.log("INITIAL D MODE ACTIVATED: Touge loaded.");
+        };
 
     </script>
 
