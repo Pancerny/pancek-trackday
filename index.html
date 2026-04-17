@@ -31,7 +31,7 @@
         .auth-card-form { flex: 1 1 55%; padding: 40px; display: flex; flex-direction: column; justify-content: center; align-items: center; background: #f0f3f5; }
         .auth-card-image { flex: 1 1 45%; background-color: #202225; background-size: cover; background-position: center; position: relative; background-image: url('helios.jpg'); border-left: 4px solid #fff;}
         .auth-card-image::after { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(88, 101, 242, 0.1); }
-        .auth-card h1 { color: #79d81d; margin: 0 0 5px 0; font-size: 32px; text-transform: uppercase; font-weight: 900; text-shadow: 1px 1px 0px #3b900b; }
+        .auth-card h1 { color: #79d81d; margin: 0 0 5px 0; font-size: 26px; text-transform: uppercase; font-weight: 900; text-shadow: 1px 1px 0px #3b900b; text-align: center; }
         .auth-card p { color: #8a7b71; margin: 0 0 25px 0; font-size: 14px; text-align: center; font-weight: bold;}
         #forgotPwdBtn { color: #168bd8; text-decoration: none; font-size: 13px; margin-top: 15px; display: block; transition: 0.2s; font-weight: bold;}
         #forgotPwdBtn:hover { text-decoration: underline; color: #0d6299; }
@@ -104,6 +104,8 @@
            ========================================== */
         #map { width: 100vw; height: 100vh; position: absolute; top: 0; left: 0; z-index: 1; }
         .leaflet-top.leaflet-left { padding-top: 80px; }
+        /* Przesunięcie kontrolek po lewej by zrobić miejsce na czat */
+        .leaflet-bottom.leaflet-left { margin-bottom: 70px; margin-left: 10px; }
         
         .floating-header { 
             position: absolute; top: 20px; left: 50%; transform: translateX(-50%); z-index: 1000; 
@@ -169,6 +171,54 @@
         }
         .track-list-item:hover { background: #f0f8e6; padding-left: 30px; color: #68cc14; }
         .track-list-icon { width: 30px; height: 30px; border-radius: 8px; background: #ddd; object-fit: cover; border: 2px solid #ccc;}
+
+        /* ==========================================
+           CZAT LOBBY
+           ========================================== */
+        #chatToggleBtn {
+            position: absolute; bottom: 20px; left: 20px; z-index: 1000;
+            background: linear-gradient(180deg, #fff 0%, #f4f4f4 100%);
+            padding: 10px 20px; border-radius: 20px; border: 3px solid #ccc;
+            box-shadow: 0 4px 0 #aaa, 0 6px 10px rgba(0,0,0,0.3);
+            font-weight: 900; color: #5a4b41; cursor: pointer; transition: 0.1s;
+        }
+        #chatToggleBtn:active { transform: translateY(4px); box-shadow: 0 0 0 #aaa, 0 2px 5px rgba(0,0,0,0.3); }
+
+        #chatWindow {
+            position: absolute; bottom: 70px; left: 20px; width: 320px; height: 420px;
+            background: #f0f3f5; border: 4px solid #fff; border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5); z-index: 1001;
+            display: flex; flex-direction: column; overflow: hidden;
+            transition: 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55); transform-origin: bottom left;
+        }
+        #chatWindow.hidden { opacity: 0; transform: scale(0); pointer-events: none; }
+
+        .chat-header {
+            padding: 12px 15px; font-weight: 900; color: #fff; font-size: 16px;
+            display: flex; justify-content: space-between; border-bottom: 4px solid #fff;
+        }
+        #chatMessages {
+            flex: 1; padding: 10px; overflow-y: auto; background: #fff;
+            display: flex; flex-direction: column; gap: 8px;
+        }
+        .chat-msg {
+            background: #f9f9f9; padding: 8px 12px; border-radius: 12px; border: 2px solid #eee;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+        }
+        .chat-nick {
+            color: #168bd8; font-weight: 900; font-size: 12px; cursor: pointer; display: inline-block; margin-bottom: 2px;
+            transition: 0.1s;
+        }
+        .chat-nick:hover { color: #f38815; text-decoration: underline; }
+        .chat-text {
+            font-size: 13px; color: #5a4b41; word-wrap: break-word; font-weight: bold; display: block;
+        }
+        
+        .chat-input-area {
+            padding: 10px; background: #e3e8eb; border-top: 4px solid #fff;
+            display: flex; gap: 5px; align-items: center;
+        }
+        .chat-input-area input { margin: 0 !important; border-radius: 12px !important; flex: 1; padding: 10px !important; }
 
         /* ==========================================
            MODALE (CUKIERKOWE UMA MUSUME)
@@ -359,7 +409,10 @@
         body.initial-d-active button,
         body.initial-d-active .troll-popup,
         body.initial-d-active #tachyonToast,
-        body.initial-d-active .achievement-icon {
+        body.initial-d-active .achievement-icon,
+        body.initial-d-active #chatToggleBtn,
+        body.initial-d-active #chatWindow,
+        body.initial-d-active .chat-msg {
             border-radius: 0 !important;
             transition: border-radius 1.5s ease-in-out, background 1.5s ease-in-out, border-color 1.5s ease-in-out, box-shadow 1.5s ease-in-out, color 1.5s ease-in-out;
         }
@@ -367,7 +420,7 @@
         body.initial-d-active {
             font-family: 'Arial', sans-serif;
         }
-        body.initial-d-active .uma-pattern-green {
+        body.initial-d-active .uma-pattern-green, body.initial-d-active .chat-header {
             background-color: #1a1a1a !important;
             background-image: none !important;
             border-bottom: 4px solid #e74c3c !important;
@@ -393,7 +446,7 @@
             font-style: italic;
             letter-spacing: 4px;
         }
-        body.initial-d-active .user-widget, body.initial-d-active #hamburgerBtn {
+        body.initial-d-active .user-widget, body.initial-d-active #hamburgerBtn, body.initial-d-active #chatToggleBtn {
             background: #1a1a1a !important;
             border-color: #e74c3c !important;
             color: #fff !important;
@@ -403,7 +456,7 @@
         body.initial-d-active .dropdown-menu { background: #111 !important; border-color: #e74c3c !important; }
         body.initial-d-active .dropdown-item { color: #ccc !important; border-bottom: 1px solid #333; }
         body.initial-d-active .dropdown-item:hover { background: #e74c3c !important; color: #fff !important; padding-left: 20px; }
-        body.initial-d-active .modal-content { background: #222 !important; border-color: #e74c3c !important; color: #ddd !important; }
+        body.initial-d-active .modal-content, body.initial-d-active #chatWindow { background: #222 !important; border-color: #e74c3c !important; color: #ddd !important; }
         body.initial-d-active .garage-form-box, body.initial-d-active .list-item, body.initial-d-active table, body.initial-d-active .time-inputs-container, body.initial-d-active .track-details-box {
             background: #333 !important;
             border-color: #555 !important;
@@ -418,6 +471,12 @@
             border-color: #666 !important;
         }
         body.initial-d-active th { background: #111 !important; border-color: #555 !important; color: #aaa !important; }
+
+        /* Ustawienia okna chatu dla Initial D */
+        body.initial-d-active #chatMessages { background: #333 !important; }
+        body.initial-d-active .chat-input-area { background: #111 !important; border-color: #e74c3c !important; }
+        body.initial-d-active .chat-msg { background: #444 !important; border-color: #555 !important; }
+        body.initial-d-active .chat-text { color: #eee !important; }
 
         /* Łatka dla Leafleta na białe teksty na białym tle */
         body.initial-d-active .leaflet-control-layers,
@@ -457,6 +516,7 @@
             .modal-content { width: 95%; }
             .modal-body { padding: 15px; }
             .leaflet-popup-content { width: 260px !important; }
+            #chatWindow { width: 90vw; left: 5vw; bottom: 70px; height: 350px;}
         }
     </style>
     <script src="https://www.youtube.com/iframe_api"></script>
@@ -471,7 +531,7 @@
     <div id="authOverlay">
         <div class="auth-card">
             <div class="auth-card-form">
-                <h1>Zaloguj się</h1>
+                <h1>Zaloguj / Zarejestruj się</h1>
                 <p>Trackday - Zmierz się z nami na torze!</p>
                 <input type="email" id="email" placeholder="Adres e-mail">
                 <input type="password" id="password" placeholder="Hasło">
@@ -517,6 +577,20 @@
             <div class="dropdown-item" id="radioBtnToggle">🎵 Włącz Audio</div>
             <div class="dropdown-item" id="logoutBtn" style="color: #e74c3c;">🚪 Wyloguj</div>
         </div>
+
+        <!-- CHAT WIDGET -->
+        <div id="chatToggleBtn" onclick="toggleChat()">💬 Czat Lobby</div>
+        <div id="chatWindow" class="hidden">
+            <div class="chat-header uma-pattern-green">
+                <span>Lobby</span>
+                <span onclick="toggleChat()" style="cursor:pointer; color:#fff; text-shadow: 1px 1px 2px rgba(0,0,0,0.5);">×</span>
+            </div>
+            <div id="chatMessages"></div>
+            <div class="chat-input-area">
+                <input type="text" id="chatInput" placeholder="Napisz wiadomość..." onkeypress="if(event.key === 'Enter') window.sendChatMessage()">
+                <button onclick="window.sendChatMessage()" class="btn-submit" style="margin-top:0; padding: 10px; width: 60px; border-radius: 12px; font-size: 11px;">Wyślij</button>
+            </div>
+        </div>
     </div>
 
     <div id="youtubePlayer" style="position: absolute; left: -9999px; width: 1px; height: 1px;"></div>
@@ -528,7 +602,7 @@
             <div class="modal-body">
                 <div class="garage-form-box" style="text-align: left; font-size: 14px; font-weight: bold; color: #5a4b41;" id="changelogText">
                 </div>
-                <button onclick="closeModal('changelogModal')" class="btn-submit">Zrozumiałem, wchodzę do gry!</button>
+                <button onclick="closeModal('changelogModal')" class="btn-submit">Przyjąłem!</button>
             </div>
         </div>
     </div>
@@ -727,7 +801,8 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
         import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, sendEmailVerification, sendPasswordResetEmail, updateProfile } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
-        import { getFirestore, collection, addDoc, getDocs, query, where, orderBy, deleteDoc, doc, updateDoc, setDoc, getDoc, arrayUnion, arrayRemove } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
+        // Dodany import 'onSnapshot' oraz 'limit' do działania czatu!
+        import { getFirestore, collection, addDoc, getDocs, query, where, orderBy, deleteDoc, doc, updateDoc, setDoc, getDoc, arrayUnion, arrayRemove, onSnapshot, limit } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
 
         // ==========================================
         // KLUCZE FIREBASE
@@ -1240,8 +1315,39 @@
         };
 
         // ==========================================
-        // MAPY, TORY, HAMBURGER
+        // MAPY, TORY, HAMBURGER I CZAT LOBBY
         // ==========================================
+
+        window.toggleChat = () => {
+            const w = document.getElementById('chatWindow');
+            if (w.classList.contains('hidden')) {
+                w.classList.remove('hidden');
+                document.getElementById('chatInput').focus();
+                const chatBox = document.getElementById('chatMessages');
+                chatBox.scrollTop = chatBox.scrollHeight;
+            } else {
+                w.classList.add('hidden');
+            }
+        };
+
+        window.sendChatMessage = async () => {
+            const input = document.getElementById('chatInput');
+            const text = input.value.trim();
+            if (!text) return;
+            input.value = '';
+            
+            try {
+                await addDoc(collection(db, "czat"), {
+                    uid: window.currentUserAlias,
+                    nick: window.currentUserNick || window.currentUserAlias,
+                    text: text,
+                    timestamp: Date.now()
+                });
+            } catch(e) {
+                console.error("Błąd wysyłania wiadomości na czat:", e);
+                alert("Nie można wysłać wiadomości.");
+            }
+        };
 
         async function initializeAppAfterLogin() {
             window.userRole = "user";
@@ -1611,6 +1717,7 @@
                 map.invalidateSize(); 
                 await initializeAppAfterLogin();
 
+                // Obsługa nowości
                 const patchSnap = await getDoc(doc(db, "ustawienia", "patchnotes"));
                 if(patchSnap.exists()) {
                     const pData = patchSnap.data();
@@ -1620,73 +1727,50 @@
                         localStorage.setItem("trackday_version", pData.version);
                     }
                 }
+                
+                // Obsługa radia
                 if(window.ytPlayer && typeof window.ytPlayer.playVideo === 'function') {
                     document.getElementById('radioBtnToggle').innerText = "🎵 Włącz Audio";
                     window.isRadioPlaying = false;
                 } 
+
+                // Aktywacja strumienia Czatu Lobby
+                if(!window.chatUnsubscribe) {
+                    const chatQ = query(collection(db, "czat"), orderBy("timestamp", "desc"), limit(50));
+                    window.chatUnsubscribe = onSnapshot(chatQ, (snapshot) => {
+                        const chatBox = document.getElementById('chatMessages');
+                        chatBox.innerHTML = '';
+                        let msgs = [];
+                        snapshot.forEach(doc => msgs.push({id: doc.id, ...doc.data()}));
+                        msgs.reverse(); // Odwracamy, by najnowsze było na dole
+                        msgs.forEach(msg => {
+                            const time = msg.timestamp ? new Date(msg.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : '';
+                            chatBox.innerHTML += `
+                            <div class="chat-msg">
+                                <span class="chat-nick" onclick="window.showUserProfile('${msg.uid}')">[${time}] ${msg.nick.toUpperCase()}:</span>
+                                <span class="chat-text">${msg.text}</span>
+                            </div>`;
+                        });
+                        chatBox.scrollTop = chatBox.scrollHeight;
+                    });
+                }
             } 
             else { 
                 document.getElementById('authOverlay').classList.remove('hidden'); 
                 document.getElementById('appUI').classList.add('hidden'); 
+                
                 if(window.ytPlayer && typeof window.ytPlayer.pauseVideo === 'function') { 
                     window.ytPlayer.pauseVideo(); 
                     window.isRadioPlaying = false; 
                 } 
+
+                // Zatrzymujemy czat jak wylogujemy
+                if(window.chatUnsubscribe) {
+                    window.chatUnsubscribe();
+                    window.chatUnsubscribe = null;
+                }
             } 
         });
-
-        // ==========================================
-        // NOWY EASTER EGG (INITIAL D MODE)
-        // Definiowane wewnątrz modułu by mieć dostęp do "map", "darkMap" itd.
-        // ==========================================
-        window.activateInitialDMode = () => {
-            if(document.body.classList.contains('initial-d-active')) return;
-            
-            const overlay = document.getElementById('secretGifOverlay');
-            overlay.classList.add('show');
-            
-            if(window.ytPlayer && typeof window.ytPlayer.loadVideoById === 'function') {
-                window.ytPlayer.loadVideoById('VY8pupVRbcc');
-                window.ytPlayer.setVolume(50);
-                window.ytPlayer.playVideo();
-                window.isRadioPlaying = true;
-                document.getElementById('radioBtnToggle').innerHTML = "🔇 Wyłącz Eurobeat";
-            }
-
-            setTimeout(() => {
-                overlay.classList.remove('show');
-                
-                document.body.classList.add('initial-d-active');
-                
-                document.getElementById('headerTitle').innerText = "INICJALNY GAZ...";
-                document.querySelectorAll('.header-gif').forEach(img => img.style.display = 'none');
-
-                // ZAMIANA HAMBURGERA NA OBRACAJĄCĄ SIĘ AE86
-                document.getElementById('hamburgerBtn').innerHTML = '<img src="secret2.gif" style="width: 100%; height: 100%; object-fit: contain;">';
-
-                map.addLayer(darkMap);
-                map.removeLayer(satelliteMap);
-
-                for(let id in window.allMarkers) {
-                    map.removeLayer(window.allMarkers[id]);
-                }
-                window.allMarkers = {};
-                
-                tory.length = 0; 
-                tory.push(
-                    { nazwa: "Przełęcz Salmopolska (Touge)", lat: 49.664, lng: 18.966, foto: "" },
-                    { nazwa: "Góry Sowie (Patelnie)", lat: 50.648, lng: 16.486, foto: "" },
-                    { nazwa: "Droga Stu Zakrętów", lat: 50.477, lng: 16.347, foto: "" },
-                    { nazwa: "Przełęcz Roztoka", lat: 49.734, lng: 19.141, foto: "" },
-                    { nazwa: "Odcinek Testowy Kłodzko", lat: 50.432, lng: 16.654, foto: "" }
-                );
-                
-                window.renderTracksOnMapAndMenu();
-                
-            }, 2500);
-            
-            console.log("INITIAL D MODE ACTIVATED: Touge loaded.");
-        };
 
     </script>
 
