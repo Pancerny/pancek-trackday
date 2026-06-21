@@ -528,6 +528,12 @@
             .modal-body { padding: 15px; }
             .leaflet-popup-content { width: 260px !important; }
             #chatWindow { width: 90vw; left: 5vw; bottom: 70px; height: 350px;}
+            .troll-popup { padding: 15px; transform: scale(0.9); }
+            .troll-popup h2 { font-size: 24px; }
+            .troll-img { max-width: 90%; }
+            #tachyonToast { bottom: -100px; padding: 5px 10px; width: 85%; }
+            #tachyonToast.show { bottom: 10px; }
+            #tachyonToast img { width: 50px; }
         }
     </style>
     <script src="https://www.youtube.com/iframe_api"></script>
@@ -657,6 +663,20 @@
                 </div>
 
                 <div class="garage-form-box">
+                    <h3 style="color:#68cc14; margin-top:0;">🌟 Stwórz Nowe Osiągnięcie</h3>
+                    <input type="text" id="newAchievId" placeholder="Unikalne ID (np. krol_driftu)">
+                    <input type="text" id="newAchievName" placeholder="Nazwa (np. Król Driftu)">
+                    <textarea id="newAchievDesc" rows="2" placeholder="Opis osiągnięcia..."></textarea>
+                    
+                    <label for="newAchievFile" class="file-upload-btn">📷 WGRAJ IKONĘ (Max 3MB)</label>
+                    <input type="file" id="newAchievFile" accept="image/*" style="display:none;">
+                    <input type="hidden" id="newAchievPhoto"> 
+                    <div id="uploadStatusAchiev" style="font-size:11px; color: #168bd8; font-weight:bold; margin-bottom: 10px;"></div>
+
+                    <button class="btn-submit" onclick="addNewDynamicAchievement()">Zapisz do bazy</button>
+                </div>
+
+                <div class="garage-form-box">
                     <h3 style="color:#68cc14; margin-top:0;">📜 Zarządzaj Patch Notes</h3>
                     <textarea id="adminPatchText" rows="4" placeholder="Wpisz nowości... (możesz użyć HTML np. <b>pogrubienie</b>)"></textarea>
                     <button class="btn-submit" onclick="publishPatchNotes()">Opublikuj nową wiadomość</button>
@@ -775,6 +795,13 @@
                     <p style="color: #5a4b41; font-size: 13px; font-weight: bold; margin-bottom: 2px; margin-top: 10px;">Data urodzenia:</p><input type="date" id="settingsDob">
                     <p style="color: #5a4b41; font-size: 13px; font-weight: bold; margin-bottom: 2px; margin-top: 10px;">Miejscowość:</p><input type="text" id="settingsCity" placeholder="Skąd nadajesz?">
                     <p style="color: #5a4b41; font-size: 13px; font-weight: bold; margin-bottom: 2px; margin-top: 10px;">O sobie:</p><textarea id="settingsDesc" rows="3" placeholder="Napisz coś o sobie..."></textarea>
+                    
+                    <p style="color: #5a4b41; font-size: 13px; font-weight: bold; margin-bottom: 2px; margin-top: 10px;">Easter Eggi / Motywy:</p>
+                    <div style="display:flex; gap: 10px; margin-bottom: 15px;">
+                        <button onclick="document.body.classList.toggle('initial-d-active'); document.body.classList.remove('easter-egg-active');" style="flex:1; background: #e74c3c; color: white; border: 2px solid #fff; border-radius: 12px; padding: 8px; font-weight: bold; cursor: pointer; text-transform: uppercase;">Initial D</button>
+                        <button onclick="document.body.classList.toggle('easter-egg-active'); document.body.classList.remove('initial-d-active');" style="flex:1; background: #9ae73a; color: white; border: 2px solid #fff; border-radius: 12px; padding: 8px; font-weight: bold; cursor: pointer; text-transform: uppercase;">Uma Uma</button>
+                    </div>
+
                     <button onclick="saveSettings()" class="btn-submit">Zapisz Profil</button>
                 </div>
             </div>
@@ -1316,6 +1343,37 @@
                 window.loadAdminUsers();
             }
         };
+        window.loadAchievementsFromFirebase = async () => {
+            try {
+                const snapshot = await getDocs(collection(db, "osiagniecia_baza"));
+                snapshot.forEach(doc => {
+                    const data = doc.data();
+                    window.bazaOsiagniec[doc.id] = { nazwa: data.nazwa, opis: data.opis, img: data.img };
+                });
+            } catch(e) { console.error("Błąd pobierania osiągnięć z Firebase:", e); }
+        };
+
+        window.addNewDynamicAchievement = async () => {
+            const id = document.getElementById('newAchievId').value;
+            const name = document.getElementById('newAchievName').value;
+            const desc = document.getElementById('newAchievDesc').value;
+            const photo = document.getElementById('newAchievPhoto').value;
+            
+            if(!id || !name || !photo) return alert("Uzupełnij ID, nazwę i wgraj ikonę!");
+            try {
+                await setDoc(doc(db, "osiagniecia_baza", id), { nazwa: name, opis: desc, img: photo });
+                alert("Osiągnięcie dodane pomyślnie!");
+                document.getElementById('newAchievId').value = "";
+                document.getElementById('newAchievName').value = "";
+                document.getElementById('newAchievDesc').value = "";
+                document.getElementById('newAchievPhoto').value = "";
+                document.getElementById('uploadStatusAchiev').innerText = "";
+                await window.loadAchievementsFromFirebase();
+                if(document.getElementById('adminModal').classList.contains('active')) {
+                    window.loadAdminUsers();
+                }
+            } catch(e) { alert("Błąd: " + e.message); }
+        };
 
         window.publishPatchNotes = async () => {
             const text = document.getElementById('adminPatchText').value;
@@ -1396,6 +1454,7 @@
         };
 
         async function initializeAppAfterLogin() {
+            await window.loadAchievementsFromFirebase();
             window.userRole = "user";
             if(window.currentUserAlias.toLowerCase() === 'pancerny') { window.userRole = "admin"; }
             const uSnap = await getDoc(doc(db, "uzytkownicy", window.currentUserAlias));
@@ -1718,6 +1777,20 @@
             if(url) {
                 document.getElementById('newCarPhoto').value = url;
                 status.innerText = "✅ Zdjęcie wgrane pomyślnie! Możesz zapisać furę.";
+            } else {
+                status.innerText = "❌ Wystąpił błąd podczas wgrywania.";
+            }
+        });
+
+        document.getElementById('newAchievFile').addEventListener('change', async (e) => {
+            const file = e.target.files[0];
+            if(!file) return;
+            const status = document.getElementById('uploadStatusAchiev');
+            status.innerText = "⏳ Kompresja i wgrywanie... Proszę czekać.";
+            const url = await uploadToStorage(file);
+            if(url) {
+                document.getElementById('newAchievPhoto').value = url;
+                status.innerText = "✅ Ikona wgrana pomyślnie!";
             } else {
                 status.innerText = "❌ Wystąpił błąd podczas wgrywania.";
             }
