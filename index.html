@@ -1817,6 +1817,7 @@
                 if(!user.user.emailVerified) { alert("Potwierdź e-mail!"); signOut(auth); } 
             } catch (err) { 
                 try { 
+                    await setPersistence(auth, browserSessionPersistence);
                     const user = await createUserWithEmailAndPassword(auth, e, p); 
                     await sendEmailVerification(user.user); 
                     alert("Konto założone! Sprawdź mail."); signOut(auth); 
