@@ -8,7 +8,6 @@
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏁</text></svg>">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     
-    <!-- ZMIENIONA CZCIONKA NA M PLUS Rounded 1c (IDEALNA DO STYLU UMA MUSUME) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@700;900&display=swap" rel="stylesheet">
@@ -40,7 +39,6 @@
            UMA MUSUME STYLE - PATTERNY, PRZYCISKI I FORMULARZE
            ========================================== */
         
-        /* Zielony pattern w romby ze screena nr 3 i 5 */
         .uma-pattern-green {
             background-color: #79d81d;
             background-image: 
@@ -53,10 +51,11 @@
         }
 
         input, select, textarea {
-            width: 100%; background: #ffffff !important; color: #5a4b41 !important; border: 3px solid #dcdcdc !important;
+            width: 100%; max-width: 100%; min-width: 0; background: #ffffff !important; color: #5a4b41 !important; border: 3px solid #dcdcdc !important;
             border-radius: 12px !important; padding: 12px 15px !important; margin: 8px 0 !important;
             font-weight: bold !important; font-size: 14px !important; box-shadow: inset 0 3px 5px rgba(0,0,0,0.05) !important;
-            box-sizing: border-box; outline: none; transition: 0.2s; font-family: 'M PLUS Rounded 1c', sans-serif;
+            box-sizing: border-box !important; outline: none; transition: 0.2s; font-family: 'M PLUS Rounded 1c', sans-serif;
+            -webkit-appearance: none; /* Pomaga na urządzeniach Apple */
         }
         input:focus, select:focus, textarea:focus { border-color: #79d81d !important; box-shadow: inset 0 3px 5px rgba(0,0,0,0.1), 0 0 0 4px rgba(121, 216, 29, 0.3) !important; }
         input[type="number"]::-webkit-inner-spin-button, input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
@@ -70,6 +69,7 @@
             color: #ffffff; font-size: 16px; font-weight: 900; text-transform: uppercase;
             text-shadow: 1px 1px 0px #2b6e06, -1px -1px 0px #2b6e06, 1px -1px 0px #2b6e06, -1px 1px 0px #2b6e06;
             padding: 12px 20px; cursor: pointer; transition: 0.1s ease; width: 100%; margin-top: 15px; font-family: 'M PLUS Rounded 1c', sans-serif;
+            box-sizing: border-box;
         }
         .btn-submit:active { transform: translateY(4px); box-shadow: 0 0 0 #3b900b, 0 2px 5px rgba(0,0,0,0.2); }
 
@@ -80,6 +80,7 @@
             color: #ffffff; font-size: 16px; font-weight: 900; text-transform: uppercase;
             text-shadow: 1px 1px 0px #1a1e50, -1px -1px 0px #1a1e50, 1px -1px 0px #1a1e50, -1px 1px 0px #1a1e50; 
             padding: 12px 20px; cursor: pointer; transition: 0.1s ease; width: 100%; margin-top: 15px; font-family: 'M PLUS Rounded 1c', sans-serif;
+            box-sizing: border-box;
         }
         .btn-auth-submit:active { transform: translateY(4px); box-shadow: 0 0 0 #2f3688, 0 2px 5px rgba(0,0,0,0.2); }
         
@@ -96,6 +97,7 @@
             background: linear-gradient(180deg, #2bc2ff, #168bd8); border: 2px solid #fff; border-radius: 12px;
             color: white; font-weight: 900; padding: 10px; cursor: pointer; text-align: center; margin-bottom: 10px;
             box-shadow: 0 4px 0 #0d6299; font-size: 12px; text-transform: uppercase; display: block; transition: 0.1s ease;
+            box-sizing: border-box; width: 100%;
         }
         .file-upload-btn:active { transform: translateY(4px); box-shadow: 0 0 0 #0d6299; }
 
@@ -104,7 +106,6 @@
            ========================================== */
         #map { width: 100vw; height: 100vh; position: absolute; top: 0; left: 0; z-index: 1; }
         .leaflet-top.leaflet-left { padding-top: 80px; }
-        /* Przesunięcie kontrolek po lewej by zrobić miejsce na czat */
         .leaflet-bottom.leaflet-left { margin-bottom: 70px; margin-left: 10px; }
         
         .floating-header { 
@@ -176,7 +177,7 @@
            CZAT LOBBY
            ========================================== */
         #chatToggleBtn {
-            position: absolute; bottom: 20px; left: 20px; z-index: 1000;
+            position: absolute; bottom: 20px; left: 20px; z-index: 2000; /* Podniesiony z-index dla mobilki */
             background: linear-gradient(180deg, #fff 0%, #f4f4f4 100%);
             padding: 10px 20px; border-radius: 20px; border: 3px solid #ccc;
             box-shadow: 0 4px 0 #aaa, 0 6px 10px rgba(0,0,0,0.3);
@@ -187,7 +188,7 @@
         #chatWindow {
             position: absolute; bottom: 70px; left: 20px; width: 320px; height: 420px;
             background: #f0f3f5; border: 4px solid #fff; border-radius: 16px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.5); z-index: 1001;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5); z-index: 2001; /* Z-index ponad popupami mapy */
             display: flex; flex-direction: column; overflow: hidden;
             transition: 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55); transform-origin: bottom left;
         }
@@ -241,6 +242,7 @@
             width: 90%; max-width: 500px; max-height: 85vh; overflow-y: auto; overflow-x: hidden; position: relative; 
             box-shadow: 0 0 0 2px #ccc, 0 15px 30px rgba(0,0,0,0.5); cursor: default; 
             display: flex; flex-direction: column;
+            box-sizing: border-box;
         }
         .close-modal { position: absolute; top: 8px; right: 15px; font-size: 28px; color: #fff; cursor: pointer; z-index: 100; font-weight: 900; transition: 0.2s; text-shadow: 1px 1px 2px rgba(0,0,0,0.4);}
         .close-modal:hover { color: #ffe600; transform: scale(1.2); }
@@ -259,9 +261,9 @@
             text-shadow: 1px 1px 0 #3b900b, -1px -1px 0 #3b900b, 1px -1px 0 #3b900b, -1px 1px 0 #3b900b;
         }
         
-        .modal-body { padding: 20px; }
+        .modal-body { padding: 20px; box-sizing: border-box; width: 100%; }
 
-        .garage-form-box { background: #fff; padding: 20px; border-radius: 12px; margin-bottom: 20px; border: 2px solid #ddd; }
+        .garage-form-box { background: #fff; padding: 20px; border-radius: 12px; margin-bottom: 20px; border: 2px solid #ddd; box-sizing: border-box; width: 100%; }
         .garage-form-box h3 { color: #68cc14; font-weight: 900; margin-top: 0; text-transform: uppercase;}
 
         .list-item { display: flex; justify-content: flex-start; align-items: center; padding: 12px; background: linear-gradient(180deg, #ffffff 0%, #f4f4f4 100%); margin-bottom: 10px; border-radius: 10px; border: 2px solid #dcdcdc; }
@@ -358,7 +360,7 @@
             gap: 15px;
             z-index: 8000;
             transition: bottom 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-            pointer-events: none; /* Nie blokuje kliknięć na mapie pod spodem */
+            pointer-events: none;
             width: 90%;
             max-width: 450px;
         }
@@ -390,7 +392,7 @@
         @keyframes bounceSimple { from { transform: translateY(0); } to { transform: translateY(-15px); } }
 
         /* ==========================================
-           EASTER EGG (INITIAL D MODE) ORAZ POPRAWKI KONTROLEK
+           EASTER EGG (INITIAL D MODE)
            ========================================== */
         #secretGifOverlay {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
@@ -401,7 +403,6 @@
         #secretGifOverlay.show { opacity: 1; pointer-events: all; }
         #secretGifOverlay img { max-width: 90%; max-height: 90%; filter: drop-shadow(0 0 20px #e74c3c); }
 
-        /* Twarde, ostre, szare przejścia */
         body.initial-d-active .modal-content, 
         body.initial-d-active .btn-submit, 
         body.initial-d-active .btn-auth-submit,
@@ -428,93 +429,36 @@
             transition: border-radius 1.5s ease-in-out, background 1.5s ease-in-out, border-color 1.5s ease-in-out, box-shadow 1.5s ease-in-out, color 1.5s ease-in-out;
         }
         
-        body.initial-d-active {
-            font-family: 'Arial', sans-serif;
-        }
-        body.initial-d-active .uma-pattern-green, body.initial-d-active .chat-header {
-            background-color: #1a1a1a !important;
-            background-image: none !important;
-            border-bottom: 4px solid #e74c3c !important;
-            color: #fff !important;
-            text-shadow: none !important;
-            transition: background-color 1.5s ease-in-out;
-        }
-        body.initial-d-active .btn-submit, body.initial-d-active .btn-auth-submit, body.initial-d-active .chat-clear-btn {
-            background: #2a2a2a !important;
-            border-color: #e74c3c !important;
-            box-shadow: 0 4px 0 #800000, 0 6px 10px rgba(0,0,0,0.5) !important;
-            color: #fff !important;
-            text-shadow: none !important;
-        }
-        body.initial-d-active .floating-header {
-            background: #1a1a1a !important;
-            border-color: #e74c3c !important;
-            box-shadow: 0 5px 0 #800000, 0 8px 15px rgba(0,0,0,0.6) !important;
-        }
-        body.initial-d-active .floating-header h1 {
-            color: #fff !important;
-            text-shadow: 2px 2px 0 #e74c3c !important;
-            font-style: italic;
-            letter-spacing: 4px;
-        }
-        body.initial-d-active .user-widget, body.initial-d-active #hamburgerBtn, body.initial-d-active #chatToggleBtn {
-            background: #1a1a1a !important;
-            border-color: #e74c3c !important;
-            color: #fff !important;
-            box-shadow: 0 4px 0 #800000 !important;
-        }
+        body.initial-d-active { font-family: 'Arial', sans-serif; }
+        body.initial-d-active .uma-pattern-green, body.initial-d-active .chat-header { background-color: #1a1a1a !important; background-image: none !important; border-bottom: 4px solid #e74c3c !important; color: #fff !important; text-shadow: none !important; transition: background-color 1.5s ease-in-out; }
+        body.initial-d-active .btn-submit, body.initial-d-active .btn-auth-submit, body.initial-d-active .chat-clear-btn { background: #2a2a2a !important; border-color: #e74c3c !important; box-shadow: 0 4px 0 #800000, 0 6px 10px rgba(0,0,0,0.5) !important; color: #fff !important; text-shadow: none !important; }
+        body.initial-d-active .floating-header { background: #1a1a1a !important; border-color: #e74c3c !important; box-shadow: 0 5px 0 #800000, 0 8px 15px rgba(0,0,0,0.6) !important; }
+        body.initial-d-active .floating-header h1 { color: #fff !important; text-shadow: 2px 2px 0 #e74c3c !important; font-style: italic; letter-spacing: 4px; }
+        body.initial-d-active .user-widget, body.initial-d-active #hamburgerBtn, body.initial-d-active #chatToggleBtn { background: #1a1a1a !important; border-color: #e74c3c !important; color: #fff !important; box-shadow: 0 4px 0 #800000 !important; }
         body.initial-d-active .greeting, body.initial-d-active .greeting span { color: #fff !important; text-shadow: none; }
         body.initial-d-active .dropdown-menu { background: #111 !important; border-color: #e74c3c !important; }
         body.initial-d-active .dropdown-item { color: #ccc !important; border-bottom: 1px solid #333; }
         body.initial-d-active .dropdown-item:hover { background: #e74c3c !important; color: #fff !important; padding-left: 20px; }
         body.initial-d-active .modal-content, body.initial-d-active #chatWindow { background: #222 !important; border-color: #e74c3c !important; color: #ddd !important; }
-        body.initial-d-active .garage-form-box, body.initial-d-active .list-item, body.initial-d-active table, body.initial-d-active .time-inputs-container, body.initial-d-active .track-details-box {
-            background: #333 !important;
-            border-color: #555 !important;
-            color: #fff !important;
-        }
-        body.initial-d-active .garage-form-box h3, body.initial-d-active .list-item b, body.initial-d-active td, body.initial-d-active span, body.initial-d-active p {
-            color: #eee !important;
-        }
-        body.initial-d-active input, body.initial-d-active select, body.initial-d-active textarea {
-            background: #444 !important;
-            color: #fff !important;
-            border-color: #666 !important;
-        }
+        body.initial-d-active .garage-form-box, body.initial-d-active .list-item, body.initial-d-active table, body.initial-d-active .time-inputs-container, body.initial-d-active .track-details-box { background: #333 !important; border-color: #555 !important; color: #fff !important; }
+        body.initial-d-active .garage-form-box h3, body.initial-d-active .list-item b, body.initial-d-active td, body.initial-d-active span, body.initial-d-active p { color: #eee !important; }
+        body.initial-d-active input, body.initial-d-active select, body.initial-d-active textarea { background: #444 !important; color: #fff !important; border-color: #666 !important; }
         body.initial-d-active th { background: #111 !important; border-color: #555 !important; color: #aaa !important; }
-
-        /* Ustawienia okna chatu dla Initial D */
         body.initial-d-active #chatMessages { background: #333 !important; }
         body.initial-d-active .chat-input-area { background: #111 !important; border-color: #e74c3c !important; }
         body.initial-d-active .chat-msg { background: #444 !important; border-color: #555 !important; }
         body.initial-d-active .chat-text { color: #eee !important; }
-
-        /* Łatka dla Leafleta na białe teksty na białym tle */
-        body.initial-d-active .leaflet-control-layers,
-        body.initial-d-active .leaflet-control-layers-expanded {
-            background: #222 !important;
-            border: 2px solid #e74c3c !important;
-            color: #fff !important;
-            border-radius: 0 !important;
-        }
-        body.initial-d-active .leaflet-control-layers label {
-            color: #fff !important;
-        }
-        body.initial-d-active .leaflet-control-zoom a {
-            background: #222 !important;
-            color: #fff !important;
-            border: 1px solid #555 !important;
-            border-radius: 0 !important;
-        }
-        body.initial-d-active .leaflet-control-zoom a:hover {
-            background: #e74c3c !important;
-            color: #fff !important;
-        }
+        
+        body.initial-d-active .leaflet-control-layers, body.initial-d-active .leaflet-control-layers-expanded { background: #222 !important; border: 2px solid #e74c3c !important; color: #fff !important; border-radius: 0 !important; }
+        body.initial-d-active .leaflet-control-layers label { color: #fff !important; }
+        body.initial-d-active .leaflet-control-zoom a { background: #222 !important; color: #fff !important; border: 1px solid #555 !important; border-radius: 0 !important; }
+        body.initial-d-active .leaflet-control-zoom a:hover { background: #e74c3c !important; color: #fff !important; }
 
         /* ==========================================
-           RESPONSYWNOŚĆ (TELEFONY)
+           RESPONSYWNOŚĆ (TELEFONY) - POPRAWIONA
            ========================================== */
         @media screen and (max-width: 600px) {
+            /* Główny header i avatar */
             .floating-header { top: 10px; padding: 5px 15px; flex-direction: row; width: auto; white-space: nowrap;}
             .floating-header h1 { font-size: 20px; letter-spacing: 1px; }
             .floating-header img { height: 50px; margin: 0 -15px; }
@@ -522,12 +466,50 @@
             .user-widget { top: 10px; padding: 2px; right: 10px; border-radius: 50%; }
             .greeting { display: none; }
             .user-avatar { width: 35px; height: 35px; font-size: 16px; margin: 0;}
+            
+            /* Ekran logowania */
             .auth-card { width: 95%; flex-direction: column; height: auto; }
             .auth-card-image { display: none; }
-            .modal-content { width: 95%; }
-            .modal-body { padding: 15px; }
-            .leaflet-popup-content { width: 220px !important; }
-            #chatWindow { width: 90vw; left: 5vw; bottom: 70px; height: 350px;}
+            
+            /* Modale i formularze - Optycznie mniejsze */
+            .modal-content { width: 95%; max-height: 90vh; }
+            .modal-content h2 { font-size: 16px; padding: 10px; }
+            .modal-body { padding: 12px; }
+            .garage-form-box { padding: 15px; margin-bottom: 15px; }
+            .garage-form-box h3 { font-size: 14px; }
+            
+            /* Inputy - naprawione ucinanie daty! */
+            input, select, textarea { 
+                padding: 10px 12px !important; 
+                font-size: 13px !important; 
+                margin: 5px 0 !important;
+            }
+            
+            /* Przyciski mniejsze i zgrabniejsze */
+            .btn-submit, .btn-auth-submit { font-size: 13px; padding: 10px 15px; margin-top: 10px; border-width: 2px; border-radius: 15px;}
+            .list-item-btns button { padding: 6px 10px; font-size: 10px; border-width: 1px;}
+            .file-upload-btn { padding: 8px; font-size: 11px; }
+            
+            /* Menu boczne - węższe */
+            #sideMenu { width: 260px; left: -280px; }
+            .side-menu-header { font-size: 16px; padding: 15px; }
+            .track-list-item { padding: 12px 15px; font-size: 13px; }
+            .track-list-icon { width: 25px; height: 25px; }
+            
+            /* Czat Lobby i map popups - poprawione nachodzenie */
+            #chatToggleBtn { 
+                bottom: 15px; left: 10px; padding: 8px 15px; font-size: 12px; 
+                border-width: 2px; border-radius: 15px; z-index: 2000;
+            }
+            .leaflet-bottom.leaflet-left { margin-bottom: 55px; } /* Przesunięcie kontrolek mapy niżej czatu */
+            .leaflet-popup-content { width: 240px !important; }
+            
+            #chatWindow { width: 92vw; left: 4vw; bottom: 60px; height: 380px; z-index: 2001;}
+            .chat-header { padding: 10px; font-size: 14px; }
+            .chat-msg { padding: 6px 10px; font-size: 12px;}
+            .chat-text { font-size: 12px; }
+            
+            /* Troll Popups */
             .troll-popup { padding: 15px; transform: scale(0.9); }
             .troll-popup h2 { font-size: 24px; }
             .troll-img { max-width: 90%; }
@@ -540,7 +522,6 @@
 </head>
 <body>
 
-    <!-- OVERLAY NA GIFY INITIAL D -->
     <div id="secretGifOverlay">
         <img src="secret.gif" alt="Secret Touge Animation">
     </div>
@@ -595,7 +576,6 @@
             <div class="dropdown-item" id="logoutBtn" style="color: #e74c3c;">🚪 Wyloguj</div>
         </div>
 
-        <!-- CHAT WIDGET -->
         <div id="chatToggleBtn" onclick="toggleChat()">💬 Czat Lobby</div>
         <div id="chatWindow" class="hidden">
             <div class="chat-header uma-pattern-green">
@@ -829,7 +809,7 @@
         </div>
     </div>
 
-    <!-- TACHYON TOAST EASTER EGG (Nie blokuje ekranu!) -->
+    <!-- TACHYON TOAST EASTER EGG -->
     <div id="tachyonToast">
         <img src="tachyon2.gif" alt="Tachyon">
         <p id="tachyonText"></p>
@@ -838,8 +818,7 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
-        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, sendEmailVerification, sendPasswordResetEmail, updateProfile } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
-        // Dodany import 'onSnapshot' oraz 'limit' do działania czatu!
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, sendEmailVerification, sendPasswordResetEmail, updateProfile, setPersistence, browserSessionPersistence } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
         import { getFirestore, collection, addDoc, getDocs, query, where, orderBy, deleteDoc, doc, updateDoc, setDoc, getDoc, arrayUnion, arrayRemove, onSnapshot, limit } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
 
         // ==========================================
@@ -859,10 +838,10 @@
         const db = getFirestore(app);
 
         window.myCars = []; 
-        window.myFullCars = []; // Dodane na potrzeby Easter Egga i lepszego śledzenia
+        window.myFullCars = [];
         window.currentUserAlias = "";
         window.currentUserNick = ""; 
-        window.userRole = "user"; // "user", "mod", "admin"
+        window.userRole = "user";
 
         window.bestTimesForTracks = {}; 
         window.allMarkers = {};
@@ -1033,7 +1012,7 @@
             const snapshot = await getDocs(q); 
             const list = document.getElementById('myCarsList'); 
             window.myCars = []; 
-            window.myFullCars = []; // Przechowujemy pełne dane dla Easter Egga
+            window.myFullCars = [];
             list.innerHTML = ""; 
 
             if(snapshot.empty) { 
@@ -1426,7 +1405,6 @@
             }
         };
 
-        // Dodane globalne funkcje administracyjne dla czatu
         window.deleteChatMessage = async (msgId) => {
             if(confirm("Usunąć tę wiadomość?")) {
                 try {
@@ -1443,7 +1421,6 @@
             
             try {
                 const chatSnap = await getDocs(collection(db, "czat"));
-                // Usuwamy równolegle dla szybkości
                 const deletePromises = [];
                 chatSnap.forEach(document => {
                     deletePromises.push(deleteDoc(doc(db, "czat", document.id)));
@@ -1534,7 +1511,6 @@
                     let infoData = { opis: "Brak opisu.", kontakt: "Brak", email: "Brak", ceny: "Brak info" };
                     if(infoSnap.exists()) infoData = infoSnap.data();
 
-                    // Nowy, zmodernizowany przycisk "Ustawienia Toru"
                     let editBtnHTML = (window.userRole === 'admin' || window.userRole === 'mod') ? `<button class="btn-submit transition-shape" style="width:100%; margin-top:15px; background: linear-gradient(180deg, #2bc2ff, #168bd8); box-shadow: 0 4px 0 #0d6299, 0 6px 10px rgba(0,0,0,0.2); text-shadow: 1px 1px 0 #0d6299;" onclick="window.openTrackEditModal('${safeId}', '${tor.nazwa}')">🔧 Ustawienia Toru</button>` : '';
 
                     infoBox.innerHTML = `
@@ -1805,7 +1781,7 @@
         });
 
         // ==========================================
-        // AUTHENTICATION LOGIC
+        // AUTHENTICATION LOGIC (POPRAWIONY SESION PERSISTENCE)
         // ==========================================
 
         document.getElementById('loginBtn').addEventListener('click', async () => { 
@@ -1813,6 +1789,8 @@
             const p = document.getElementById('password').value; 
             if(!e || !p) return alert("Wpisz dane!"); 
             try { 
+                // USTAWIAMY KRÓTKĄ SESJĘ PRZED ZALOGOWANIEM (wygasa po zamknięciu przeglądarki)
+                await setPersistence(auth, browserSessionPersistence);
                 const user = await signInWithEmailAndPassword(auth, e, p); 
                 if(!user.user.emailVerified) { alert("Potwierdź e-mail!"); signOut(auth); } 
             } catch (err) { 
@@ -1872,11 +1850,10 @@
                         chatBox.innerHTML = '';
                         let msgs = [];
                         snapshot.forEach(doc => msgs.push({id: doc.id, ...doc.data()}));
-                        msgs.reverse(); // Odwracamy, by najnowsze było na dole
+                        msgs.reverse(); 
                         msgs.forEach(msg => {
                             const time = msg.timestamp ? new Date(msg.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : '';
                             
-                            // Przycisk usuwania dla Admina/Moda
                             let deleteBtnHTML = '';
                             if (window.userRole === 'admin' || window.userRole === 'mod') {
                                 deleteBtnHTML = `<span class="chat-msg-delete" onclick="window.deleteChatMessage('${msg.id}')">×</span>`;
@@ -1902,7 +1879,6 @@
                     window.isRadioPlaying = false; 
                 } 
 
-                // Zatrzymujemy czat jak wylogujemy
                 if(window.chatUnsubscribe) {
                     window.chatUnsubscribe();
                     window.chatUnsubscribe = null;
@@ -1912,7 +1888,6 @@
 
         // ==========================================
         // EASTER EGG (INITIAL D MODE)
-        // Definiowane wewnątrz modułu by mieć dostęp do "map", "darkMap" itd.
         // ==========================================
         window.activateInitialDMode = () => {
             if(document.body.classList.contains('initial-d-active')) return;
@@ -1936,7 +1911,6 @@
                 document.getElementById('headerTitle').innerText = "INICJALNY GAZ...";
                 document.querySelectorAll('.header-gif').forEach(img => img.style.display = 'none');
 
-                // ZAMIANA HAMBURGERA NA OBRACAJĄCĄ SIĘ AE86
                 document.getElementById('hamburgerBtn').innerHTML = '<img src="secret2.gif" style="width: 100%; height: 100%; object-fit: contain;">';
 
                 map.addLayer(darkMap);
@@ -2053,7 +2027,6 @@
             let messages = [];
             let imgSrc = "tachyon2.gif";
 
-            // Sprawdzamy czy aktywny jest tryb Initial D
             if (document.body.classList.contains('initial-d-active')) {
                 messages = [
                     "Ściganci nie potrzebują dziewczyn...",
@@ -2063,7 +2036,6 @@
                 ];
                 imgSrc = "id.gif";
             } else {
-                // Podstawowy tryb Umapyoi (Tachyon)
                 messages = [
                     "Nudzi ci się? a do kiedy masz przegląd?",
                     "Protip! Sprawdzaj po wulkanizatorze czy koło dokręcił jadąc 140 km/h!",
@@ -2079,7 +2051,6 @@
                     "Wpisz sobie Forda T na czas do okrążenia a nie tu klikasz jak jakiś bambik."
                 ];
                 
-                // Sprawdzenie czy gracz ma Diesla
                 let hasDiesel = false;
                 if (window.myFullCars && window.myFullCars.some(car => car.fuel === 'Diesel')) {
                     hasDiesel = true;
@@ -2093,7 +2064,7 @@
             const randomMsg = messages[Math.floor(Math.random() * messages.length)];
 
             document.getElementById('tachyonText').innerText = randomMsg;
-            document.querySelector('#tachyonToast img').src = imgSrc; // Podmiana gifa w locie
+            document.querySelector('#tachyonToast img').src = imgSrc; 
             
             const toast = document.getElementById('tachyonToast');
             toast.classList.add('show');
