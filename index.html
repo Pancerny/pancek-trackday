@@ -284,7 +284,7 @@
         .achievement-icon { width: 50px; height: 50px; border-radius: 10px; border: 2px solid #fff; background: #fff; box-shadow: 0 0 0 2px #f38815, 0 4px 6px rgba(0,0,0,0.2); object-fit: contain;}
 
         /* ==========================================
-           DYMKI MAPY I TABELE (ZMNIEJSZONE)
+           DYMKI MAPY I TABELE (ZMNIEJSZONE Z ZACHOWANIEM STAREGO SILNIKA)
            ========================================== */
         .leaflet-popup-content-wrapper { background: #f0f3f5; border: 4px solid #fff; border-radius: 16px; box-shadow: 0 0 0 2px #ccc, 0 10px 20px rgba(0,0,0,0.3); padding: 0; overflow: hidden; }
         .leaflet-popup-tip { background: #fff; }
@@ -303,12 +303,11 @@
 
         .track-details-box { background: #fff; border-radius: 10px; padding: 10px; margin-bottom: 10px; border: 2px solid #ddd; font-size: 12px; text-align: left; color:#5a4b41;}
 
-        /* NOWY STYL DLA PRZYCISKÓW AKCJI W DYMKU */
         .track-action-btn { display: inline-flex; align-items: center; justify-content: center; gap: 5px; background: #fff; border: 2px solid #ccc; color: #5a4b41; padding: 6px 10px; border-radius: 12px; text-decoration: none; font-size: 10px; font-weight: 900; transition: 0.2s; box-shadow: 0 2px 0 #ccc; cursor: pointer; text-transform: uppercase; font-family: 'M PLUS Rounded 1c', sans-serif;}
         .track-action-btn:active { transform: translateY(2px); box-shadow: 0 0 0 #ccc; }
         .track-action-btn:hover { color: #168bd8; border-color: #168bd8; box-shadow: 0 2px 0 #168bd8; }
 
-        table { width: 100%; border-collapse: separate; border-spacing: 0; margin: 8px 0; background: #fff; border-radius: 8px; border: 2px solid #ddd; overflow: hidden; font-size: 12px; }
+        table { width: 100%; border-collapse: separate; border-spacing: 0; margin: 8px 0; background: #fff; border-radius: 8px; border: 2px solid #ddd; overflow: hidden; font-size: 12px; table-layout: fixed;}
         th { background: linear-gradient(180deg, #f0f0f0, #e0e0e0); color: #8a7b71; font-weight: 900; padding: 6px; text-transform: uppercase; font-size: 10px; border-bottom: 2px solid #ddd;}
         td { border-bottom: 1px solid #eee; padding: 6px; color: #5a4b41; font-weight: 900; font-size: 11px; text-align: center; vertical-align: middle;}
         tr:last-child td { border-bottom: none; }
@@ -317,7 +316,6 @@
         .time-inputs-container input { border: 2px solid #eee !important; background: #f9f9f9 !important; box-shadow: inset 0 2px 4px rgba(0,0,0,0.05) !important; padding: 8px 5px !important; margin: 0 !important; font-size: 16px !important; flex: 1; text-align: center; font-weight: 900;}
         .time-inputs-container span { font-weight: 900; color: #5a4b41; font-size: 16px; }
 
-        /* UPROSZCZONY RANKING */
         .rank-box { display: inline-flex; align-items: center; justify-content: center; min-width: 20px; font-weight: 900; font-size: 12px; }
         .rank-1 { padding: 0; }
         .rank-2 { background: silver; color: #fff; text-shadow: 1px 1px 0 #666; padding: 2px 6px; border-radius: 6px; }
@@ -809,8 +807,8 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
         import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, sendEmailVerification, sendPasswordResetEmail, updateProfile, setPersistence, browserSessionPersistence } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
-        // UWAGA: wyrzuciliśmy orderBy, where oraz onSnapshot żeby uwolnić Cię od błędów bazy. Używamy prostego, niezawodnego getDocs.
-        import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, updateDoc, setDoc, getDoc, arrayUnion, arrayRemove, limit, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
+        // UWAGA: Przywrócono 'where' i 'orderBy' na życzenie, idealnie skopiowane ze starego dzialajacego kodu.
+        import { getFirestore, collection, addDoc, getDocs, query, where, orderBy, deleteDoc, doc, updateDoc, setDoc, getDoc, arrayUnion, arrayRemove, limit, onSnapshot } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
 
         // ==========================================
         // KLUCZE FIREBASE
@@ -1570,7 +1568,7 @@
                 });
             } catch(e) { console.error("Custom tracks err:", e); }
 
-            renderTracksOnMapAndMenu();
+            window.renderTracksOnMapAndMenu();
             await loadMyGarage(); 
         }
 
@@ -1580,90 +1578,92 @@
             
             tory.forEach(tor => { 
                 const marker = L.marker([tor.lat, tor.lng]).addTo(map); 
-                const safeId = tor.nazwa.replace(/[^a-zA-Z0-9]/g, ''); 
+                const safeId = tor.nazwa.replace(/\s+/g, ''); 
                 window.allMarkers[safeId] = marker;
                 
-                marker.bindPopup(`<div style="padding:20px; text-align:center; font-weight:bold; color:#5a4b41;">⌛ Otwieranie...</div>`, {
-                    minWidth: 260, maxWidth: 300, autoPanPaddingTopLeft: [0, 50]
+                marker.bindPopup(`<div id="popup-content-${safeId}"><div style="padding:20px; text-align:center; font-weight:bold; color:#5a4b41;">⌛ Otwieranie...</div></div>`, {
+                    minWidth: 260, maxWidth: 320, autoPanPaddingTopLeft: [0, 50]
                 }); 
                 
                 marker.on('popupopen', async (e) => { 
-                    const popup = e.popup;
-                    popup.setContent(`<div style="padding:30px; text-align:center;"><div style="font-size: 24px; margin-bottom: 10px;">🏎️</div><div style="font-weight:900; color:#5a4b41;">Pobieranie danych z padoku...</div></div>`);
-                    popup.update();
+                    
+                    let trackLayoutLink = tor.foto ? `
+                        <div style="margin-top: 12px; text-align: center;">
+                            <a href="${tor.foto}" target="_blank" class="track-action-btn">
+                                <span style="font-size:12px;">🗺️</span> UKŁAD TORU
+                            </a>
+                        </div>` : '';
+                    
+                    let editBtnHTML = (window.userRole === 'admin' || window.userRole === 'mod') ? `
+                        <div style="margin-top: 5px; text-align: center;">
+                            <button class="track-action-btn" style="color:#e74c3c; border-color:#e74c3c; box-shadow: 0 2px 0 #e74c3c;" onclick="window.openTrackEditModal('${safeId}', '${tor.nazwa}')">
+                                <span style="font-size:12px;">🔧</span> USTAWIENIA TORU
+                            </button>
+                        </div>` : '';
+                        
+                    const fullHTML = `
+                        <div class="popup-inner-pad transition-shape">
+                            <h2 class="transition-shape uma-pattern-green">${tor.nazwa}</h2>
+                            <div id="trackInfoRender-${safeId}" class="track-details-box transition-shape">Ładowanie informacji...</div>
+                            <table class="transition-shape" style="table-layout: fixed; width: 100%;">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 48%; text-align:left; padding-left:8px;">Kierowca</th>
+                                        <th style="width: 27%;">Fura</th>
+                                        <th style="width: 25%;">Czas</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="table-${safeId}"><tr><td colspan='3'>Ładowanie...</td></tr></tbody>
+                            </table>
+                            <hr style="border-color:#ddd; margin:12px 0;">
+                            <div id="carSelectContainer-${safeId}"></div>
+                            <div class="time-inputs-container transition-shape" style="padding: 6px; gap: 4px;">
+                                <input type="number" id="timeM-${safeId}" placeholder="Min" min="0" max="99" style="font-size:14px !important; padding:6px 2px !important;"> <span style="font-size:14px;">:</span> 
+                                <input type="number" id="timeS-${safeId}" placeholder="Sek" min="0" max="59" style="font-size:14px !important; padding:6px 2px !important;"> <span style="font-size:14px;">.</span> 
+                                <input type="number" id="timeMS-${safeId}" placeholder="MS" min="0" max="999" style="font-size:14px !important; padding:6px 2px !important;">
+                            </div>
+                            <button onclick="window.saveTime('${tor.nazwa}')" class="btn-submit transition-shape" style="padding: 8px; font-size: 14px; margin-top: 5px;">Zapisz wynik</button>
+                        </div>`; 
 
+                    document.getElementById(`popup-content-${safeId}`).innerHTML = fullHTML; 
+                    
+                    let carSelectHTML = `<select id="carSelect-${safeId}" class="transition-shape" style="width:100%; border: 3px solid #ccc; border-radius: 12px; padding: 10px; font-weight: bold;">`; 
+                    if(window.myCars.length === 0) carSelectHTML += `<option value="" disabled selected>Brak aut!</option>`; 
+                    else { window.myCars.forEach(car => { carSelectHTML += `<option value="${car}">${car}</option>`; }); } 
+                    carSelectHTML += `</select>`; 
+                    document.getElementById(`carSelectContainer-${safeId}`).innerHTML = carSelectHTML;
+
+                    const infoBox = document.getElementById(`trackInfoRender-${safeId}`);
                     try {
                         const infoSnap = await getDoc(doc(db, "tory_detale", safeId));
                         let infoData = { opis: "Brak opisu.", kontakt: "Brak", email: "Brak", ceny: "Brak info" };
                         if(infoSnap.exists()) infoData = infoSnap.data();
 
-                        let trackLayoutLink = tor.foto ? `
-                            <button class="track-action-btn" onclick="window.showTrackLayout('${tor.nazwa}', '${tor.foto}')">
-                                <span style="font-size:12px;">🗺️</span> UKŁAD TORU
-                            </button>` : '';
-                        
-                        let editBtnHTML = (window.userRole === 'admin' || window.userRole === 'mod') ? `
-                            <button class="track-action-btn" style="color:#e74c3c; border-color:#e74c3c; box-shadow: 0 2px 0 #e74c3c;" onclick="window.openTrackEditModal('${safeId}', '${tor.nazwa}')">
-                                <span style="font-size:12px;">🔧</span> USTAWIENIA
-                            </button>` : '';
-
-                        let carSelectHTML = `<select class="transition-shape car-select" style="width:100%; border: 3px solid #ccc; border-radius: 12px; padding: 10px; font-weight: bold;">`; 
-                        if(window.myCars.length === 0) carSelectHTML += `<option value="" disabled selected>Brak aut!</option>`; 
-                        else { window.myCars.forEach(car => { carSelectHTML += `<option value="${car}">${car}</option>`; }); } 
-                        carSelectHTML += `</select>`; 
-
-                        const fullHTML = `
-                            <div class="popup-inner-pad transition-shape">
-                                <h2 class="transition-shape uma-pattern-green">${tor.nazwa}</h2>
-                                <div class="track-details-box transition-shape">
-                                    <div style="margin-bottom: 8px; font-weight: bold; text-align: center; border-bottom: 2px dashed #ddd; padding-bottom: 6px; font-size: 12px;">${infoData.opis}</div>
-                                    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px;">
-                                        <span style="font-weight: 900; font-size: 11px; text-transform: uppercase; flex-shrink: 0;"><span style="font-size:14px;">☎️</span> Kontakt</span>
-                                        <span style="font-weight: 900; font-size: 12px; text-align: right; max-width: 65%; overflow-wrap: anywhere; word-break: break-word;">${infoData.kontakt}</span>
-                                    </div>
-                                    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px;">
-                                        <span style="font-weight: 900; font-size: 11px; text-transform: uppercase; flex-shrink: 0;"><span style="font-size:14px;">📧</span> E-mail</span>
-                                        <span style="font-weight: 900; font-size: 12px; text-align: right; max-width: 65%; overflow-wrap: anywhere; word-break: break-word;">${infoData.email}</span>
-                                    </div>
-                                    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px;">
-                                        <span style="font-weight: 900; font-size: 11px; text-transform: uppercase; flex-shrink: 0;"><span style="font-size:14px;">💲</span> Ceny</span>
-                                        <span style="font-weight: 900; font-size: 12px; text-align: right; max-width: 65%; overflow-wrap: anywhere; word-break: break-word;">${infoData.ceny}</span>
-                                    </div>
-                                    <div style="display: flex; justify-content: center; gap: 8px; flex-wrap: wrap;">
-                                        ${trackLayoutLink}
-                                        ${editBtnHTML}
-                                    </div>
-                                </div>
-                                <table class="transition-shape" style="table-layout: fixed; width: 100%;">
-                                    <thead>
-                                        <tr>
-                                            <th style="width: 48%; text-align:left; padding-left:8px;">Kierowca</th>
-                                            <th style="width: 27%;">Fura</th>
-                                            <th style="width: 25%;">Czas</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody class="leaderboard-tbody"><tr><td colspan='3'>Ładowanie wyników...</td></tr></tbody>
-                                </table>
-                                <hr style="border-color:#ddd; margin:12px 0;">
-                                <div class="car-select-container">${carSelectHTML}</div>
-                                <div class="time-inputs-container transition-shape" style="padding: 6px; gap: 4px;">
-                                    <input type="number" class="time-min" placeholder="Min" min="0" max="99" style="font-size:14px !important; padding:6px 2px !important;"> <span style="font-size:14px;">:</span> 
-                                    <input type="number" class="time-sec" placeholder="Sek" min="0" max="59" style="font-size:14px !important; padding:6px 2px !important;"> <span style="font-size:14px;">.</span> 
-                                    <input type="number" class="time-ms" placeholder="MS" min="0" max="999" style="font-size:14px !important; padding:6px 2px !important;">
-                                </div>
-                                <button onclick="window.saveTime('${tor.nazwa}', this)" class="btn-submit transition-shape" style="padding: 8px; font-size: 14px; margin-top: 5px;">Zapisz wynik</button>
-                            </div>`;
-
-                        popup.setContent(fullHTML);
-                        popup.update();
-
-                        window.loadLeaderboard(tor.nazwa); 
-
-                    } catch (error) {
-                        console.error("Popup Error:", error);
-                        popup.setContent(`<div style="padding:20px; text-align:center; color:red; font-weight:bold;">Błąd łączenia z bazą danych!</div>`);
-                        popup.update();
+                        infoBox.innerHTML = `
+                            <div style="margin-bottom: 8px; font-weight: bold; text-align: center; border-bottom: 2px dashed #ddd; padding-bottom: 6px; font-size: 12px;">${infoData.opis}</div>
+                            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px;">
+                                <span style="font-weight: 900; font-size: 11px; text-transform: uppercase;"><span style="font-size:14px;">☎️</span> Kontakt</span>
+                                <span style="font-weight: 900; font-size: 12px; text-align: right; max-width: 60%; word-break: break-word;">${infoData.kontakt}</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px;">
+                                <span style="font-weight: 900; font-size: 11px; text-transform: uppercase;"><span style="font-size:14px;">📧</span> E-mail</span>
+                                <span style="font-weight: 900; font-size: 12px; text-align: right; max-width: 60%; word-break: break-word;">${infoData.email}</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                                <span style="font-weight: 900; font-size: 11px; text-transform: uppercase;"><span style="font-size:14px;">💲</span> Ceny</span>
+                                <span style="font-weight: 900; font-size: 12px; text-align: right; max-width: 60%; word-break: break-word;">${infoData.ceny}</span>
+                            </div>
+                            <div style="display: flex; justify-content: center; gap: 8px; flex-wrap: wrap;">
+                                ${trackLayoutLink}
+                                ${editBtnHTML}
+                            </div>
+                        `;
+                    } catch (e) {
+                        infoBox.innerHTML = `<span style="color:red; font-size: 11px;">Błąd pobierania info: ${e.message}</span>`;
                     }
+
+                    // RESTORED STABLE LOAD LEADERBOARD
+                    window.loadLeaderboard(tor.nazwa); 
                 }); 
 
                 let listImg = tor.foto ? `<img src="${tor.foto}" class="track-list-icon transition-shape">` : `<div class="track-list-icon transition-shape"></div>`;
@@ -1725,179 +1725,134 @@
         };
 
         // ==========================================
-        // CZASY I WYNIKI
+        // CZASY I WYNIKI (RESTORED TO OLD WORKING VERSION WITH NEW UI)
         // ==========================================
 
         window.loadLeaderboard = async (trackName) => { 
-            const popupEl = document.querySelector('.leaflet-popup-content');
-            if(!popupEl) return;
-            const tbody = popupEl.querySelector('.leaderboard-tbody');
-            if(!tbody) return;
-
-            window.debugLog(`[START] Pobieranie wyników dla toru: ${trackName}`);
-            tbody.innerHTML = `<tr><td colspan='3' style='text-align:center;'>Ładowanie wyników...</td></tr>`;
+            const safeId = trackName.replace(/\s+/g, ''); 
+            const tbody = document.getElementById(`table-${safeId}`); 
+            if(!tbody) return; 
 
             try {
-                window.debugLog(`[DB] Wywoływanie getDocs() dla kolekcji 'czasy'...`);
-                const snapshot = await getDocs(collection(db, "czasy")); 
-                window.debugLog(`[DB] Otrzymano dokumentów ogółem: ${snapshot.size}`);
-
-                let results = [];
-                snapshot.forEach((doc) => {
-                    const data = doc.data();
-                    if(data.track === trackName) {
-                        results.push({ id: doc.id, ...data });
-                    }
-                });
-
-                window.debugLog(`[JS] Pasujące wyniki dla tego toru po przefiltrowaniu: ${results.length}`);
-
-                results.sort((a, b) => {
-                    if(!a.time) return 1;
-                    if(!b.time) return -1;
-                    return a.time.localeCompare(b.time);
-                });
-
-                let htmlBuffer = "";
-                if (results.length === 0) { 
-                    window.debugLog(`[UI] Tabela pusta dla toru ${trackName}.`);
-                    htmlBuffer = "<tr><td colspan='3'>Brak czasów. Bądź pierwszy!</td></tr>"; 
-                    window.bestTimesForTracks[trackName] = "99:99.999"; 
-                } else {
-                    let currentRank = 1; 
-                    let firstPlaceTime = ""; 
-                    
-                    results.forEach((data) => { 
-                        const safeCar = (data.car || "Nieznane").replace(/'/g, "\\'"); 
-                        const safeTime = data.time || "??:??.???";
-                        const safeDriver = data.driver || "Ktoś";
-                        
-                        if(currentRank === 1) { 
-                            firstPlaceTime = safeTime; 
-                            window.bestTimesForTracks[trackName] = firstPlaceTime; 
-                        } 
-                        
-                        let rankDisplay = currentRank === 1 ? `<img src="1st.png" style="height: 18px; width: auto; object-fit: contain; display: block;">` : (currentRank === 2 ? "🥈" : (currentRank === 3 ? "🥉" : currentRank+"."));
-                        let rankClass = currentRank === 1 ? "rank-1" : (currentRank === 2 ? "rank-2" : (currentRank === 3 ? "rank-3" : "rank-other")); 
-                        
-                        let adminTag = safeDriver.toLowerCase() === 'pancerny' ? `<span class="admin-badge" style="margin: 2px 0 0 0; display: inline-block;">ADMIN</span>` : ''; 
-
-                        let actionBtns = ""; 
-                        if(safeDriver === window.currentUserAlias || window.userRole === 'admin' || window.userRole === 'mod') { 
-                            actionBtns = `<div style="margin-top:4px;"><span onclick="window.deleteLapTime('${data.id}', '${trackName}')" style="cursor:pointer; font-size:9px; background:#e74c3c; color:#fff; padding:3px 8px; border-radius:10px; font-weight:bold; box-shadow: 0 2px 0 #c0392b;">USUŃ</span></div>`; 
-                        } 
-                        
-                        htmlBuffer += `
-                        <tr>
-                            <td style="text-align: left; padding: 6px 8px;">
-                                <div style="display: flex; align-items: center; gap: 6px;">
-                                    <div class="rank-box ${rankClass}">${rankDisplay}</div>
-                                    <div style="display: flex; flex-direction: column; align-items: flex-start; justify-content: center;">
-                                        <span class="user-link" style="cursor:pointer; color:#168bd8; line-height: 1.1; font-size: 12px; word-break: break-all;" onclick="window.showUserProfile('${safeDriver}')">${safeDriver.toUpperCase()}</span>
-                                        ${adminTag}
-                                    </div>
-                                </div>
-                            </td>
-                            <td style="padding: 6px;">
-                                <span class="car-link" style="cursor:pointer; font-weight:bold; color:#f38815; font-size:11px; word-break: break-word;" onclick="window.showCarCard('${safeCar}', '${safeDriver}')">${data.car || "Brak"}</span>
-                            </td>
-                            <td style="padding: 6px;">
-                                <b style="color:#68cc14; font-size: 13px;">${safeTime}</b>
-                                ${actionBtns}
-                            </td>
-                        </tr>`; 
-                        currentRank++; 
-                    }); 
-                }
-
-                tbody.innerHTML = htmlBuffer;
-                window.debugLog(`[UI] Zakończono generowanie tabeli HTML.`);
+                window.debugLog(`[DB] Pobieranie czasow dla: ${trackName}`);
+                // EXACT QUERY FROM OLD WORKING COMMIT
+                const q = query(collection(db, "czasy"), where("track", "==", trackName), orderBy("time", "asc")); 
+                const snapshot = await getDocs(q); 
                 
-                // Wymuszenie na mapie dostosowania wysokości dymka do nowych danych
-                map.eachLayer((layer) => {
-                    if (layer.getPopup && layer.getPopup() && layer.getPopup().isOpen()) {
-                        layer.getPopup().update();
-                    }
-                });
+                tbody.innerHTML = ""; 
+                if (snapshot.empty) { 
+                    tbody.innerHTML = "<tr><td colspan='3'>Brak czasów. Bądź pierwszy!</td></tr>"; 
+                    window.bestTimesForTracks[trackName] = "99:99.999"; 
+                    if(window.allMarkers[safeId] && window.allMarkers[safeId].getPopup()) window.allMarkers[safeId].getPopup().update();
+                    return; 
+                } 
+                
+                let currentRank = 1; 
+                let firstPlaceTime = ""; 
+                let htmlBuffer = "";
+                
+                snapshot.forEach((doc) => { 
+                    const data = doc.data(); 
+                    const safeCar = (data.car || "Nieznane").replace(/'/g, "\\'"); 
+                    const safeTime = data.time || "??:??.???";
+                    const safeDriver = data.driver || "Ktoś";
+                    
+                    if(currentRank === 1) { 
+                        firstPlaceTime = safeTime; 
+                        window.bestTimesForTracks[trackName] = firstPlaceTime; 
+                    } 
+                    
+                    let rankDisplay = currentRank === 1 ? `<img src="1st.png" style="height: 18px; width: auto; object-fit: contain; display: block;">` : (currentRank === 2 ? "🥈" : (currentRank === 3 ? "🥉" : currentRank+"."));
+                    let rankClass = currentRank === 1 ? "rank-1" : (currentRank === 2 ? "rank-2" : (currentRank === 3 ? "rank-3" : "rank-other")); 
+                    
+                    let adminTag = safeDriver.toLowerCase() === 'pancerny' ? `<span class="admin-badge" style="margin: 2px 0 0 0; display: inline-block;">ADMIN</span>` : ''; 
+
+                    let actionBtns = ""; 
+                    if(safeDriver === window.currentUserAlias || window.userRole === 'admin' || window.userRole === 'mod') { 
+                        actionBtns = `<div style="margin-top:4px;"><span onclick="window.deleteLapTime('${doc.id}', '${trackName}')" style="cursor:pointer; font-size:9px; background:#e74c3c; color:#fff; padding:3px 8px; border-radius:10px; font-weight:bold; box-shadow: 0 2px 0 #c0392b;">USUŃ</span></div>`; 
+                    } 
+                    
+                    htmlBuffer += `
+                    <tr>
+                        <td style="text-align: left; padding: 6px 8px;">
+                            <div style="display: flex; align-items: center; gap: 6px;">
+                                <div class="rank-box ${rankClass}">${rankDisplay}</div>
+                                <div style="display: flex; flex-direction: column; align-items: flex-start; justify-content: center;">
+                                    <span class="user-link" style="cursor:pointer; color:#168bd8; line-height: 1.1; font-size: 12px; word-break: break-all;" onclick="window.showUserProfile('${safeDriver}')">${safeDriver.toUpperCase()}</span>
+                                    ${adminTag}
+                                </div>
+                            </div>
+                        </td>
+                        <td style="padding: 6px;">
+                            <span class="car-link" style="cursor:pointer; font-weight:bold; color:#f38815; font-size:11px; word-break: break-word;" onclick="window.showCarCard('${safeCar}', '${safeDriver}')">${data.car || "Brak"}</span>
+                        </td>
+                        <td style="padding: 6px;">
+                            <b style="color:#68cc14; font-size: 13px;">${safeTime}</b>
+                            ${actionBtns}
+                        </td>
+                    </tr>`; 
+                    currentRank++; 
+                }); 
+                
+                tbody.innerHTML = htmlBuffer;
+                
+                if(window.allMarkers[safeId] && window.allMarkers[safeId].getPopup()) {
+                     window.allMarkers[safeId].getPopup().update();
+                }
             } catch (error) {
-                window.debugLog(`[BŁĄD FIREBASE] Błąd podczas getDocs(): ${error.message}`, error, true);
+                window.debugLog(`[BŁĄD FIREBASE] ${error.message}`, error, true);
                 tbody.innerHTML = `<tr><td colspan='3' style='color:red; font-size:11px; font-weight:bold;'>Błąd pobierania wyników:<br>${error.message}</td></tr>`;
+                if(window.allMarkers[safeId] && window.allMarkers[safeId].getPopup()) window.allMarkers[safeId].getPopup().update();
             }
         };
 
         window.deleteLapTime = async (docId, trackName) => { 
             if(confirm("Usunąć ten wynik?")) { 
                 try {
-                    window.debugLog(`[USUŃ] Żądanie usunięcia rekordu: ${docId}`);
                     await deleteDoc(doc(db, "czasy", docId)); 
-                    window.debugLog(`[USUŃ] Sukces.`);
-                    await window.loadLeaderboard(trackName); 
+                    window.loadLeaderboard(trackName); 
                 } catch(e) {
-                    window.debugLog(`[BŁĄD USUŃ] ${e.message}`, e, true);
                     alert("Błąd usuwania wyniku z bazy: " + e.message);
                 }
             } 
         };
 
-        window.saveTime = async (trackName, btnElement) => { 
-            const popupEl = document.querySelector('.leaflet-popup-content');
-            if(!popupEl) return;
-
-            const carSelect = popupEl.querySelector('.car-select');
-            const car = carSelect ? carSelect.value : null; 
-            const m = popupEl.querySelector('.time-min').value; 
-            const s = popupEl.querySelector('.time-sec').value; 
-            const ms = popupEl.querySelector('.time-ms').value; 
+        window.saveTime = async (trackName) => { 
+            const safeId = trackName.replace(/\s+/g, ''); 
+            const car = document.getElementById(`carSelect-${safeId}`)?.value; 
+            const m = document.getElementById(`timeM-${safeId}`).value; 
+            const s = document.getElementById(`timeS-${safeId}`).value; 
+            const ms = document.getElementById(`timeMS-${safeId}`).value; 
             
-            if(!car) { window.debugLog("[ZAPIS] Odrzucono: Brak auta."); return alert("Wybierz auto z Garażu!"); }
-            if(!m && !s && !ms) { window.debugLog("[ZAPIS] Odrzucono: Pusty czas."); return alert("Wpisz czas!"); }
+            if(!car) return alert("Wybierz auto z Garażu!"); 
+            if(!m && !s && !ms) return alert("Wpisz czas!"); 
             
             const formattedTime = `${(m||'0').toString().padStart(2, '0')}:${(s||'0').toString().padStart(2, '0')}.${(ms||'0').toString().padStart(3, '0')}`; 
             const currentBest = window.bestTimesForTracks[trackName] || "99:99.999"; 
             
-            let originalText = "Zapisz wynik";
-            if (btnElement) {
-                originalText = btnElement.innerText;
-                btnElement.innerText = "Zapisywanie...";
-                btnElement.disabled = true;
-            }
-
-            const payload = { 
-                driver: window.currentUserAlias, 
-                car: car, 
-                track: trackName, 
-                time: formattedTime,
-                timestamp: Date.now()
-            };
-
-            window.debugLog(`[ZAPIS] Rozpoczynam wysyłanie czasu: ${formattedTime} dla toru ${trackName}...`, payload);
-
             try {
-                const docRef = await addDoc(collection(db, "czasy"), payload); 
-                window.debugLog(`[ZAPIS] SUKCES! Utworzono dokument o ID: ${docRef.id}`);
+                // Dodajemy timestamp do starej dzialajacej logiki zapisu
+                await addDoc(collection(db, "czasy"), { 
+                    driver: window.currentUserAlias, 
+                    car: car, 
+                    track: trackName, 
+                    time: formattedTime,
+                    timestamp: Date.now()
+                }); 
                 
-                popupEl.querySelector('.time-min').value = ''; 
-                popupEl.querySelector('.time-sec').value = ''; 
-                popupEl.querySelector('.time-ms').value = ''; 
-                
-                window.debugLog(`[ZAPIS] Trwa przeladowanie tabeli wyników...`);
-                await window.loadLeaderboard(trackName); 
-                window.debugLog(`[ZAPIS] Tabela wyników odświeżona!`);
+                document.getElementById(`timeM-${safeId}`).value = ''; 
+                document.getElementById(`timeS-${safeId}`).value = ''; 
+                document.getElementById(`timeMS-${safeId}`).value = ''; 
                 
                 if (formattedTime < currentBest) { 
-                    window.debugLog(`[ZAPIS] Czas to nowy REKORD! Otwieranie powiadomienia.`);
                     const randomIndex = Math.floor(Math.random() * window.victoryGifs.length); 
                     document.getElementById('victoryImgRender').src = window.victoryGifs[randomIndex]; 
                     setTimeout(() => { document.getElementById('victoryModal').classList.add('active'); }, 500); 
                 } 
+                window.loadLeaderboard(trackName); 
             } catch(e) {
-                window.debugLog(`[BŁĄD ZAPISU] Firestore odrzuciło polecenie: ${e.message}`, e, true);
+                console.error("Firebase write error:", e);
                 alert("Błąd zapisu wyniku w Firebase: " + e.message);
-            } finally {
-                if (btnElement) {
-                    btnElement.innerText = originalText;
-                    btnElement.disabled = false;
-                }
             }
         };
 
