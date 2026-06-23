@@ -177,7 +177,7 @@
            CZAT LOBBY
            ========================================== */
         #chatToggleBtn {
-            position: absolute; bottom: 20px; left: 20px; z-index: 2000; /* Podniesiony z-index dla mobilki */
+            position: absolute; bottom: 20px; left: 20px; z-index: 2000;
             background: linear-gradient(180deg, #fff 0%, #f4f4f4 100%);
             padding: 10px 20px; border-radius: 20px; border: 3px solid #ccc;
             box-shadow: 0 4px 0 #aaa, 0 6px 10px rgba(0,0,0,0.3);
@@ -188,7 +188,7 @@
         #chatWindow {
             position: absolute; bottom: 70px; left: 20px; width: 320px; height: 420px;
             background: #f0f3f5; border: 4px solid #fff; border-radius: 16px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.5); z-index: 2001; /* Z-index ponad popupami mapy */
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5); z-index: 2001; 
             display: flex; flex-direction: column; overflow: hidden;
             transition: 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55); transform-origin: bottom left;
         }
@@ -288,7 +288,6 @@
         .leaflet-popup-content-wrapper { background: #f0f3f5; border: 4px solid #fff; border-radius: 16px; box-shadow: 0 0 0 2px #ccc, 0 10px 20px rgba(0,0,0,0.3); padding: 0; overflow: hidden; }
         .leaflet-popup-tip { background: #fff; }
         
-        /* Zmieniamy max-width na min-width, szerokość dopasuje się do zawartości */
         .leaflet-popup-content { margin: 0 !important; width: auto !important; min-width: 270px; max-width: 320px; font-family: 'M PLUS Rounded 1c', sans-serif; font-size: 12px !important; } 
         
         .leaflet-popup-close-button { 
@@ -303,6 +302,7 @@
 
         .track-details-box { background: #fff; border-radius: 10px; padding: 10px; margin-bottom: 10px; border: 2px solid #ddd; font-size: 12px; text-align: left; color:#5a4b41;}
 
+        /* NOWY STYL DLA PRZYCISKÓW AKCJI W DYMKU */
         .track-action-btn { display: inline-flex; align-items: center; justify-content: center; gap: 5px; background: #fff; border: 2px solid #ccc; color: #5a4b41; padding: 6px 10px; border-radius: 12px; text-decoration: none; font-size: 10px; font-weight: 900; transition: 0.2s; box-shadow: 0 2px 0 #ccc; cursor: pointer; text-transform: uppercase; font-family: 'M PLUS Rounded 1c', sans-serif;}
         .track-action-btn:active { transform: translateY(2px); box-shadow: 0 0 0 #ccc; }
         .track-action-btn:hover { color: #168bd8; border-color: #168bd8; box-shadow: 0 2px 0 #168bd8; }
@@ -316,7 +316,7 @@
         .time-inputs-container input { border: 2px solid #eee !important; background: #f9f9f9 !important; box-shadow: inset 0 2px 4px rgba(0,0,0,0.05) !important; padding: 8px 5px !important; margin: 0 !important; font-size: 16px !important; flex: 1; text-align: center; font-weight: 900;}
         .time-inputs-container span { font-weight: 900; color: #5a4b41; font-size: 16px; }
 
-        /* UPROSZCZONY RANKING ZEBY OBRAZKI NIE MIALY BRZYDKIEGO TŁA */
+        /* UPROSZCZONY RANKING */
         .rank-box { display: inline-flex; align-items: center; justify-content: center; min-width: 20px; font-weight: 900; font-size: 12px; }
         .rank-1 { padding: 0; }
         .rank-2 { background: silver; color: #fff; text-shadow: 1px 1px 0 #666; padding: 2px 6px; border-radius: 6px; }
@@ -385,7 +385,6 @@
         body.initial-d-active .list-item,
         body.initial-d-active button,
         body.initial-d-active .troll-popup,
-        body.initial-d-active #tachyonToast,
         body.initial-d-active .achievement-icon,
         body.initial-d-active #chatToggleBtn,
         body.initial-d-active #chatWindow,
@@ -422,11 +421,14 @@
         body.initial-d-active .leaflet-control-zoom a { background: #222 !important; color: #fff !important; border: 1px solid #555 !important; border-radius: 0 !important; }
         body.initial-d-active .leaflet-control-zoom a:hover { background: #e74c3c !important; color: #fff !important; }
 
+        /* Wymuszenie czarnego tekstu na białym toascie w trybie Initial D */
+        body.initial-d-active #tachyonToast { background: #fff !important; border-color: #e74c3c !important; color: #000 !important; }
+        body.initial-d-active #tachyonText { color: #000 !important; }
+
         /* ==========================================
-           RESPONSYWNOŚĆ (TELEFONY) - POPRAWIONA
+           RESPONSYWNOŚĆ (TELEFONY)
            ========================================== */
         @media screen and (max-width: 600px) {
-            /* Główny header i avatar */
             .floating-header { top: 10px; padding: 5px 15px; flex-direction: row; width: auto; white-space: nowrap;}
             .floating-header h1 { font-size: 20px; letter-spacing: 1px; }
             .floating-header img { height: 50px; margin: 0 -15px; }
@@ -435,49 +437,36 @@
             .greeting { display: none; }
             .user-avatar { width: 35px; height: 35px; font-size: 16px; margin: 0;}
             
-            /* Ekran logowania */
             .auth-card { width: 95%; flex-direction: column; height: auto; }
             .auth-card-image { display: none; }
             
-            /* Modale i formularze - Optycznie mniejsze */
             .modal-content { width: 95%; max-height: 90vh; }
             .modal-content h2 { font-size: 16px; padding: 10px; }
             .modal-body { padding: 12px; }
             .garage-form-box { padding: 15px; margin-bottom: 15px; }
             .garage-form-box h3 { font-size: 14px; }
             
-            /* Inputy - naprawione ucinanie daty! */
-            input, select, textarea { 
-                padding: 10px 12px !important; 
-                font-size: 13px !important; 
-                margin: 5px 0 !important;
-            }
+            input, select, textarea { padding: 10px 12px !important; font-size: 13px !important; margin: 5px 0 !important; }
             
-            /* Przyciski mniejsze i zgrabniejsze */
             .btn-submit, .btn-auth-submit { font-size: 13px; padding: 10px 15px; margin-top: 10px; border-width: 2px; border-radius: 15px;}
             .list-item-btns button { padding: 6px 10px; font-size: 10px; border-width: 1px;}
             .file-upload-btn { padding: 8px; font-size: 11px; }
             
-            /* Menu boczne - węższe */
             #sideMenu { width: 260px; left: -280px; }
             .side-menu-header { font-size: 16px; padding: 15px; }
             .track-list-item { padding: 12px 15px; font-size: 13px; }
             .track-list-icon { width: 25px; height: 25px; }
             
-            /* Czat Lobby i map popups - poprawione nachodzenie */
-            #chatToggleBtn { 
-                bottom: 15px; left: 10px; padding: 8px 15px; font-size: 12px; 
-                border-width: 2px; border-radius: 15px; z-index: 2000;
-            }
-            .leaflet-bottom.leaflet-left { margin-bottom: 55px; } /* Przesunięcie kontrolek mapy niżej czatu */
-            .leaflet-popup-content { width: 240px !important; }
+            #chatToggleBtn { bottom: 15px; left: 10px; padding: 8px 15px; font-size: 12px; border-width: 2px; border-radius: 15px; z-index: 2000; }
+            .leaflet-bottom.leaflet-left { margin-bottom: 55px; } 
+            
+            .leaflet-popup-content { max-width: 240px !important; } 
             
             #chatWindow { width: 92vw; left: 4vw; bottom: 60px; height: 380px; z-index: 2001;}
             .chat-header { padding: 10px; font-size: 14px; }
             .chat-msg { padding: 6px 10px; font-size: 12px;}
             .chat-text { font-size: 12px; }
             
-            /* Troll Popups */
             .troll-popup { padding: 15px; transform: scale(0.9); }
             .troll-popup h2 { font-size: 24px; }
             .troll-img { max-width: 90%; }
@@ -590,6 +579,17 @@
                     <input type="text" id="editTrackPrice" placeholder="np. 450 PLN / Sesja">
                     <button class="btn-submit" onclick="saveTrackDetails()">Zapisz Informacje</button>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- NOWY MODAL DLA UKŁADU TORU -->
+    <div class="modal-overlay" id="trackLayoutModal" style="z-index: 7500;">
+        <div class="modal-content" style="max-width: 800px; width: 95vw; background: #f0f3f5; padding: 0;">
+            <span class="close-modal" onclick="closeModal('trackLayoutModal')">×</span>
+            <h2 class="uma-pattern-green" id="trackLayoutTitle">Układ Toru</h2>
+            <div class="modal-body" style="padding: 10px; text-align: center; background: #222;">
+                <img src="" id="trackLayoutImgRender" style="max-width: 100%; max-height: 70vh; object-fit: contain; border-radius: 8px;">
             </div>
         </div>
     </div>
@@ -746,8 +746,8 @@
                     
                     <p style="color: #5a4b41; font-size: 13px; font-weight: bold; margin-bottom: 2px; margin-top: 10px;">Easter Eggi / Motywy:</p>
                     <div style="display:flex; gap: 10px; margin-bottom: 15px;">
-                        <button onclick="document.body.classList.toggle('initial-d-active'); document.body.classList.remove('easter-egg-active');" style="flex:1; background: #e74c3c; color: white; border: 2px solid #fff; border-radius: 12px; padding: 8px; font-weight: bold; cursor: pointer; text-transform: uppercase;">Initial D</button>
-                        <button onclick="document.body.classList.toggle('easter-egg-active'); document.body.classList.remove('initial-d-active');" style="flex:1; background: #9ae73a; color: white; border: 2px solid #fff; border-radius: 12px; padding: 8px; font-weight: bold; cursor: pointer; text-transform: uppercase;">Uma Uma</button>
+                        <button onclick="window.activateInitialDMode(); window.closeModal('settingsModal');" style="flex:1; background: #e74c3c; color: white; border: 2px solid #fff; border-radius: 12px; padding: 8px; font-weight: bold; cursor: pointer; text-transform: uppercase;">Initial D</button>
+                        <button onclick="window.activateEasterEgg(); window.closeModal('settingsModal');" style="flex:1; background: #9ae73a; color: white; border: 2px solid #fff; border-radius: 12px; padding: 8px; font-weight: bold; cursor: pointer; text-transform: uppercase;">Uma Uma</button>
                     </div>
 
                     <button onclick="saveSettings()" class="btn-submit">Zapisz Profil</button>
@@ -1192,6 +1192,13 @@
             }
         };
 
+        window.showTrackLayout = (trackName, url) => {
+            if(!url) return;
+            document.getElementById('trackLayoutTitle').innerText = trackName;
+            document.getElementById('trackLayoutImgRender').src = url;
+            document.getElementById('trackLayoutModal').classList.add('active');
+        };
+
         // ==========================================
         // PANEL ADMINA Z LISTĄ I USUWANIE ORAZ PATCHNOTES
         // ==========================================
@@ -1444,85 +1451,90 @@
                 const safeId = tor.nazwa.replace(/\s+/g, ''); 
                 window.allMarkers[safeId] = marker;
                 
-                // Modyfikacja minWidth dla popupa aby teksty się nie łamały brzydko
-                marker.bindPopup(`<div id="popup-content-${safeId}"><div style="padding:20px; text-align:center;">Ładowanie...</div></div>`, {
-                    minWidth: 280, maxWidth: 350, autoPanPaddingTopLeft: [0, 50]
+                marker.bindPopup(`<div style="padding:20px; text-align:center; font-weight:bold; color:#5a4b41;">⌛ Otwieranie...</div>`, {
+                    minWidth: 260, maxWidth: 300, autoPanPaddingTopLeft: [0, 50]
                 }); 
                 
-                marker.on('popupopen', async () => { 
-                    
-                    let trackLayoutLink = tor.foto ? `
-                            <a href="${tor.foto}" target="_blank" class="track-action-btn">
-                                UKŁAD TORU
-                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
-                            </a>` : '';
-                    
-                    // Definiujemy Edit Button, ale nie jako wielki submit
-                    let editBtnHTML = (window.userRole === 'admin' || window.userRole === 'mod') ? `
-                        <button class="track-action-btn" style="color:#168bd8; border-color:#168bd8; box-shadow: 0 2px 0 #168bd8;" onclick="window.openTrackEditModal('${safeId}', '${tor.nazwa}')">
-                            🔧 Ustawienia
-                        </button>` : '';
+                marker.on('popupopen', async (e) => { 
+                    const popup = e.popup;
+                    // Bezpieczne informowanie że pobieramy
+                    popup.setContent(`<div style="padding:30px; text-align:center;"><div style="font-size: 24px; margin-bottom: 10px;">🏎️</div><div style="font-weight:900; color:#5a4b41;">Pobieranie danych z padoku...</div></div>`);
+                    popup.update();
 
-                    const fullHTML = `
-                        <div class="popup-inner-pad transition-shape">
-                            <h2 class="transition-shape uma-pattern-green">${tor.nazwa}</h2>
-                            <div id="trackInfoRender-${safeId}" class="track-details-box transition-shape">Ładowanie informacji...</div>
-                            <table class="transition-shape" style="table-layout: fixed; width: 100%;">
-                                <thead>
-                                    <tr>
-                                        <th style="width: 48%; text-align:left; padding-left:8px;">Kierowca</th>
-                                        <th style="width: 27%;">Fura</th>
-                                        <th style="width: 25%;">Czas</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="table-${safeId}"><tr><td colspan='3'>Ładowanie...</td></tr></tbody>
-                            </table>
-                            <hr style="border-color:#ddd; margin:12px 0;">
-                            <div id="carSelectContainer-${safeId}"></div>
-                            <div class="time-inputs-container transition-shape" style="padding: 6px; gap: 4px;">
-                                <input type="number" id="timeM-${safeId}" placeholder="Min" min="0" max="99" style="font-size:14px !important; padding:6px 2px !important;"> <span style="font-size:14px;">:</span> 
-                                <input type="number" id="timeS-${safeId}" placeholder="Sek" min="0" max="59" style="font-size:14px !important; padding:6px 2px !important;"> <span style="font-size:14px;">.</span> 
-                                <input type="number" id="timeMS-${safeId}" placeholder="MS" min="0" max="999" style="font-size:14px !important; padding:6px 2px !important;">
-                            </div>
-                            <button onclick="window.saveTime('${tor.nazwa}')" class="btn-submit transition-shape" style="padding: 8px; font-size: 14px; margin-top: 5px;">Zapisz wynik</button>
-                        </div>`; 
-                    document.getElementById(`popup-content-${safeId}`).innerHTML = fullHTML; 
-                    
-                    let carSelectHTML = `<select id="carSelect-${safeId}" class="transition-shape" style="width:100%; border: 3px solid #ccc; border-radius: 12px; padding: 10px; font-weight: bold;">`; 
-                    if(window.myCars.length === 0) carSelectHTML += `<option value="" disabled selected>Brak aut!</option>`; 
-                    else { window.myCars.forEach(car => { carSelectHTML += `<option value="${car}">${car}</option>`; }); } 
-                    carSelectHTML += `</select>`; 
-                    document.getElementById(`carSelectContainer-${safeId}`).innerHTML = carSelectHTML;
+                    try {
+                        const infoSnap = await getDoc(doc(db, "tory_detale", safeId));
+                        let infoData = { opis: "Brak opisu.", kontakt: "Brak", email: "Brak", ceny: "Brak info" };
+                        if(infoSnap.exists()) infoData = infoSnap.data();
 
-                    const infoBox = document.getElementById(`trackInfoRender-${safeId}`);
-                    const infoSnap = await getDoc(doc(db, "tory_detale", safeId));
-                    let infoData = { opis: "Brak opisu.", kontakt: "Brak", email: "Brak", ceny: "Brak info" };
-                    if(infoSnap.exists()) infoData = infoSnap.data();
+                        let trackLayoutLink = tor.foto ? `
+                            <button class="track-action-btn" onclick="window.showTrackLayout('${tor.nazwa}', '${tor.foto}')">
+                                <span style="font-size:12px;">🗺️</span> UKŁAD TORU
+                            </button>` : '';
+                        
+                        let editBtnHTML = (window.userRole === 'admin' || window.userRole === 'mod') ? `
+                            <button class="track-action-btn" style="color:#e74c3c; border-color:#e74c3c; box-shadow: 0 2px 0 #e74c3c;" onclick="window.openTrackEditModal('${safeId}', '${tor.nazwa}')">
+                                <span style="font-size:12px;">🔧</span> USTAWIENIA
+                            </button>` : '';
 
-                    infoBox.innerHTML = `
-                        <div style="margin-bottom: 8px; font-weight: bold; text-align: center; border-bottom: 2px dashed #ddd; padding-bottom: 6px; font-size: 12px;">${infoData.opis}</div>
-                        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px;">
-                            <span style="font-weight: 900; font-size: 11px; text-transform: uppercase; flex-shrink: 0;"><span style="font-size:14px;">☎️</span> Kontakt</span>
-                            <span style="font-weight: 900; font-size: 12px; text-align: right; max-width: 65%; word-break: break-word;">${infoData.kontakt}</span>
-                        </div>
-                        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px;">
-                            <span style="font-weight: 900; font-size: 11px; text-transform: uppercase; flex-shrink: 0;"><span style="font-size:14px;">📧</span> E-mail</span>
-                            <span style="font-weight: 900; font-size: 12px; text-align: right; max-width: 65%; word-break: break-word;">${infoData.email}</span>
-                        </div>
-                        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px;">
-                            <span style="font-weight: 900; font-size: 11px; text-transform: uppercase; flex-shrink: 0;"><span style="font-size:14px;">💲</span> Ceny</span>
-                            <span style="font-weight: 900; font-size: 12px; text-align: right; max-width: 65%; word-break: break-word;">${infoData.ceny}</span>
-                        </div>
-                        <div style="display: flex; justify-content: center; gap: 10px; flex-wrap: wrap;">
-                            ${trackLayoutLink}
-                            ${editBtnHTML}
-                        </div>
-                    `;
+                        let carSelectHTML = `<select id="carSelect-${safeId}" class="transition-shape" style="width:100%; border: 3px solid #ccc; border-radius: 12px; padding: 10px; font-weight: bold;">`; 
+                        if(window.myCars.length === 0) carSelectHTML += `<option value="" disabled selected>Brak aut!</option>`; 
+                        else { window.myCars.forEach(car => { carSelectHTML += `<option value="${car}">${car}</option>`; }); } 
+                        carSelectHTML += `</select>`; 
 
-                    // Wymuś odświeżenie rozmiaru po załadowaniu treści
-                    setTimeout(() => { marker.getPopup().update(); }, 50);
+                        const fullHTML = `
+                            <div class="popup-inner-pad transition-shape">
+                                <h2 class="transition-shape uma-pattern-green">${tor.nazwa}</h2>
+                                <div class="track-details-box transition-shape">
+                                    <div style="margin-bottom: 8px; font-weight: bold; text-align: center; border-bottom: 2px dashed #ddd; padding-bottom: 6px; font-size: 12px;">${infoData.opis}</div>
+                                    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px;">
+                                        <span style="font-weight: 900; font-size: 11px; text-transform: uppercase; flex-shrink: 0;"><span style="font-size:14px;">☎️</span> Kontakt</span>
+                                        <span style="font-weight: 900; font-size: 12px; text-align: right; max-width: 65%; overflow-wrap: anywhere; word-break: break-word;">${infoData.kontakt}</span>
+                                    </div>
+                                    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px;">
+                                        <span style="font-weight: 900; font-size: 11px; text-transform: uppercase; flex-shrink: 0;"><span style="font-size:14px;">📧</span> E-mail</span>
+                                        <span style="font-weight: 900; font-size: 12px; text-align: right; max-width: 65%; overflow-wrap: anywhere; word-break: break-word;">${infoData.email}</span>
+                                    </div>
+                                    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px;">
+                                        <span style="font-weight: 900; font-size: 11px; text-transform: uppercase; flex-shrink: 0;"><span style="font-size:14px;">💲</span> Ceny</span>
+                                        <span style="font-weight: 900; font-size: 12px; text-align: right; max-width: 65%; overflow-wrap: anywhere; word-break: break-word;">${infoData.ceny}</span>
+                                    </div>
+                                    <div style="display: flex; justify-content: center; gap: 8px; flex-wrap: wrap;">
+                                        ${trackLayoutLink}
+                                        ${editBtnHTML}
+                                    </div>
+                                </div>
+                                <table class="transition-shape" style="table-layout: fixed; width: 100%;">
+                                    <thead>
+                                        <tr>
+                                            <th style="width: 48%; text-align:left; padding-left:8px;">Kierowca</th>
+                                            <th style="width: 27%;">Fura</th>
+                                            <th style="width: 25%;">Czas</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="table-${safeId}"><tr><td colspan='3'>Ładowanie wyników...</td></tr></tbody>
+                                </table>
+                                <hr style="border-color:#ddd; margin:12px 0;">
+                                <div id="carSelectContainer-${safeId}">${carSelectHTML}</div>
+                                <div class="time-inputs-container transition-shape" style="padding: 6px; gap: 4px;">
+                                    <input type="number" id="timeM-${safeId}" placeholder="Min" min="0" max="99" style="font-size:14px !important; padding:6px 2px !important;"> <span style="font-size:14px;">:</span> 
+                                    <input type="number" id="timeS-${safeId}" placeholder="Sek" min="0" max="59" style="font-size:14px !important; padding:6px 2px !important;"> <span style="font-size:14px;">.</span> 
+                                    <input type="number" id="timeMS-${safeId}" placeholder="MS" min="0" max="999" style="font-size:14px !important; padding:6px 2px !important;">
+                                </div>
+                                <button onclick="window.saveTime('${tor.nazwa}')" class="btn-submit transition-shape" style="padding: 8px; font-size: 14px; margin-top: 5px;">Zapisz wynik</button>
+                            </div>`;
 
-                    window.loadLeaderboard(tor.nazwa); 
+                        // UŻYWAMY SETCONTENT zamiast InnerHTML - To naprawia BŁĄD!
+                        popup.setContent(fullHTML);
+                        popup.update();
+
+                        // Odpalamy skrypt z leaderboard, on znajdzie zaktualizowaną tabelę po ID
+                        window.loadLeaderboard(tor.nazwa); 
+
+                    } catch (error) {
+                        console.error("Popup Error:", error);
+                        popup.setContent(`<div style="padding:20px; text-align:center; color:red; font-weight:bold;">Błąd łączenia z bazą danych!</div>`);
+                        popup.update();
+                    }
                 }); 
 
                 let listImg = tor.foto ? `<img src="${tor.foto}" class="track-list-icon transition-shape">` : `<div class="track-list-icon transition-shape"></div>`;
@@ -1595,6 +1607,7 @@
             if (snapshot.empty) { 
                 tbody.innerHTML = "<tr><td colspan='3'>Brak czasów. Bądź pierwszy!</td></tr>"; 
                 window.bestTimesForTracks[trackName] = "99:99.999"; 
+                if(window.allMarkers[safeId] && window.allMarkers[safeId].getPopup()) window.allMarkers[safeId].getPopup().update();
                 return; 
             } 
             
@@ -1610,7 +1623,7 @@
                     window.bestTimesForTracks[trackName] = firstPlaceTime; 
                 } 
                 
-                // Poprawka rankDisplay - bez wymuszonego tła jeśli jest obrazek
+                // Poprawka rankDisplay
                 let rankDisplay = currentRank === 1 ? `<img src="1st.png" style="height: 18px; width: auto; object-fit: contain; display: block;">` : (currentRank === 2 ? "🥈" : (currentRank === 3 ? "🥉" : currentRank+"."));
                 let rankClass = currentRank === 1 ? "rank-1" : (currentRank === 2 ? "rank-2" : (currentRank === 3 ? "rank-3" : "rank-other")); 
                 
@@ -1618,7 +1631,7 @@
 
                 let actionBtns = ""; 
                 if(data.driver === window.currentUserAlias || window.userRole === 'admin' || window.userRole === 'mod') { 
-                    actionBtns = `<div style="margin-top:3px;"><span onclick="window.deleteLapTime('${doc.id}', '${trackName}')" style="cursor:pointer; font-size:9px; background:#e74c3c; color:#fff; padding:2px 6px; border-radius:10px; font-weight:bold;">USUŃ</span></div>`; 
+                    actionBtns = `<div style="margin-top:4px;"><span onclick="window.deleteLapTime('${doc.id}', '${trackName}')" style="cursor:pointer; font-size:9px; background:#e74c3c; color:#fff; padding:3px 8px; border-radius:10px; font-weight:bold; box-shadow: 0 2px 0 #c0392b;">USUŃ</span></div>`; 
                 } 
                 
                 tbody.innerHTML += `
@@ -1642,7 +1655,7 @@
                 </tr>`; 
                 currentRank++; 
             }); 
-            // Wymuś odświeżenie rozmiaru po załadowaniu tabeli
+            // Odświeżenie wysokości po wrzuceniu wierszy
             if(window.allMarkers[safeId] && window.allMarkers[safeId].getPopup()) {
                  window.allMarkers[safeId].getPopup().update();
             }
@@ -1683,7 +1696,7 @@
         };
 
         window.closeModal = (modalId) => { document.getElementById(modalId).classList.remove('active'); };
-        const modalsArr = ['garageModal', 'settingsModal', 'userProfileModal', 'allCarsModal', 'usersListModal', 'changelogModal', 'adminModal', 'trophiesModal', 'trackInfoEditModal'];
+        const modalsArr = ['garageModal', 'settingsModal', 'userProfileModal', 'allCarsModal', 'usersListModal', 'changelogModal', 'adminModal', 'trophiesModal', 'trackInfoEditModal', 'trackLayoutModal'];
         modalsArr.forEach(m => { 
             document.getElementById(m).addEventListener('click', (e) => { 
                 if(e.target.id === m) window.closeModal(m); 
@@ -1796,7 +1809,7 @@
         });
 
         // ==========================================
-        // AUTHENTICATION LOGIC (POPRAWIONY SESION PERSISTENCE)
+        // AUTHENTICATION LOGIC
         // ==========================================
 
         document.getElementById('loginBtn').addEventListener('click', async () => { 
@@ -1804,7 +1817,6 @@
             const p = document.getElementById('password').value; 
             if(!e || !p) return alert("Wpisz dane!"); 
             try { 
-                // USTAWIAMY KRÓTKĄ SESJĘ PRZED ZALOGOWANIEM (wygasa po zamknięciu przeglądarki)
                 await setPersistence(auth, browserSessionPersistence);
                 const user = await signInWithEmailAndPassword(auth, e, p); 
                 if(!user.user.emailVerified) { alert("Potwierdź e-mail!"); signOut(auth); } 
@@ -1840,7 +1852,6 @@
                 map.invalidateSize(); 
                 await initializeAppAfterLogin();
 
-                // Obsługa nowości
                 const patchSnap = await getDoc(doc(db, "ustawienia", "patchnotes"));
                 if(patchSnap.exists()) {
                     const pData = patchSnap.data();
@@ -1851,13 +1862,11 @@
                     }
                 }
                 
-                // Obsługa radia
                 if(window.ytPlayer && typeof window.ytPlayer.playVideo === 'function') {
                     document.getElementById('radioBtnToggle').innerText = "🎵 Włącz Audio";
                     window.isRadioPlaying = false;
                 } 
 
-                // Aktywacja strumienia Czatu Lobby
                 if(!window.chatUnsubscribe) {
                     const chatQ = query(collection(db, "czat"), orderBy("timestamp", "desc"), limit(50));
                     window.chatUnsubscribe = onSnapshot(chatQ, (snapshot) => {
@@ -1894,7 +1903,6 @@
                     window.isRadioPlaying = false; 
                 } 
 
-                // Zatrzymujemy czat jak wylogujemy
                 if(window.chatUnsubscribe) {
                     window.chatUnsubscribe();
                     window.chatUnsubscribe = null;
@@ -1904,7 +1912,6 @@
 
         // ==========================================
         // EASTER EGG (INITIAL D MODE)
-        // Definiowane wewnątrz modułu by mieć dostęp do "map", "darkMap" itd.
         // ==========================================
         window.activateInitialDMode = () => {
             if(document.body.classList.contains('initial-d-active')) return;
@@ -1928,7 +1935,6 @@
                 document.getElementById('headerTitle').innerText = "INICJALNY GAZ...";
                 document.querySelectorAll('.header-gif').forEach(img => img.style.display = 'none');
 
-                // ZAMIANA HAMBURGERA NA OBRACAJĄCĄ SIĘ AE86
                 document.getElementById('hamburgerBtn').innerHTML = '<img src="secret2.gif" style="width: 100%; height: 100%; object-fit: contain;">';
 
                 map.addLayer(darkMap);
@@ -1996,7 +2002,7 @@
             
             if (keysBuffer.includes("umauma")) {
                 keysBuffer = ""; 
-                activateEasterEgg();
+                window.activateEasterEgg();
             }
 
             if (keysBuffer.includes("wwssadadb")) {
@@ -2007,12 +2013,13 @@
             }
         });
 
-        function activateEasterEgg() {
+        window.activateEasterEgg = () => {
             document.body.classList.add('easter-egg-active');
             document.getElementById('headerTitle').innerText = "UMAPYOI!";
             
             document.querySelectorAll('.header-gif').forEach(img => {
                 img.src = "tachyon.gif";
+                img.style.display = "inline-block";
             });
 
             if(window.ytPlayer && typeof window.ytPlayer.loadVideoById === 'function') {
@@ -2045,7 +2052,6 @@
             let messages = [];
             let imgSrc = "tachyon2.gif";
 
-            // Sprawdzamy czy aktywny jest tryb Initial D
             if (document.body.classList.contains('initial-d-active')) {
                 messages = [
                     "Ściganci nie potrzebują dziewczyn...",
@@ -2053,9 +2059,8 @@
                     "Wow.. zamierza tym latać czy co?",
                     "Co do wała, od kiedy moja 85' jest 86'?!"
                 ];
-                imgSrc = "id.gif";
+                imgSrc = "ryu.gif";
             } else {
-                // Podstawowy tryb Umapyoi (Tachyon)
                 messages = [
                     "Nudzi ci się? a do kiedy masz przegląd?",
                     "Protip! Sprawdzaj po wulkanizatorze czy koło dokręcił jadąc 140 km/h!",
@@ -2066,12 +2071,14 @@
                     "Jak już tu kliknąłeś to rozumiem że auto w warsztacie?",
                     "Opel Asterka ma 1 miejsce w rankingu! Najczęściej złomowanych aut.",
                     "OMODA? Xiaomi? Tesla? telefonem jeździsz? odważnie.",
-                    "W celu zwiększenia ryżu należy ujebać rurę wydechową do zera, niech usłyszą twoją bestię na wysokich",
-                    "Jak zaświeci się kontrolka Check Engine to stuknij w deskę rozdzielczą - to tylko fatamorgana",
-                    "Wpisz sobie Forda T na czas do okrążenia a nie tu klikasz jak jakiś bambik."
+                    "W celu zwiększenia ryżu należy ujebać rurę wydechową do zera, niech usłyszą twoją bestię na wysokich.",
+                    "Pamiętaj żeby po zakręcie dodać oleju- Jakiś litr zgubiłem przed chwilą.",
+                    "Francuza kupiłeś że tu klikasz? Gratulacje, wylosuj sobie usterkę teraz",
+                    "Jak jeździsz Volvo w dieslu... to gratuluje zasłony dymnej z urwanego DPFu.",
+                    "Na łysych letnich przynajmniej czujesz, że żyjesz.",
+                    "Im dłużej tu klikasz tym zwiększasz prawdopodobieństwo rudej szmaty."
                 ];
                 
-                // Sprawdzenie czy gracz ma Diesla
                 let hasDiesel = false;
                 if (window.myFullCars && window.myFullCars.some(car => car.fuel === 'Diesel')) {
                     hasDiesel = true;
@@ -2085,7 +2092,7 @@
             const randomMsg = messages[Math.floor(Math.random() * messages.length)];
 
             document.getElementById('tachyonText').innerText = randomMsg;
-            document.querySelector('#tachyonToast img').src = imgSrc; // Podmiana gifa w locie
+            document.querySelector('#tachyonToast img').src = imgSrc; 
             
             const toast = document.getElementById('tachyonToast');
             toast.classList.add('show');
