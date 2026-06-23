@@ -8,6 +8,7 @@
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏁</text></svg>">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     
+    <!-- ZMIENIONA CZCIONKA NA M PLUS Rounded 1c (IDEALNA DO STYLU UMA MUSUME) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@700;900&display=swap" rel="stylesheet">
@@ -39,6 +40,7 @@
            UMA MUSUME STYLE - PATTERNY, PRZYCISKI I FORMULARZE
            ========================================== */
         
+        /* Zielony pattern w romby ze screena nr 3 i 5 */
         .uma-pattern-green {
             background-color: #79d81d;
             background-image: 
@@ -51,11 +53,10 @@
         }
 
         input, select, textarea {
-            width: 100%; max-width: 100%; min-width: 0; background: #ffffff !important; color: #5a4b41 !important; border: 3px solid #dcdcdc !important;
+            width: 100%; background: #ffffff !important; color: #5a4b41 !important; border: 3px solid #dcdcdc !important;
             border-radius: 12px !important; padding: 12px 15px !important; margin: 8px 0 !important;
             font-weight: bold !important; font-size: 14px !important; box-shadow: inset 0 3px 5px rgba(0,0,0,0.05) !important;
-            box-sizing: border-box !important; outline: none; transition: 0.2s; font-family: 'M PLUS Rounded 1c', sans-serif;
-            -webkit-appearance: none;
+            box-sizing: border-box; outline: none; transition: 0.2s; font-family: 'M PLUS Rounded 1c', sans-serif;
         }
         input:focus, select:focus, textarea:focus { border-color: #79d81d !important; box-shadow: inset 0 3px 5px rgba(0,0,0,0.1), 0 0 0 4px rgba(121, 216, 29, 0.3) !important; }
         input[type="number"]::-webkit-inner-spin-button, input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
@@ -69,10 +70,8 @@
             color: #ffffff; font-size: 16px; font-weight: 900; text-transform: uppercase;
             text-shadow: 1px 1px 0px #2b6e06, -1px -1px 0px #2b6e06, 1px -1px 0px #2b6e06, -1px 1px 0px #2b6e06;
             padding: 12px 20px; cursor: pointer; transition: 0.1s ease; width: 100%; margin-top: 15px; font-family: 'M PLUS Rounded 1c', sans-serif;
-            box-sizing: border-box;
         }
         .btn-submit:active { transform: translateY(4px); box-shadow: 0 0 0 #3b900b, 0 2px 5px rgba(0,0,0,0.2); }
-        .btn-submit:disabled { filter: grayscale(100%); cursor: not-allowed; }
 
         .btn-auth-submit { 
             background: linear-gradient(180deg, #5865F2 0%, #4752C4 100%); 
@@ -81,7 +80,6 @@
             color: #ffffff; font-size: 16px; font-weight: 900; text-transform: uppercase;
             text-shadow: 1px 1px 0px #1a1e50, -1px -1px 0px #1a1e50, 1px -1px 0px #1a1e50, -1px 1px 0px #1a1e50; 
             padding: 12px 20px; cursor: pointer; transition: 0.1s ease; width: 100%; margin-top: 15px; font-family: 'M PLUS Rounded 1c', sans-serif;
-            box-sizing: border-box;
         }
         .btn-auth-submit:active { transform: translateY(4px); box-shadow: 0 0 0 #2f3688, 0 2px 5px rgba(0,0,0,0.2); }
         
@@ -98,7 +96,6 @@
             background: linear-gradient(180deg, #2bc2ff, #168bd8); border: 2px solid #fff; border-radius: 12px;
             color: white; font-weight: 900; padding: 10px; cursor: pointer; text-align: center; margin-bottom: 10px;
             box-shadow: 0 4px 0 #0d6299; font-size: 12px; text-transform: uppercase; display: block; transition: 0.1s ease;
-            box-sizing: border-box; width: 100%;
         }
         .file-upload-btn:active { transform: translateY(4px); box-shadow: 0 0 0 #0d6299; }
 
@@ -107,6 +104,7 @@
            ========================================== */
         #map { width: 100vw; height: 100vh; position: absolute; top: 0; left: 0; z-index: 1; }
         .leaflet-top.leaflet-left { padding-top: 80px; }
+        /* Przesunięcie kontrolek po lewej by zrobić miejsce na czat */
         .leaflet-bottom.leaflet-left { margin-bottom: 70px; margin-left: 10px; }
         
         .floating-header { 
@@ -178,7 +176,7 @@
            CZAT LOBBY
            ========================================== */
         #chatToggleBtn {
-            position: absolute; bottom: 20px; left: 20px; z-index: 2000;
+            position: absolute; bottom: 20px; left: 20px; z-index: 1000;
             background: linear-gradient(180deg, #fff 0%, #f4f4f4 100%);
             padding: 10px 20px; border-radius: 20px; border: 3px solid #ccc;
             box-shadow: 0 4px 0 #aaa, 0 6px 10px rgba(0,0,0,0.3);
@@ -189,7 +187,7 @@
         #chatWindow {
             position: absolute; bottom: 70px; left: 20px; width: 320px; height: 420px;
             background: #f0f3f5; border: 4px solid #fff; border-radius: 16px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.5); z-index: 2001; 
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5); z-index: 1001;
             display: flex; flex-direction: column; overflow: hidden;
             transition: 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55); transform-origin: bottom left;
         }
@@ -243,7 +241,6 @@
             width: 90%; max-width: 500px; max-height: 85vh; overflow-y: auto; overflow-x: hidden; position: relative; 
             box-shadow: 0 0 0 2px #ccc, 0 15px 30px rgba(0,0,0,0.5); cursor: default; 
             display: flex; flex-direction: column;
-            box-sizing: border-box;
         }
         .close-modal { position: absolute; top: 8px; right: 15px; font-size: 28px; color: #fff; cursor: pointer; z-index: 100; font-weight: 900; transition: 0.2s; text-shadow: 1px 1px 2px rgba(0,0,0,0.4);}
         .close-modal:hover { color: #ffe600; transform: scale(1.2); }
@@ -262,9 +259,9 @@
             text-shadow: 1px 1px 0 #3b900b, -1px -1px 0 #3b900b, 1px -1px 0 #3b900b, -1px 1px 0 #3b900b;
         }
         
-        .modal-body { padding: 20px; box-sizing: border-box; width: 100%; }
+        .modal-body { padding: 20px; }
 
-        .garage-form-box { background: #fff; padding: 20px; border-radius: 12px; margin-bottom: 20px; border: 2px solid #ddd; box-sizing: border-box; width: 100%; }
+        .garage-form-box { background: #fff; padding: 20px; border-radius: 12px; margin-bottom: 20px; border: 2px solid #ddd; }
         .garage-form-box h3 { color: #68cc14; font-weight: 900; margin-top: 0; text-transform: uppercase;}
 
         .list-item { display: flex; justify-content: flex-start; align-items: center; padding: 12px; background: linear-gradient(180deg, #ffffff 0%, #f4f4f4 100%); margin-bottom: 10px; border-radius: 10px; border: 2px solid #dcdcdc; }
@@ -284,46 +281,55 @@
         .achievement-icon { width: 50px; height: 50px; border-radius: 10px; border: 2px solid #fff; background: #fff; box-shadow: 0 0 0 2px #f38815, 0 4px 6px rgba(0,0,0,0.2); object-fit: contain;}
 
         /* ==========================================
-           DYMKI MAPY I TABELE (ZMNIEJSZONE Z ZACHOWANIEM STAREGO SILNIKA)
+           DYMKI MAPY I TABELE
            ========================================== */
         .leaflet-popup-content-wrapper { background: #f0f3f5; border: 4px solid #fff; border-radius: 16px; box-shadow: 0 0 0 2px #ccc, 0 10px 20px rgba(0,0,0,0.3); padding: 0; overflow: hidden; }
         .leaflet-popup-tip { background: #fff; }
-        
-        .leaflet-popup-content { margin: 0 !important; width: auto !important; min-width: 270px; max-width: 320px; font-family: 'M PLUS Rounded 1c', sans-serif; font-size: 12px !important; } 
+        .leaflet-popup-content { margin: 0 !important; width: 320px !important; font-family: 'M PLUS Rounded 1c', sans-serif; } 
         
         .leaflet-popup-close-button { 
-            background: rgba(0,0,0,0.6) !important; color: #fff !important; font-size: 20px !important; font-weight: 900 !important; top: 8px !important; right: 8px !important; 
-            width: 30px !important; height: 30px !important; line-height: 30px !important; text-align: center !important; border-radius: 50% !important;
-            text-shadow: none !important; z-index: 100; border: 2px solid #fff !important; box-shadow: 0 2px 5px rgba(0,0,0,0.5) !important; transition: 0.2s;
+            background: rgba(0,0,0,0.6) !important; 
+            color: #fff !important; 
+            font-size: 20px !important; 
+            font-weight: 900 !important; 
+            top: 8px !important; 
+            right: 8px !important; 
+            width: 30px !important; 
+            height: 30px !important; 
+            line-height: 30px !important; 
+            text-align: center !important; 
+            border-radius: 50% !important;
+            text-shadow: none !important; 
+            z-index: 100; 
+            border: 2px solid #fff !important;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.5) !important;
+            transition: 0.2s;
         }
         .leaflet-popup-close-button:hover { background: #ffe600 !important; color: #333 !important; transform: scale(1.1); }
         
+        .track-img-header { width: 100%; height: 130px; object-fit: cover; background-color: #222; border-bottom: 4px solid #fff; display: block; margin: 0; padding: 0; }
+        
         .popup-inner-pad { padding: 12px; }
-        .popup-inner-pad h2 { color: #fff; text-shadow: 1px 1px 0 #3b900b, -1px -1px 0 #3b900b, 1px -1px 0 #3b900b, -1px 1px 0 #3b900b; font-size: 16px; font-weight: 900; text-transform: uppercase; text-align: center; margin-top: 0; margin-bottom: 12px; background: linear-gradient(180deg, #9ae73a 0%, #68cc14 100%); padding: 6px; border-radius: 12px; border: 2px solid #fff;}
+        .popup-inner-pad h2 { color: #fff; text-shadow: 1px 1px 0 #3b900b, -1px -1px 0 #3b900b, 1px -1px 0 #3b900b, -1px 1px 0 #3b900b; font-size: 20px; font-weight: 900; text-transform: uppercase; text-align: center; margin-top: 0; margin-bottom: 10px; background: linear-gradient(180deg, #9ae73a 0%, #68cc14 100%); padding: 5px; border-radius: 12px; border: 2px solid #fff;}
 
-        .track-details-box { background: #fff; border-radius: 10px; padding: 10px; margin-bottom: 10px; border: 2px solid #ddd; font-size: 12px; text-align: left; color:#5a4b41;}
+        .track-details-box { background: #fff; border-radius: 10px; padding: 10px; margin-bottom: 10px; border: 2px solid #ddd; font-size: 13px; text-align: left; color:#5a4b41;}
 
-        .track-action-btn { display: inline-flex; align-items: center; justify-content: center; gap: 5px; background: #fff; border: 2px solid #ccc; color: #5a4b41; padding: 6px 10px; border-radius: 12px; text-decoration: none; font-size: 10px; font-weight: 900; transition: 0.2s; box-shadow: 0 2px 0 #ccc; cursor: pointer; text-transform: uppercase; font-family: 'M PLUS Rounded 1c', sans-serif;}
-        .track-action-btn:active { transform: translateY(2px); box-shadow: 0 0 0 #ccc; }
-        .track-action-btn:hover { color: #168bd8; border-color: #168bd8; box-shadow: 0 2px 0 #168bd8; }
-
-        table { width: 100%; border-collapse: separate; border-spacing: 0; margin: 8px 0; background: #fff; border-radius: 8px; border: 2px solid #ddd; overflow: hidden; font-size: 12px; table-layout: fixed;}
-        th { background: linear-gradient(180deg, #f0f0f0, #e0e0e0); color: #8a7b71; font-weight: 900; padding: 6px; text-transform: uppercase; font-size: 10px; border-bottom: 2px solid #ddd;}
-        td { border-bottom: 1px solid #eee; padding: 6px; color: #5a4b41; font-weight: 900; font-size: 11px; text-align: center; vertical-align: middle;}
+        table { width: 100%; border-collapse: separate; border-spacing: 0; margin: 10px 0; background: #fff; border-radius: 10px; border: 2px solid #ddd; overflow: hidden; }
+        th { background: linear-gradient(180deg, #f0f0f0, #e0e0e0); color: #8a7b71; font-weight: 900; padding: 8px; text-transform: uppercase; font-size: 11px; border-bottom: 2px solid #ddd;}
+        td { border-bottom: 1px solid #eee; padding: 8px; color: #5a4b41; font-weight: 900; font-size: 13px; text-align: center; vertical-align: middle;}
         tr:last-child td { border-bottom: none; }
         
         .time-inputs-container { background: #fff; border-radius: 12px; padding: 8px; border: 2px solid #ddd; display: flex; gap: 5px; align-items: center; justify-content: center; margin: 10px 0; }
         .time-inputs-container input { border: 2px solid #eee !important; background: #f9f9f9 !important; box-shadow: inset 0 2px 4px rgba(0,0,0,0.05) !important; padding: 8px 5px !important; margin: 0 !important; font-size: 16px !important; flex: 1; text-align: center; font-weight: 900;}
         .time-inputs-container span { font-weight: 900; color: #5a4b41; font-size: 16px; }
 
-        .rank-box { display: inline-flex; align-items: center; justify-content: center; min-width: 20px; font-weight: 900; font-size: 12px; }
-        .rank-1 { padding: 0; }
-        .rank-2 { background: silver; color: #fff; text-shadow: 1px 1px 0 #666; padding: 2px 6px; border-radius: 6px; }
-        .rank-3 { background: #cd7f32; color: #fff; text-shadow: 1px 1px 0 #663300; padding: 2px 6px; border-radius: 6px; } 
-        .rank-other { background: #eee; color: #8a7b71; padding: 2px 6px; border-radius: 6px; }
+        .rank-1 { color: #fff; text-shadow: 1px 1px 0 #b8860b, -1px -1px 0 #b8860b, 1px -1px 0 #b8860b, -1px 1px 0 #b8860b; font-weight: 900; font-size: 16px; background: gold; padding: 2px 6px; border-radius: 10px;}
+        .rank-2 { color: #fff; text-shadow: 1px 1px 0 #666; font-weight: 900; font-size: 14px; background: silver; padding: 2px 6px; border-radius: 10px;}
+        .rank-3 { color: #fff; text-shadow: 1px 1px 0 #663300; font-weight: 900; font-size: 14px; background: #cd7f32; padding: 2px 6px; border-radius: 10px;} 
+        .rank-other { color: #8a7b71; font-weight: 900; font-size: 14px;}
 
-        .admin-badge { background-color: #e74c3c; color: white; font-size: 9px; padding: 2px 5px; border-radius: 5px; font-weight: 900; text-transform: uppercase; box-shadow: 0 2px 0 #c0392b;}
-        .mod-badge { background-color: #3498db; color: white; font-size: 9px; padding: 2px 5px; border-radius: 5px; font-weight: 900; text-transform: uppercase; box-shadow: 0 2px 0 #2980b9;}
+        .admin-badge { background-color: #e74c3c; color: white; font-size: 9px; padding: 2px 5px; border-radius: 5px; margin-left: 5px; font-weight: 900; text-transform: uppercase; box-shadow: 0 2px 0 #c0392b;}
+        .mod-badge { background-color: #3498db; color: white; font-size: 9px; padding: 2px 5px; border-radius: 5px; margin-left: 5px; font-weight: 900; text-transform: uppercase; box-shadow: 0 2px 0 #2980b9;}
 
         /* ==========================================
            TROLL POPUPS I VICTORY
@@ -338,27 +344,39 @@
            TOAST EASTER EGG (TACHYON)
            ========================================== */
         #tachyonToast {
-            position: fixed; bottom: -150px; left: 50%; transform: translateX(-50%); background: #fff; border: 4px solid #168bd8;
-            border-radius: 20px; padding: 10px 20px; box-shadow: 0 10px 20px rgba(0,0,0,0.4); display: flex; align-items: center;
-            gap: 15px; z-index: 8000; transition: bottom 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55); pointer-events: none;
-            width: 90%; max-width: 450px;
+            position: fixed;
+            bottom: -150px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #fff;
+            border: 4px solid #168bd8;
+            border-radius: 20px;
+            padding: 10px 20px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.4);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            z-index: 8000;
+            transition: bottom 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            pointer-events: none; /* Nie blokuje kliknięć na mapie pod spodem */
+            width: 90%;
+            max-width: 450px;
         }
-        #tachyonToast.show { bottom: 30px; }
-        #tachyonToast img { width: 80px; height: auto; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3)); }
-        #tachyonText { font-size: 14px; font-weight: 900; color: #5a4b41; margin: 0; line-height: 1.4; }
-
-        /* ==========================================
-           KONSOLA DEBUG (NOWA)
-           ========================================== */
-        #debugConsole {
-            display: none; position: fixed; bottom: 10px; right: 10px; width: 320px; height: 300px;
-            background: rgba(0,0,0,0.9); color: #0f0; font-family: monospace; font-size: 11px;
-            z-index: 9999; padding: 10px; border-radius: 8px; overflow-y: auto; box-shadow: 0 0 20px rgba(0,0,0,0.8);
-            border: 2px solid #333; pointer-events: none;
+        #tachyonToast.show {
+            bottom: 30px;
         }
-        #debugConsole.active { display: block; }
-        .debug-msg { border-bottom: 1px dashed #444; padding-bottom: 5px; margin-bottom: 5px; word-wrap: break-word;}
-        .debug-error { color: #ff4c4c; font-weight: bold; }
+        #tachyonToast img {
+            width: 80px;
+            height: auto;
+            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3));
+        }
+        #tachyonText {
+            font-size: 14px;
+            font-weight: 900;
+            color: #5a4b41;
+            margin: 0;
+            line-height: 1.4;
+        }
 
         /* ==========================================
            EASTER EGG (UMAUMA) ANIMATIONS
@@ -372,15 +390,18 @@
         @keyframes bounceSimple { from { transform: translateY(0); } to { transform: translateY(-15px); } }
 
         /* ==========================================
-           EASTER EGG (INITIAL D MODE)
+           EASTER EGG (INITIAL D MODE) ORAZ POPRAWKI KONTROLEK
            ========================================== */
         #secretGifOverlay {
-            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.9); z-index: 9999;
-            display: flex; justify-content: center; align-items: center; opacity: 0; pointer-events: none; transition: opacity 0.5s ease-in-out;
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(0,0,0,0.9); z-index: 9999;
+            display: flex; justify-content: center; align-items: center;
+            opacity: 0; pointer-events: none; transition: opacity 0.5s ease-in-out;
         }
         #secretGifOverlay.show { opacity: 1; pointer-events: all; }
         #secretGifOverlay img { max-width: 90%; max-height: 90%; filter: drop-shadow(0 0 20px #e74c3c); }
 
+        /* Twarde, ostre, szare przejścia */
         body.initial-d-active .modal-content, 
         body.initial-d-active .btn-submit, 
         body.initial-d-active .btn-auth-submit,
@@ -397,6 +418,7 @@
         body.initial-d-active .list-item,
         body.initial-d-active button,
         body.initial-d-active .troll-popup,
+        body.initial-d-active #tachyonToast,
         body.initial-d-active .achievement-icon,
         body.initial-d-active #chatToggleBtn,
         body.initial-d-active #chatWindow,
@@ -406,36 +428,88 @@
             transition: border-radius 1.5s ease-in-out, background 1.5s ease-in-out, border-color 1.5s ease-in-out, box-shadow 1.5s ease-in-out, color 1.5s ease-in-out;
         }
         
-        body.initial-d-active { font-family: 'Arial', sans-serif; }
-        body.initial-d-active .uma-pattern-green, body.initial-d-active .chat-header { background-color: #1a1a1a !important; background-image: none !important; border-bottom: 4px solid #e74c3c !important; color: #fff !important; text-shadow: none !important; transition: background-color 1.5s ease-in-out; }
-        body.initial-d-active .btn-submit, body.initial-d-active .btn-auth-submit, body.initial-d-active .chat-clear-btn { background: #2a2a2a !important; border-color: #e74c3c !important; box-shadow: 0 4px 0 #800000, 0 6px 10px rgba(0,0,0,0.5) !important; color: #fff !important; text-shadow: none !important; }
-        body.initial-d-active .floating-header { background: #1a1a1a !important; border-color: #e74c3c !important; box-shadow: 0 5px 0 #800000, 0 8px 15px rgba(0,0,0,0.6) !important; }
-        body.initial-d-active .floating-header h1 { color: #fff !important; text-shadow: 2px 2px 0 #e74c3c !important; font-style: italic; letter-spacing: 4px; }
-        body.initial-d-active .user-widget, body.initial-d-active #hamburgerBtn, body.initial-d-active #chatToggleBtn { background: #1a1a1a !important; border-color: #e74c3c !important; color: #fff !important; box-shadow: 0 4px 0 #800000 !important; }
+        body.initial-d-active {
+            font-family: 'Arial', sans-serif;
+        }
+        body.initial-d-active .uma-pattern-green, body.initial-d-active .chat-header {
+            background-color: #1a1a1a !important;
+            background-image: none !important;
+            border-bottom: 4px solid #e74c3c !important;
+            color: #fff !important;
+            text-shadow: none !important;
+            transition: background-color 1.5s ease-in-out;
+        }
+        body.initial-d-active .btn-submit, body.initial-d-active .btn-auth-submit, body.initial-d-active .chat-clear-btn {
+            background: #2a2a2a !important;
+            border-color: #e74c3c !important;
+            box-shadow: 0 4px 0 #800000, 0 6px 10px rgba(0,0,0,0.5) !important;
+            color: #fff !important;
+            text-shadow: none !important;
+        }
+        body.initial-d-active .floating-header {
+            background: #1a1a1a !important;
+            border-color: #e74c3c !important;
+            box-shadow: 0 5px 0 #800000, 0 8px 15px rgba(0,0,0,0.6) !important;
+        }
+        body.initial-d-active .floating-header h1 {
+            color: #fff !important;
+            text-shadow: 2px 2px 0 #e74c3c !important;
+            font-style: italic;
+            letter-spacing: 4px;
+        }
+        body.initial-d-active .user-widget, body.initial-d-active #hamburgerBtn, body.initial-d-active #chatToggleBtn {
+            background: #1a1a1a !important;
+            border-color: #e74c3c !important;
+            color: #fff !important;
+            box-shadow: 0 4px 0 #800000 !important;
+        }
         body.initial-d-active .greeting, body.initial-d-active .greeting span { color: #fff !important; text-shadow: none; }
         body.initial-d-active .dropdown-menu { background: #111 !important; border-color: #e74c3c !important; }
         body.initial-d-active .dropdown-item { color: #ccc !important; border-bottom: 1px solid #333; }
         body.initial-d-active .dropdown-item:hover { background: #e74c3c !important; color: #fff !important; padding-left: 20px; }
         body.initial-d-active .modal-content, body.initial-d-active #chatWindow { background: #222 !important; border-color: #e74c3c !important; color: #ddd !important; }
-        body.initial-d-active .garage-form-box, body.initial-d-active .list-item, body.initial-d-active table, body.initial-d-active .time-inputs-container, body.initial-d-active .track-details-box { background: #333 !important; border-color: #555 !important; color: #fff !important; }
-        body.initial-d-active .garage-form-box h3, body.initial-d-active .list-item b, body.initial-d-active td, body.initial-d-active span, body.initial-d-active p { color: #eee !important; }
-        body.initial-d-active input, body.initial-d-active select, body.initial-d-active textarea { background: #444 !important; color: #fff !important; border-color: #666 !important; }
+        body.initial-d-active .garage-form-box, body.initial-d-active .list-item, body.initial-d-active table, body.initial-d-active .time-inputs-container, body.initial-d-active .track-details-box {
+            background: #333 !important;
+            border-color: #555 !important;
+            color: #fff !important;
+        }
+        body.initial-d-active .garage-form-box h3, body.initial-d-active .list-item b, body.initial-d-active td, body.initial-d-active span, body.initial-d-active p {
+            color: #eee !important;
+        }
+        body.initial-d-active input, body.initial-d-active select, body.initial-d-active textarea {
+            background: #444 !important;
+            color: #fff !important;
+            border-color: #666 !important;
+        }
         body.initial-d-active th { background: #111 !important; border-color: #555 !important; color: #aaa !important; }
+
+        /* Ustawienia okna chatu dla Initial D */
         body.initial-d-active #chatMessages { background: #333 !important; }
         body.initial-d-active .chat-input-area { background: #111 !important; border-color: #e74c3c !important; }
         body.initial-d-active .chat-msg { background: #444 !important; border-color: #555 !important; }
         body.initial-d-active .chat-text { color: #eee !important; }
-        
-        body.initial-d-active .track-action-btn { background: #2a2a2a !important; color: #fff !important; border-color: #e74c3c !important; box-shadow: 0 2px 0 #800000 !important; border-radius: 0 !important; }
 
-        body.initial-d-active .leaflet-control-layers, body.initial-d-active .leaflet-control-layers-expanded { background: #222 !important; border: 2px solid #e74c3c !important; color: #fff !important; border-radius: 0 !important; }
-        body.initial-d-active .leaflet-control-layers label { color: #fff !important; }
-        body.initial-d-active .leaflet-control-zoom a { background: #222 !important; color: #fff !important; border: 1px solid #555 !important; border-radius: 0 !important; }
-        body.initial-d-active .leaflet-control-zoom a:hover { background: #e74c3c !important; color: #fff !important; }
-
-        /* Wymuszenie czarnego tekstu na białym toascie w trybie Initial D */
-        body.initial-d-active #tachyonToast { background: #fff !important; border-color: #e74c3c !important; color: #000 !important; }
-        body.initial-d-active #tachyonText { color: #000 !important; }
+        /* Łatka dla Leafleta na białe teksty na białym tle */
+        body.initial-d-active .leaflet-control-layers,
+        body.initial-d-active .leaflet-control-layers-expanded {
+            background: #222 !important;
+            border: 2px solid #e74c3c !important;
+            color: #fff !important;
+            border-radius: 0 !important;
+        }
+        body.initial-d-active .leaflet-control-layers label {
+            color: #fff !important;
+        }
+        body.initial-d-active .leaflet-control-zoom a {
+            background: #222 !important;
+            color: #fff !important;
+            border: 1px solid #555 !important;
+            border-radius: 0 !important;
+        }
+        body.initial-d-active .leaflet-control-zoom a:hover {
+            background: #e74c3c !important;
+            color: #fff !important;
+        }
 
         /* ==========================================
            RESPONSYWNOŚĆ (TELEFONY)
@@ -448,49 +522,19 @@
             .user-widget { top: 10px; padding: 2px; right: 10px; border-radius: 50%; }
             .greeting { display: none; }
             .user-avatar { width: 35px; height: 35px; font-size: 16px; margin: 0;}
-            
             .auth-card { width: 95%; flex-direction: column; height: auto; }
             .auth-card-image { display: none; }
-            
-            .modal-content { width: 95%; max-height: 90vh; }
-            .modal-content h2 { font-size: 16px; padding: 10px; }
-            .modal-body { padding: 12px; }
-            .garage-form-box { padding: 15px; margin-bottom: 15px; }
-            .garage-form-box h3 { font-size: 14px; }
-            
-            input, select, textarea { padding: 10px 12px !important; font-size: 13px !important; margin: 5px 0 !important; }
-            
-            .btn-submit, .btn-auth-submit { font-size: 13px; padding: 10px 15px; margin-top: 10px; border-width: 2px; border-radius: 15px;}
-            .list-item-btns button { padding: 6px 10px; font-size: 10px; border-width: 1px;}
-            .file-upload-btn { padding: 8px; font-size: 11px; }
-            
-            #sideMenu { width: 260px; left: -280px; }
-            .side-menu-header { font-size: 16px; padding: 15px; }
-            .track-list-item { padding: 12px 15px; font-size: 13px; }
-            .track-list-icon { width: 25px; height: 25px; }
-            
-            #chatToggleBtn { bottom: 15px; left: 10px; padding: 8px 15px; font-size: 12px; border-width: 2px; border-radius: 15px; z-index: 2000; }
-            .leaflet-bottom.leaflet-left { margin-bottom: 55px; } 
-            
-            .leaflet-popup-content { max-width: 240px !important; } 
-            
-            #chatWindow { width: 92vw; left: 4vw; bottom: 60px; height: 380px; z-index: 2001;}
-            .chat-header { padding: 10px; font-size: 14px; }
-            .chat-msg { padding: 6px 10px; font-size: 12px;}
-            .chat-text { font-size: 12px; }
-            
-            .troll-popup { padding: 15px; transform: scale(0.9); }
-            .troll-popup h2 { font-size: 24px; }
-            .troll-img { max-width: 90%; }
-            #tachyonToast { bottom: -100px; padding: 5px 10px; width: 85%; }
-            #tachyonToast.show { bottom: 10px; }
-            #tachyonToast img { width: 50px; }
+            .modal-content { width: 95%; }
+            .modal-body { padding: 15px; }
+            .leaflet-popup-content { width: 260px !important; }
+            #chatWindow { width: 90vw; left: 5vw; bottom: 70px; height: 350px;}
         }
     </style>
     <script src="https://www.youtube.com/iframe_api"></script>
 </head>
 <body>
 
+    <!-- OVERLAY NA GIFY INITIAL D -->
     <div id="secretGifOverlay">
         <img src="secret.gif" alt="Secret Touge Animation">
     </div>
@@ -545,6 +589,7 @@
             <div class="dropdown-item" id="logoutBtn" style="color: #e74c3c;">🚪 Wyloguj</div>
         </div>
 
+        <!-- CHAT WIDGET -->
         <div id="chatToggleBtn" onclick="toggleChat()">💬 Czat Lobby</div>
         <div id="chatWindow" class="hidden">
             <div class="chat-header uma-pattern-green">
@@ -595,27 +640,11 @@
         </div>
     </div>
 
-    <!-- NOWY MODAL DLA UKŁADU TORU -->
-    <div class="modal-overlay" id="trackLayoutModal" style="z-index: 7500;">
-        <div class="modal-content" style="max-width: 800px; width: 95vw; padding: 0;">
-            <span class="close-modal" onclick="closeModal('trackLayoutModal')">×</span>
-            <h2 class="uma-pattern-green" id="trackLayoutTitle">Układ Toru</h2>
-            <div class="modal-body" style="padding: 10px; text-align: center; background: #222;">
-                <img src="" id="trackLayoutImgRender" style="max-width: 100%; max-height: 70vh; object-fit: contain; border-radius: 8px;">
-            </div>
-        </div>
-    </div>
-
     <div class="modal-overlay" id="adminModal" style="z-index: 6000;">
         <div class="modal-content" style="max-width: 600px;">
             <span class="close-modal" onclick="closeModal('adminModal')">×</span>
             <h2 style="background: linear-gradient(180deg, #ff7675, #c0392b); text-shadow: 1px 1px 0 #900000;">👑 Uma Control Track Panel</h2>
             <div class="modal-body">
-                <div class="garage-form-box">
-                    <h3 style="color:#e74c3c; margin-top:0;">🐛 Opcje Deweloperskie</h3>
-                    <button class="btn-submit" id="debugToggleBtn" onclick="window.toggleDebugMode()" style="background: #34495e; border-color: #2c3e50; box-shadow: 0 4px 0 #2c3e50; margin-top: 5px;">Tryb Debug: WYŁĄCZONY</button>
-                </div>
-
                 <div class="garage-form-box">
                     <h3 style="color:#68cc14; margin-top:0;">📍 Dodaj Nowy Tor</h3>
                     <input type="text" id="newPinName" placeholder="Nazwa Toru (np. Tor Jastrząb)">
@@ -625,20 +654,6 @@
                     </div>
                     <input type="text" id="newPinFoto" placeholder="Link do zdjęcia (opcjonalnie)">
                     <button class="btn-submit" onclick="addNewCustomTrack()">Dodaj Tor do Mapy</button>
-                </div>
-
-                <div class="garage-form-box">
-                    <h3 style="color:#68cc14; margin-top:0;">🌟 Stwórz Nowe Osiągnięcie</h3>
-                    <input type="text" id="newAchievId" placeholder="Unikalne ID (np. krol_driftu)">
-                    <input type="text" id="newAchievName" placeholder="Nazwa (np. Król Driftu)">
-                    <textarea id="newAchievDesc" rows="2" placeholder="Opis osiągnięcia..."></textarea>
-                    
-                    <label for="newAchievFile" class="file-upload-btn">📷 WGRAJ IKONĘ (Max 3MB)</label>
-                    <input type="file" id="newAchievFile" accept="image/*" style="display:none;">
-                    <input type="hidden" id="newAchievPhoto"> 
-                    <div id="uploadStatusAchiev" style="font-size:11px; color: #168bd8; font-weight:bold; margin-bottom: 10px;"></div>
-
-                    <button class="btn-submit" onclick="addNewDynamicAchievement()">Zapisz do bazy</button>
                 </div>
 
                 <div class="garage-form-box">
@@ -760,13 +775,6 @@
                     <p style="color: #5a4b41; font-size: 13px; font-weight: bold; margin-bottom: 2px; margin-top: 10px;">Data urodzenia:</p><input type="date" id="settingsDob">
                     <p style="color: #5a4b41; font-size: 13px; font-weight: bold; margin-bottom: 2px; margin-top: 10px;">Miejscowość:</p><input type="text" id="settingsCity" placeholder="Skąd nadajesz?">
                     <p style="color: #5a4b41; font-size: 13px; font-weight: bold; margin-bottom: 2px; margin-top: 10px;">O sobie:</p><textarea id="settingsDesc" rows="3" placeholder="Napisz coś o sobie..."></textarea>
-                    
-                    <p style="color: #5a4b41; font-size: 13px; font-weight: bold; margin-bottom: 2px; margin-top: 10px;">Easter Eggi / Motywy:</p>
-                    <div style="display:flex; gap: 10px; margin-bottom: 15px;">
-                        <button onclick="window.activateInitialDMode(); window.closeModal('settingsModal');" style="flex:1; background: #e74c3c; color: white; border: 2px solid #fff; border-radius: 12px; padding: 8px; font-weight: bold; cursor: pointer; text-transform: uppercase;">Initial D</button>
-                        <button onclick="window.activateEasterEgg(); window.closeModal('settingsModal');" style="flex:1; background: #9ae73a; color: white; border: 2px solid #fff; border-radius: 12px; padding: 8px; font-weight: bold; cursor: pointer; text-transform: uppercase;">Uma Uma</button>
-                    </div>
-
                     <button onclick="saveSettings()" class="btn-submit">Zapisz Profil</button>
                 </div>
             </div>
@@ -794,21 +802,18 @@
         </div>
     </div>
 
-    <!-- TACHYON TOAST EASTER EGG -->
+    <!-- TACHYON TOAST EASTER EGG (Nie blokuje ekranu!) -->
     <div id="tachyonToast">
         <img src="tachyon2.gif" alt="Tachyon">
         <p id="tachyonText"></p>
     </div>
 
-    <!-- KONSOLA DEBUG -->
-    <div id="debugConsole"></div>
-
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
-        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, sendEmailVerification, sendPasswordResetEmail, updateProfile, setPersistence, browserSessionPersistence } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
-        // UWAGA: Przywrócono 'where' i 'orderBy' na życzenie, idealnie skopiowane ze starego dzialajacego kodu.
-        import { getFirestore, collection, addDoc, getDocs, query, where, orderBy, deleteDoc, doc, updateDoc, setDoc, getDoc, arrayUnion, arrayRemove, limit, onSnapshot } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, sendEmailVerification, sendPasswordResetEmail, updateProfile } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
+        // Dodany import 'onSnapshot' oraz 'limit' do działania czatu!
+        import { getFirestore, collection, addDoc, getDocs, query, where, orderBy, deleteDoc, doc, updateDoc, setDoc, getDoc, arrayUnion, arrayRemove, onSnapshot, limit } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
 
         // ==========================================
         // KLUCZE FIREBASE
@@ -826,50 +831,11 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        // --- SYSTEM DEBUGOWANIA ---
-        window.DEBUG_MODE = false;
-        window.toggleDebugMode = () => {
-            window.DEBUG_MODE = !window.DEBUG_MODE;
-            const btn = document.getElementById('debugToggleBtn');
-            const consoleEl = document.getElementById('debugConsole');
-            if(window.DEBUG_MODE) {
-                btn.innerText = "Tryb Debug: WŁĄCZONY";
-                btn.style.background = "#e74c3c";
-                btn.style.borderColor = "#c0392b";
-                btn.style.boxShadow = "0 4px 0 #c0392b";
-                consoleEl.classList.add('active');
-                window.debugLog("Tryb debugowania aktywowany. Otwórz dymek toru, aby sprawdzić komunikację z Firebase.");
-            } else {
-                btn.innerText = "Tryb Debug: WYŁĄCZONY";
-                btn.style.background = "#34495e";
-                btn.style.borderColor = "#2c3e50";
-                btn.style.boxShadow = "0 4px 0 #2c3e50";
-                consoleEl.classList.remove('active');
-            }
-        };
-
-        window.debugLog = (msg, obj = null, isError = false) => {
-            if(!window.DEBUG_MODE) return;
-            const consoleEl = document.getElementById('debugConsole');
-            if(!consoleEl) return;
-            
-            let objStr = "";
-            if(obj) {
-                try { objStr = "<br>" + JSON.stringify(obj).substring(0, 150) + "..."; } catch(e) { objStr = "<br>[Obiekt]"; }
-            }
-            const time = new Date().toLocaleTimeString();
-            const colorClass = isError ? 'debug-error' : '';
-            consoleEl.innerHTML += `<div class="debug-msg ${colorClass}">[${time}] ${msg} ${objStr}</div>`;
-            consoleEl.scrollTop = consoleEl.scrollHeight;
-            console.log(`[TRACKDAY DEBUG] ${msg}`, obj || '');
-        };
-        // -------------------------
-
         window.myCars = []; 
-        window.myFullCars = [];
+        window.myFullCars = []; // Dodane na potrzeby Easter Egga i lepszego śledzenia
         window.currentUserAlias = "";
         window.currentUserNick = ""; 
-        window.userRole = "user";
+        window.userRole = "user"; // "user", "mod", "admin"
 
         window.bestTimesForTracks = {}; 
         window.allMarkers = {};
@@ -896,15 +862,7 @@
             { nazwa: "Autodrom Jastrząb", lat: 51.263, lng: 20.931, foto: "track/autodromjastrzab.webp" },
             { nazwa: "Tor Kielce", lat: 50.963, lng: 20.457, foto: "track/kielce.webp" },
             { nazwa: "Tor Ułęż Moto Park", lat: 51.624, lng: 22.094, foto: "track/ulez.webp" },
-            { nazwa: "Tor Łódź", lat: 51.877, lng: 19.533, foto: "track/torlodz.webp" },
-            { nazwa: "Tor Poznań", lat: 52.418, lng: 16.818, foto: "track/torbemowo.jpeg" },
-            { nazwa: "Silesia Ring", lat: 50.534, lng: 18.067, foto: "track/torbemowo.jpeg" },
-            { nazwa: "Tor Krzywa", lat: 51.319, lng: 15.759, foto: "track/torbemowo.jpeg" },
-            { nazwa: "Moto Park Kraków", lat: 50.043, lng: 20.089, foto: "track/torkrakow.webp" },
-            { nazwa: "Autodrom Pomorze", lat: 54.195, lng: 18.683, foto: "track/torbemowo.jpeg" },
-            { nazwa: "Tor Bednary", lat: 52.535, lng: 17.227, foto: "track/torbemowo.jpeg" },
-            { nazwa: "Tor Toruń", lat: 53.018, lng: 18.566, foto: "track/torbemowo.jpeg" },
-            { nazwa: "Tor Koszalin", lat: 54.193, lng: 16.182, foto: "track/torbemowo.jpeg" }
+            { nazwa: "Tor Łódź", lat: 51.877, lng: 19.533, foto: "track/torlodz.webp" }
         ];
 
         // ZARZĄDZANIE MODALAMI
@@ -991,30 +949,25 @@
             document.getElementById('allCarsModal').classList.add('active'); 
             const list = document.getElementById('allCarsListRender'); 
             list.innerHTML = "Ładowanie..."; 
+            const snapshot = await getDocs(collection(db, "fury")); 
+            list.innerHTML = ""; 
             
-            try {
-                const snapshot = await getDocs(collection(db, "fury")); 
-                list.innerHTML = ""; 
+            snapshot.forEach(doc => { 
+                const d = doc.data(); 
+                const safeName = d.name.replace(/'/g, "\\'");
+                const safePhoto = d.photo.replace(/'/g, "\\'");
+                const safeEngine = d.engine.replace(/'/g, "\\'");
+                const safeFuel = d.fuel || "";
+                const safeAccel = d.accel.replace(/'/g, "\\'");
+                const safeTires = d.tires.replace(/'/g, "\\'");
                 
-                snapshot.forEach(doc => { 
-                    const d = doc.data(); 
-                    const safeName = d.name.replace(/'/g, "\\'");
-                    const safePhoto = d.photo.replace(/'/g, "\\'");
-                    const safeEngine = d.engine.replace(/'/g, "\\'");
-                    const safeFuel = d.fuel || "";
-                    const safeAccel = d.accel.replace(/'/g, "\\'");
-                    const safeTires = d.tires.replace(/'/g, "\\'");
-                    
-                    let actionBtns = `<button class="btn-view" onclick="window.showCarCard('${safeName}', '${d.driver}')">KARTA</button>`; 
-                    
-                    if(d.driver === window.currentUserAlias) { 
-                        actionBtns += `<button class="btn-edit" onclick="window.closeModal('allCarsModal'); window.openGarage(); setTimeout(()=>window.triggerEditCar('${doc.id}', '${safeName}', '${safePhoto}', '${safeEngine}', '${safeFuel}', '${safeAccel}', '${safeTires}'), 500)">EDYCJA</button><button class="btn-del" onclick="window.deleteCar('${doc.id}'); document.getElementById('allCarsModal').classList.remove('active');">USUŃ</button>`; 
-                    } 
-                    list.innerHTML += `<li class="list-item"><div><b style="color:#68cc14; font-size:13px;">[${d.driver.toUpperCase()}]</b><br><b style="color:#5a4b41; font-size:15px;">${d.name}</b> <span style="font-size:11px; color:#8a7b71;">(${d.engine})</span></div><div class="list-item-btns">${actionBtns}</div></li>`; 
-                });
-            } catch(e) {
-                list.innerHTML = `<li style="color:red;">Błąd ładowania aut: ${e.message}</li>`;
-            }
+                let actionBtns = `<button class="btn-view" onclick="window.showCarCard('${safeName}', '${d.driver}')">KARTA</button>`; 
+                
+                if(d.driver === window.currentUserAlias) { 
+                    actionBtns += `<button class="btn-edit" onclick="window.closeModal('allCarsModal'); window.openGarage(); setTimeout(()=>window.triggerEditCar('${doc.id}', '${safeName}', '${safePhoto}', '${safeEngine}', '${safeFuel}', '${safeAccel}', '${safeTires}'), 500)">EDYCJA</button><button class="btn-del" onclick="window.deleteCar('${doc.id}'); document.getElementById('allCarsModal').classList.remove('active');">USUŃ</button>`; 
+                } 
+                list.innerHTML += `<li class="list-item"><div><b style="color:#68cc14; font-size:13px;">[${d.driver.toUpperCase()}]</b><br><b style="color:#5a4b41; font-size:15px;">${d.name}</b> <span style="font-size:11px; color:#8a7b71;">(${d.engine})</span></div><div class="list-item-btns">${actionBtns}</div></li>`; 
+            }); 
         };
         
         window.openUsersList = async () => { 
@@ -1022,75 +975,59 @@
             document.getElementById('usersListModal').classList.add('active'); 
             const list = document.getElementById('usersListRender'); 
             list.innerHTML = "Ładowanie..."; 
+            const snapshot = await getDocs(collection(db, "uzytkownicy")); 
+            list.innerHTML = ""; 
             
-            try {
-                const snapshot = await getDocs(collection(db, "uzytkownicy")); 
-                list.innerHTML = ""; 
+            snapshot.forEach(doc => { 
+                const d = doc.data(); 
+                let rTag = doc.id==='pancerny' ? '<span class="admin-badge">ADMIN</span>' : (d.role==='mod'?'<span class="mod-badge">MOD</span>':''); 
+                let bgImage = d.avatar ? `background-image: url('${d.avatar}')` : '';
                 
-                snapshot.forEach(doc => { 
-                    const d = doc.data(); 
-                    let rTag = doc.id==='pancerny' ? '<span class="admin-badge">ADMIN</span>' : (d.role==='mod'?'<span class="mod-badge">MOD</span>':''); 
-                    let bgImage = d.avatar ? `background-image: url('${d.avatar}')` : '';
-                    
-                    list.innerHTML += `<li class="list-item" style="cursor:pointer;" onclick="window.showUserProfile('${doc.id}')">
-                        <div style="display:flex; align-items:center;">
-                            <div class="user-list-avatar" style="${bgImage}">${d.avatar ? '' : doc.id.charAt(0).toUpperCase()}</div>
-                            <div><b style="color:#5a4b41; font-size:15px;">${(d.nick||doc.id).toUpperCase()}</b> ${rTag}<br>
-                            <span style="font-size:11px; color:#8a7b71; font-weight:bold;">${d.miejscowosc || 'Nieznane Miasto'}</span></div>
-                        </div>
-                    </li>`; 
-                });
-            } catch(e) {
-                list.innerHTML = `<li style="color:red;">Błąd ładowania graczy: ${e.message}</li>`;
-            }
+                list.innerHTML += `<li class="list-item" style="cursor:pointer;" onclick="window.showUserProfile('${doc.id}')">
+                    <div style="display:flex; align-items:center;">
+                        <div class="user-list-avatar" style="${bgImage}">${d.avatar ? '' : doc.id.charAt(0).toUpperCase()}</div>
+                        <div><b style="color:#5a4b41; font-size:15px;">${(d.nick||doc.id).toUpperCase()}</b> ${rTag}<br>
+                        <span style="font-size:11px; color:#8a7b71; font-weight:bold;">${d.miejscowosc || 'Nieznane Miasto'}</span></div>
+                    </div>
+                </li>`; 
+            }); 
         };
 
         async function loadMyGarage() { 
+            const q = query(collection(db, "fury"), where("driver", "==", window.currentUserAlias)); 
+            const snapshot = await getDocs(q); 
             const list = document.getElementById('myCarsList'); 
             window.myCars = []; 
-            window.myFullCars = [];
-            list.innerHTML = "Ładowanie..."; 
+            window.myFullCars = []; // Przechowujemy pełne dane dla Easter Egga
+            list.innerHTML = ""; 
 
-            try {
-                const snapshot = await getDocs(collection(db, "fury"));
-                let myDocs = [];
-                snapshot.forEach((doc) => {
-                    if (doc.data().driver === window.currentUserAlias) {
-                        myDocs.push(doc);
-                    }
-                });
-                
-                list.innerHTML = "";
-                if(myDocs.length === 0) { 
-                    list.innerHTML = "Brak aut."; 
-                    return; 
-                } 
+            if(snapshot.empty) { 
+                list.innerHTML = "Brak aut."; 
+                return; 
+            } 
 
-                myDocs.forEach(doc => { 
-                    const d = doc.data(); 
-                    window.myCars.push(d.name); 
-                    window.myFullCars.push(d); 
+            snapshot.forEach(doc => { 
+                const d = doc.data(); 
+                window.myCars.push(d.name); 
+                window.myFullCars.push(d); 
 
-                    const safeName = d.name.replace(/'/g, "\\'"); 
-                    const safePhoto = d.photo.replace(/'/g, "\\'"); 
-                    const safeEngine = d.engine.replace(/'/g, "\\'"); 
-                    const safeFuel = d.fuel || ""; 
-                    const safeAccel = d.accel.replace(/'/g, "\\'"); 
-                    const safeTires = d.tires.replace(/'/g, "\\'"); 
+                const safeName = d.name.replace(/'/g, "\\'"); 
+                const safePhoto = d.photo.replace(/'/g, "\\'"); 
+                const safeEngine = d.engine.replace(/'/g, "\\'"); 
+                const safeFuel = d.fuel || ""; 
+                const safeAccel = d.accel.replace(/'/g, "\\'"); 
+                const safeTires = d.tires.replace(/'/g, "\\'"); 
 
-                    list.innerHTML += `
-                        <li class="list-item">
-                            <div><b style="color:#5a4b41;">${d.name}</b></div>
-                            <div class="list-item-btns">
-                                <button class="btn-view" onclick="window.showCarCard('${safeName}', '${window.currentUserAlias}')">KARTA</button>
-                                <button class="btn-edit" onclick="window.triggerEditCar('${doc.id}', '${safeName}', '${safePhoto}', '${safeEngine}', '${safeFuel}', '${safeAccel}', '${safeTires}')">EDYCJA</button>
-                                <button class="btn-del" onclick="window.deleteCar('${doc.id}')">USUŃ</button>
-                            </div>
-                        </li>`; 
-                }); 
-            } catch(e) {
-                list.innerHTML = `<li style="color:red;">Błąd ładowania garażu: ${e.message}</li>`;
-            }
+                list.innerHTML += `
+                    <li class="list-item">
+                        <div><b style="color:#5a4b41;">${d.name}</b></div>
+                        <div class="list-item-btns">
+                            <button class="btn-view" onclick="window.showCarCard('${safeName}', '${window.currentUserAlias}')">KARTA</button>
+                            <button class="btn-edit" onclick="window.triggerEditCar('${doc.id}', '${safeName}', '${safePhoto}', '${safeEngine}', '${safeFuel}', '${safeAccel}', '${safeTires}')">EDYCJA</button>
+                            <button class="btn-del" onclick="window.deleteCar('${doc.id}')">USUŃ</button>
+                        </div>
+                    </li>`; 
+            }); 
         }
 
         window.saveNewCar = async () => { 
@@ -1104,18 +1041,14 @@
 
             if(!n) return alert("Podaj nazwę fury!"); 
 
-            try {
-                if(editId) { 
-                    await updateDoc(doc(db, "fury", editId), { name: n, photo: photo, engine: engine, fuel: fuel, accel: accel, tires: tires }); 
-                    window.cancelEdit(); 
-                } else { 
-                    await addDoc(collection(db, "fury"), { driver: window.currentUserAlias, name: n, photo: photo, engine: engine, fuel: fuel, accel: accel, tires: tires }); 
-                    window.cancelEdit(); 
-                } 
-                await loadMyGarage(); 
-            } catch(e) {
-                alert("Błąd zapisu auta w bazie: " + e.message);
-            }
+            if(editId) { 
+                await updateDoc(doc(db, "fury", editId), { name: n, photo: photo, engine: engine, fuel: fuel, accel: accel, tires: tires }); 
+                window.cancelEdit(); 
+            } else { 
+                await addDoc(collection(db, "fury"), { driver: window.currentUserAlias, name: n, photo: photo, engine: engine, fuel: fuel, accel: accel, tires: tires }); 
+                window.cancelEdit(); 
+            } 
+            await loadMyGarage(); 
         };
 
         window.triggerEditCar = (id, name, photo, engine, fuel, accel, tires) => { 
@@ -1154,12 +1087,8 @@
 
         window.deleteCar = async (docId) => { 
             if(confirm("Na pewno chcesz zezłomować?")) { 
-                try {
-                    await deleteDoc(doc(db, "fury", docId)); 
-                    await loadMyGarage(); 
-                } catch(e) {
-                    alert("Błąd przy usuwaniu: " + e.message);
-                }
+                await deleteDoc(doc(db, "fury", docId)); 
+                await loadMyGarage(); 
             } 
         };
 
@@ -1173,63 +1102,49 @@
                 if(e.target.id === 'dynamicUmaModal') { document.getElementById('dynamicUmaModal').remove(); } 
             });
 
-            try {
-                const snapshot = await getDocs(collection(db, "fury"));
-                let matchedCar = null;
-                snapshot.forEach((doc) => {
-                    const data = doc.data();
-                    if (data.driver === driverName && data.name === carName) {
-                        matchedCar = data;
-                    }
-                });
+            const q = query(collection(db, "fury"), where("driver", "==", driverName), where("name", "==", carName)); 
+            const snapshot = await getDocs(q); 
+            if(snapshot.empty) return; 
+            
+            const carData = snapshot.docs[0].data(); 
+            const fuelDisplay = carData.fuel ? carData.fuel : "Brak danych";
+            
+            document.getElementById('dynamicUmaInner').innerHTML = `
+                <div class="transition-shape garage-form-box" style="width: 100%; background: #f0f3f5; border-radius: 16px; overflow: hidden; border: 4px solid #fff; box-shadow: 0 10px 25px rgba(0,0,0,0.5); position: relative; padding:0; margin:0;">
+                    <span onclick="document.getElementById('dynamicUmaModal').remove()" style="position: absolute; top: 10px; right: 15px; font-size: 28px; color: #fff; cursor: pointer; z-index: 10; font-weight: 900; text-shadow: 1px 1px 2px rgba(0,0,0,0.5);">×</span>
+                    
+                    <div class="transition-shape uma-pattern-green" style="background: linear-gradient(180deg, #2bc2ff, #168bd8); padding: 15px; text-align: center; border-bottom: 4px solid #fff;">
+                        <div style="color: #fff; font-size: 12px; font-weight: bold; text-transform: uppercase; text-shadow: 1px 1px 0 #0d6299;">Właściciel Maszyny</div>
+                        <div style="color: #fff; font-size: 20px; font-weight: 900; text-transform: uppercase; text-shadow: 2px 2px 0 #0d6299;">${carData.driver.toUpperCase()}</div>
+                    </div>
 
-                if(!matchedCar) {
-                    document.getElementById('dynamicUmaInner').innerHTML = `<div style="background:#fff; padding:20px; border-radius:10px; color:red;">Auto nie zostało znalezione!</div>`;
-                    return; 
-                }
-                
-                const carData = matchedCar;
-                const fuelDisplay = carData.fuel ? carData.fuel : "Brak danych";
-                
-                document.getElementById('dynamicUmaInner').innerHTML = `
-                    <div class="transition-shape garage-form-box" style="width: 100%; background: #f0f3f5; border-radius: 16px; overflow: hidden; border: 4px solid #fff; box-shadow: 0 10px 25px rgba(0,0,0,0.5); position: relative; padding:0; margin:0;">
-                        <span onclick="document.getElementById('dynamicUmaModal').remove()" style="position: absolute; top: 10px; right: 15px; font-size: 28px; color: #fff; cursor: pointer; z-index: 10; font-weight: 900; text-shadow: 1px 1px 2px rgba(0,0,0,0.5);">×</span>
-                        
-                        <div class="transition-shape uma-pattern-green" style="background: linear-gradient(180deg, #2bc2ff, #168bd8); padding: 15px; text-align: center; border-bottom: 4px solid #fff;">
-                            <div style="color: #fff; font-size: 12px; font-weight: bold; text-transform: uppercase; text-shadow: 1px 1px 0 #0d6299;">Właściciel Maszyny</div>
-                            <div style="color: #fff; font-size: 20px; font-weight: 900; text-transform: uppercase; text-shadow: 2px 2px 0 #0d6299;">${carData.driver.toUpperCase()}</div>
-                        </div>
+                    <div style="width: 100%; height: 200px; background-color: #222; background-image: url('${carData.photo}'); background-size: cover; background-position: center; border-bottom: 4px solid #fff;"></div>
 
-                        <div style="width: 100%; height: 200px; background-color: #222; background-image: url('${carData.photo}'); background-size: cover; background-position: center; border-bottom: 4px solid #fff;"></div>
+                    <div style="padding: 15px 20px 5px 20px; text-align: center;">
+                        <h2 style="margin: 0; color: #f38815; font-size: 24px; font-weight: 900; text-transform: uppercase; text-shadow: 1px 1px 0 #fff, -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff;">${carData.name}</h2>
+                    </div>
 
-                        <div style="padding: 15px 20px 5px 20px; text-align: center;">
-                            <h2 style="margin: 0; color: #f38815; font-size: 24px; font-weight: 900; text-transform: uppercase; text-shadow: 1px 1px 0 #fff, -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff;">${carData.name}</h2>
-                        </div>
-
-                        <div style="padding: 15px 20px 25px 20px;">
-                            <div class="transition-shape" style="background: #fff; border-radius: 12px; border: 2px solid #ddd; padding: 15px; display: flex; flex-direction: column; gap: 10px;">
-                                <div style="display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 1px solid #eee; padding-bottom: 8px;">
-                                    <span style="color: #8a7b71; font-weight: 900; font-size: 12px; text-transform: uppercase; margin-right: 15px; flex-shrink: 0;">⚙️ Silnik</span>
-                                    <span style="color: #5a4b41; font-weight: 900; font-size: 14px; text-align: right; word-break: break-word;">${carData.engine}</span>
-                                </div>
-                                <div style="display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 1px solid #eee; padding-bottom: 8px;">
-                                    <span style="color: #8a7b71; font-weight: 900; font-size: 12px; text-transform: uppercase; margin-right: 15px; flex-shrink: 0;">⛽ Paliwo</span>
-                                    <span style="color: #4facfe; font-weight: 900; font-size: 14px; text-align: right; word-break: break-word;">${fuelDisplay}</span>
-                                </div>
-                                <div style="display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 1px solid #eee; padding-bottom: 8px;">
-                                    <span style="color: #8a7b71; font-weight: 900; font-size: 12px; text-transform: uppercase; margin-right: 15px; flex-shrink: 0;">⏱️ 0-100 km/h</span>
-                                    <span style="color: #68cc14; font-weight: 900; font-size: 14px; text-align: right; word-break: break-word;">${carData.accel}</span>
-                                </div>
-                                <div style="display: flex; justify-content: space-between; align-items: flex-start;">
-                                    <span style="color: #8a7b71; font-weight: 900; font-size: 12px; text-transform: uppercase; margin-right: 15px; flex-shrink: 0;">🛞 Opony</span>
-                                    <span style="color: #e74c3c; font-weight: 900; font-size: 14px; text-align: right; word-break: break-word;">${carData.tires}</span>
-                                </div>
+                    <div style="padding: 15px 20px 25px 20px;">
+                        <div class="transition-shape" style="background: #fff; border-radius: 12px; border: 2px solid #ddd; padding: 15px; display: flex; flex-direction: column; gap: 10px;">
+                            <div style="display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 1px solid #eee; padding-bottom: 8px;">
+                                <span style="color: #8a7b71; font-weight: 900; font-size: 12px; text-transform: uppercase; margin-right: 15px; flex-shrink: 0;">⚙️ Silnik</span>
+                                <span style="color: #5a4b41; font-weight: 900; font-size: 14px; text-align: right; word-break: break-word;">${carData.engine}</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 1px solid #eee; padding-bottom: 8px;">
+                                <span style="color: #8a7b71; font-weight: 900; font-size: 12px; text-transform: uppercase; margin-right: 15px; flex-shrink: 0;">⛽ Paliwo</span>
+                                <span style="color: #4facfe; font-weight: 900; font-size: 14px; text-align: right; word-break: break-word;">${fuelDisplay}</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 1px solid #eee; padding-bottom: 8px;">
+                                <span style="color: #8a7b71; font-weight: 900; font-size: 12px; text-transform: uppercase; margin-right: 15px; flex-shrink: 0;">⏱️ 0-100 km/h</span>
+                                <span style="color: #68cc14; font-weight: 900; font-size: 14px; text-align: right; word-break: break-word;">${carData.accel}</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                                <span style="color: #8a7b71; font-weight: 900; font-size: 12px; text-transform: uppercase; margin-right: 15px; flex-shrink: 0;">🛞 Opony</span>
+                                <span style="color: #e74c3c; font-weight: 900; font-size: 14px; text-align: right; word-break: break-word;">${carData.tires}</span>
                             </div>
                         </div>
-                    </div>`; 
-            } catch (err) {
-                document.getElementById('dynamicUmaInner').innerHTML = `<div style="background:#fff; padding:20px; border-radius:10px; color:red;">Błąd bazy: ${err.message}</div>`;
-            }
+                    </div>
+                </div>`; 
         };
 
         window.showUserProfile = async (alias) => { 
@@ -1242,70 +1157,57 @@
             document.getElementById('pubProfileDesc').innerText = "Ładowanie...";
             document.getElementById('pubProfileAchievements').innerHTML = "Ładowanie odznak...";
             
-            try {
-                const docSnap = await getDoc(doc(db, "uzytkownicy", alias)); 
-                const adminB = document.getElementById('pubProfileAdminBadge'); 
-                adminB.style.display='none'; 
+            const docSnap = await getDoc(doc(db, "uzytkownicy", alias)); 
+            const adminB = document.getElementById('pubProfileAdminBadge'); 
+            adminB.style.display='none'; 
+            
+            if(docSnap.exists()) { 
+                const d = docSnap.data(); 
+                document.getElementById('pubProfileAlias').innerText = d.nick||alias; 
                 
-                if(docSnap.exists()) { 
-                    const d = docSnap.data(); 
-                    document.getElementById('pubProfileAlias').innerText = d.nick||alias; 
-                    
-                    if(d.avatar) { 
-                        document.getElementById('pubProfileAvatar').innerHTML = ""; 
-                        document.getElementById('pubProfileAvatar').style.backgroundImage = `url('${d.avatar}')`; 
-                    } 
+                if(d.avatar) { 
+                    document.getElementById('pubProfileAvatar').innerHTML = ""; 
+                    document.getElementById('pubProfileAvatar').style.backgroundImage = `url('${d.avatar}')`; 
+                } 
 
-                    if(alias==='pancerny') { 
-                        adminB.innerHTML='<span class="admin-badge" style="font-size: 12px; padding: 4px 10px; border-radius: 10px;">ADMINISTRATOR</span>'; 
-                        adminB.style.display='block'; 
-                    } 
-                    else if (d.role==='mod') { 
-                        adminB.innerHTML='<span class="mod-badge" style="font-size: 12px; padding: 4px 10px; border-radius: 10px;">MODERATOR</span>'; 
-                        adminB.style.display='block'; 
-                    } 
-                    
-                    if(d.dataUrodzenia) { 
-                        const birthDate = new Date(d.dataUrodzenia); 
-                        const today = new Date(); 
-                        let age = today.getFullYear() - birthDate.getFullYear(); 
-                        const m = today.getMonth() - birthDate.getMonth(); 
-                        if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) { age--; } 
-                        document.getElementById('pubProfileAge').innerText = age + " lat"; 
-                    } else { 
-                        document.getElementById('pubProfileAge').innerText = "Nie podano"; 
-                    } 
-                    
-                    document.getElementById('pubProfileCity').innerText = d.miejscowosc || "Nie podano"; 
-                    document.getElementById('pubProfileDesc').innerText = d.opis || "Brak opisu."; 
-                    
-                    const achBox = document.getElementById('pubProfileAchievements'); 
-                    achBox.innerHTML=''; 
-                    if(d.osiagniecia && d.osiagniecia.length > 0) { 
-                        d.osiagniecia.forEach(key => { 
-                            if(window.bazaOsiagniec[key]) achBox.innerHTML += `<img src="${window.bazaOsiagniec[key].img}" class="achievement-icon" title="${window.bazaOsiagniec[key].nazwa}">`; 
-                        }); 
-                    } else { 
-                        achBox.innerHTML = `<span style="color:#aaa; font-size:12px; font-weight:bold;">Brak odznak w klaserze.</span>`; 
-                    }
-                } else {
-                     document.getElementById('pubProfileAge').innerText = "Nie podano"; 
-                     document.getElementById('pubProfileCity').innerText = "Nie podano"; 
-                     document.getElementById('pubProfileDesc').innerText = "Konto założone, ale gracz nie zapisał profilu."; 
-                     document.getElementById('pubProfileAchievements').innerHTML = `<span style="color:#aaa; font-size:12px; font-weight:bold;">Brak odznak w klaserze.</span>`;
+                if(alias==='pancerny') { 
+                    adminB.innerHTML='<span class="admin-badge" style="font-size: 12px; padding: 4px 10px; border-radius: 10px;">ADMINISTRATOR</span>'; 
+                    adminB.style.display='block'; 
+                } 
+                else if (d.role==='mod') { 
+                    adminB.innerHTML='<span class="mod-badge" style="font-size: 12px; padding: 4px 10px; border-radius: 10px;">MODERATOR</span>'; 
+                    adminB.style.display='block'; 
+                } 
+                
+                if(d.dataUrodzenia) { 
+                    const birthDate = new Date(d.dataUrodzenia); 
+                    const today = new Date(); 
+                    let age = today.getFullYear() - birthDate.getFullYear(); 
+                    const m = today.getMonth() - birthDate.getMonth(); 
+                    if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) { age--; } 
+                    document.getElementById('pubProfileAge').innerText = age + " lat"; 
+                } else { 
+                    document.getElementById('pubProfileAge').innerText = "Nie podano"; 
+                } 
+                
+                document.getElementById('pubProfileCity').innerText = d.miejscowosc || "Nie podano"; 
+                document.getElementById('pubProfileDesc').innerText = d.opis || "Brak opisu."; 
+                
+                const achBox = document.getElementById('pubProfileAchievements'); 
+                achBox.innerHTML=''; 
+                if(d.osiagniecia && d.osiagniecia.length > 0) { 
+                    d.osiagniecia.forEach(key => { 
+                        if(window.bazaOsiagniec[key]) achBox.innerHTML += `<img src="${window.bazaOsiagniec[key].img}" class="achievement-icon" title="${window.bazaOsiagniec[key].nazwa}">`; 
+                    }); 
+                } else { 
+                    achBox.innerHTML = `<span style="color:#aaa; font-size:12px; font-weight:bold;">Brak odznak w klaserze.</span>`; 
                 }
-            } catch (err) {
-                 document.getElementById('pubProfileAge').innerText = "Błąd"; 
-                 document.getElementById('pubProfileCity').innerText = "Błąd"; 
-                 document.getElementById('pubProfileDesc').innerText = `Problem z pobraniem profilu: ${err.message}`;
+            } else {
+                 document.getElementById('pubProfileAge').innerText = "Nie podano"; 
+                 document.getElementById('pubProfileCity').innerText = "Nie podano"; 
+                 document.getElementById('pubProfileDesc').innerText = "Konto założone, ale gracz nie zapisał profilu."; 
+                 document.getElementById('pubProfileAchievements').innerHTML = `<span style="color:#aaa; font-size:12px; font-weight:bold;">Brak odznak w klaserze.</span>`;
             }
-        };
-
-        window.showTrackLayout = (trackName, url) => {
-            if(!url) return;
-            document.getElementById('trackLayoutTitle').innerText = trackName;
-            document.getElementById('trackLayoutImgRender').src = url;
-            document.getElementById('trackLayoutModal').classList.add('active');
         };
 
         // ==========================================
@@ -1316,12 +1218,10 @@
             userMenu.classList.remove('active'); 
             document.getElementById('adminModal').classList.add('active'); 
             
-            try {
-                const patchSnap = await getDoc(doc(db, "ustawienia", "patchnotes"));
-                if(patchSnap.exists()) { 
-                    document.getElementById('adminPatchText').value = patchSnap.data().text || ""; 
-                }
-            } catch(e) { console.error("Admin panel notes err:", e); }
+            const patchSnap = await getDoc(doc(db, "ustawienia", "patchnotes"));
+            if(patchSnap.exists()) { 
+                document.getElementById('adminPatchText').value = patchSnap.data().text || ""; 
+            }
 
             window.loadAdminUsers();
         };
@@ -1334,77 +1234,68 @@
             const f = document.getElementById('newPinFoto').value;
             if(!n || isNaN(lat) || isNaN(lng)) return alert("Wypełnij poprawnie nazwę i współrzędne!");
             
-            try {
-                await addDoc(collection(db, "tory_custom"), { nazwa: n, lat: lat, lng: lng, foto: f });
-                alert("Dodano tor! Odśwież stronę, żeby go zobaczyć.");
-                closeModal('adminModal');
-            } catch(e) { alert("Błąd dodawania toru: " + e.message); }
+            await addDoc(collection(db, "tory_custom"), { nazwa: n, lat: lat, lng: lng, foto: f });
+            alert("Dodano tor! Odśwież stronę, żeby go zobaczyć.");
+            closeModal('adminModal');
         };
 
         window.loadAdminUsers = async () => {
             const render = document.getElementById('adminUsersAchRender');
             render.innerHTML = "Ładowanie graczy...";
-            
-            try {
-                const snap = await getDocs(collection(db, "uzytkownicy"));
-                render.innerHTML = "";
+            const snap = await getDocs(collection(db, "uzytkownicy"));
+            render.innerHTML = "";
 
-                let selectOptions = `<option value="" disabled selected>Wybierz odznakę...</option>`;
-                for (const [key, t] of Object.entries(window.bazaOsiagniec)) { 
-                    selectOptions += `<option value="${key}">${t.nazwa}</option>`; 
+            let selectOptions = `<option value="" disabled selected>Wybierz odznakę...</option>`;
+            for (const [key, t] of Object.entries(window.bazaOsiagniec)) { 
+                selectOptions += `<option value="${key}">${t.nazwa}</option>`; 
+            }
+
+            snap.forEach(d => {
+                const uData = d.data(); 
+                const uid = d.id; 
+                const nick = uData.nick || uid;
+                let achHTML = "";
+                
+                if(uData.osiagniecia && uData.osiagniecia.length > 0) {
+                    uData.osiagniecia.forEach(achKey => {
+                        const info = window.bazaOsiagniec[achKey];
+                        if(info) {
+                            achHTML += `<div style="display:inline-block; position:relative; margin:2px;"><img src="${info.img}" style="width:30px; height:30px; border-radius:5px; border:1px solid #ccc; object-fit:contain;"><span onclick="removeAchievement('${uid}', '${achKey}')" style="position:absolute; top:-5px; right:-5px; background:red; color:white; border-radius:50%; width:15px; height:15px; font-size:10px; line-height:15px; text-align:center; cursor:pointer; font-weight:bold;">X</span></div>`;
+                        }
+                    });
                 }
 
-                snap.forEach(d => {
-                    const uData = d.data(); 
-                    const uid = d.id; 
-                    const nick = uData.nick || uid;
-                    let achHTML = "";
-                    
-                    if(uData.osiagniecia && uData.osiagniecia.length > 0) {
-                        uData.osiagniecia.forEach(achKey => {
-                            const info = window.bazaOsiagniec[achKey];
-                            if(info) {
-                                achHTML += `<div style="display:inline-block; position:relative; margin:2px;"><img src="${info.img}" style="width:30px; height:30px; border-radius:5px; border:1px solid #ccc; object-fit:contain;"><span onclick="removeAchievement('${uid}', '${achKey}')" style="position:absolute; top:-5px; right:-5px; background:red; color:white; border-radius:50%; width:15px; height:15px; font-size:10px; line-height:15px; text-align:center; cursor:pointer; font-weight:bold;">X</span></div>`;
-                            }
-                        });
+                let modBtn = "";
+                if(window.userRole === 'admin') {
+                    if(uData.role === 'mod') {
+                        modBtn = `<button class="btn-del" style="font-size:9px; padding:3px 6px; width:auto;" onclick="window.toggleMod('${uid}', false)">Odbierz uprawnienia</button>`;
+                    } else if(uid !== 'pancerny') {
+                        modBtn = `<button class="btn-view" style="font-size:9px; padding:3px 6px; width:auto;" onclick="window.toggleMod('${uid}', true)">Nadaj uprawnienia</button>`;
                     }
+                }
 
-                    let modBtn = "";
-                    if(window.userRole === 'admin') {
-                        if(uData.role === 'mod') {
-                            modBtn = `<button class="btn-del" style="font-size:9px; padding:3px 6px; width:auto;" onclick="window.toggleMod('${uid}', false)">Odbierz uprawnienia</button>`;
-                        } else if(uid !== 'pancerny') {
-                            modBtn = `<button class="btn-view" style="font-size:9px; padding:3px 6px; width:auto;" onclick="window.toggleMod('${uid}', true)">Nadaj uprawnienia</button>`;
-                        }
-                    }
+                let roleTag = uData.role === 'mod' ? `<span class="mod-badge">MOD</span>` : '';
+                if(uid === 'pancerny') roleTag = `<span class="admin-badge">ADMIN</span>`;
 
-                    let roleTag = uData.role === 'mod' ? `<span class="mod-badge">MOD</span>` : '';
-                    if(uid === 'pancerny') roleTag = `<span class="admin-badge">ADMIN</span>`;
-
-                    render.innerHTML += `
-                        <div class="list-item" style="padding:10px; margin-bottom:10px; display:block;">
-                            <div style="display:flex; justify-content:space-between;">
-                                <div><b style="color:#5a4b41;">${nick.toUpperCase()}</b> ${roleTag} <span style="font-size:10px; color:#8a7b71;">(${uid})</span></div>
-                                ${modBtn}
-                            </div>
-                            <div style="margin: 5px 0; min-height: 35px;">${achHTML}</div>
-                            <div style="display:flex; gap:5px;">
-                                <select id="addAchSel_${uid}" style="margin:0 !important; padding:5px !important; font-size:12px !important;">${selectOptions}</select>
-                                <button class="btn-submit" style="width:auto; padding:5px 10px; margin:0;" onclick="addAchievement('${uid}')">DODAJ</button>
-                            </div>
-                        </div>`;
-                });
-            } catch(e) {
-                render.innerHTML = `<div style="color:red; font-weight:bold;">Błąd ładowania graczy: ${e.message}</div>`;
-            }
+                render.innerHTML += `
+                    <div class="list-item" style="padding:10px; margin-bottom:10px; display:block;">
+                        <div style="display:flex; justify-content:space-between;">
+                            <div><b style="color:#5a4b41;">${nick.toUpperCase()}</b> ${roleTag} <span style="font-size:10px; color:#8a7b71;">(${uid})</span></div>
+                            ${modBtn}
+                        </div>
+                        <div style="margin: 5px 0; min-height: 35px;">${achHTML}</div>
+                        <div style="display:flex; gap:5px;">
+                            <select id="addAchSel_${uid}" style="margin:0 !important; padding:5px !important; font-size:12px !important;">${selectOptions}</select>
+                            <button class="btn-submit" style="width:auto; padding:5px 10px; margin:0;" onclick="addAchievement('${uid}')">DODAJ</button>
+                        </div>
+                    </div>`;
+            });
         };
 
         window.toggleMod = async (uid, makeMod) => {
             if(!confirm(`Czy na pewno chcesz ${makeMod ? 'dać' : 'zabrać'} rangę Moderatora?`)) return;
-            try {
-                await updateDoc(doc(db, "uzytkownicy", uid), { role: makeMod ? 'mod' : 'user' });
-                window.loadAdminUsers();
-            } catch(e) { alert("Błąd: " + e.message); }
+            await updateDoc(doc(db, "uzytkownicy", uid), { role: makeMod ? 'mod' : 'user' });
+            window.loadAdminUsers();
         };
 
         window.addAchievement = async (uid) => {
@@ -1421,53 +1312,17 @@
 
         window.removeAchievement = async (uid, achKey) => {
             if(confirm("Zabrać tę odznakę graczowi?")) {
-                try {
-                    await updateDoc(doc(db, "uzytkownicy", uid), { osiagniecia: arrayRemove(achKey) });
-                    window.loadAdminUsers();
-                } catch(e) { alert("Błąd: " + e.message); }
+                await updateDoc(doc(db, "uzytkownicy", uid), { osiagniecia: arrayRemove(achKey) });
+                window.loadAdminUsers();
             }
-        };
-
-        window.loadAchievementsFromFirebase = async () => {
-            try {
-                const snapshot = await getDocs(collection(db, "osiagniecia_baza"));
-                snapshot.forEach(doc => {
-                    const data = doc.data();
-                    window.bazaOsiagniec[doc.id] = { nazwa: data.nazwa, opis: data.opis, img: data.img };
-                });
-            } catch(e) { console.error("Błąd pobierania osiągnięć z Firebase:", e); }
-        };
-
-        window.addNewDynamicAchievement = async () => {
-            const id = document.getElementById('newAchievId').value;
-            const name = document.getElementById('newAchievName').value;
-            const desc = document.getElementById('newAchievDesc').value;
-            const photo = document.getElementById('newAchievPhoto').value;
-            
-            if(!id || !name || !photo) return alert("Uzupełnij ID, nazwę i wgraj ikonę!");
-            try {
-                await setDoc(doc(db, "osiagniecia_baza", id), { nazwa: name, opis: desc, img: photo });
-                alert("Osiągnięcie dodane pomyślnie!");
-                document.getElementById('newAchievId').value = "";
-                document.getElementById('newAchievName').value = "";
-                document.getElementById('newAchievDesc').value = "";
-                document.getElementById('newAchievPhoto').value = "";
-                document.getElementById('uploadStatusAchiev').innerText = "";
-                await window.loadAchievementsFromFirebase();
-                if(document.getElementById('adminModal').classList.contains('active')) {
-                    window.loadAdminUsers();
-                }
-            } catch(e) { alert("Błąd: " + e.message); }
         };
 
         window.publishPatchNotes = async () => {
             const text = document.getElementById('adminPatchText').value;
             if(!text) return alert("Wpisz treść nowości!");
             const newVersion = Date.now().toString(); 
-            try {
-                await setDoc(doc(db, "ustawienia", "patchnotes"), { text: text, version: newVersion });
-                alert("Opublikowano! Wszyscy gracze zobaczą to przy logowaniu.");
-            } catch(e) { alert("Błąd zapisu nowości: " + e.message); }
+            await setDoc(doc(db, "ustawienia", "patchnotes"), { text: text, version: newVersion });
+            alert("Opublikowano! Wszyscy gracze zobaczą to przy logowaniu.");
         };
 
         // ==========================================
@@ -1505,6 +1360,7 @@
             }
         };
 
+        // Dodane globalne funkcje administracyjne dla czatu
         window.deleteChatMessage = async (msgId) => {
             if(confirm("Usunąć tę wiadomość?")) {
                 try {
@@ -1521,6 +1377,7 @@
             
             try {
                 const chatSnap = await getDocs(collection(db, "czat"));
+                // Usuwamy równolegle dla szybkości
                 const deletePromises = [];
                 chatSnap.forEach(document => {
                     deletePromises.push(deleteDoc(doc(db, "czat", document.id)));
@@ -1539,19 +1396,15 @@
         };
 
         async function initializeAppAfterLogin() {
-            await window.loadAchievementsFromFirebase();
             window.userRole = "user";
             if(window.currentUserAlias.toLowerCase() === 'pancerny') { window.userRole = "admin"; }
+            const uSnap = await getDoc(doc(db, "uzytkownicy", window.currentUserAlias));
             
-            try {
-                const uSnap = await getDoc(doc(db, "uzytkownicy", window.currentUserAlias));
-                if(uSnap.exists()) {
-                    const ud = uSnap.data();
-                    if(ud.nick) window.currentUserNick = ud.nick;
-                    if(ud.role === 'mod' && window.userRole !== 'admin') window.userRole = 'mod';
-                }
-            } catch (err) { console.error("Profile load err:", err); }
-            
+            if(uSnap.exists()) {
+                const ud = uSnap.data();
+                if(ud.nick) window.currentUserNick = ud.nick;
+                if(ud.role === 'mod' && window.userRole !== 'admin') window.userRole = 'mod';
+            }
             document.getElementById('greetingAlias').innerText = (window.currentUserNick || window.currentUserAlias).toUpperCase(); 
             
             if(window.userRole === 'admin' || window.userRole === 'mod') { 
@@ -1560,15 +1413,13 @@
                 if(clearBtn) clearBtn.classList.remove('hidden');
             }
 
-            try {
-                const customTracksSnap = await getDocs(collection(db, "tory_custom"));
-                customTracksSnap.forEach(d => {
-                    const td = d.data();
-                    tory.push({ nazwa: td.nazwa, lat: td.lat, lng: td.lng, foto: td.foto || "" });
-                });
-            } catch(e) { console.error("Custom tracks err:", e); }
+            const customTracksSnap = await getDocs(collection(db, "tory_custom"));
+            customTracksSnap.forEach(d => {
+                const td = d.data();
+                tory.push({ nazwa: td.nazwa, lat: td.lat, lng: td.lng, foto: td.foto || "" });
+            });
 
-            window.renderTracksOnMapAndMenu();
+            renderTracksOnMapAndMenu();
             await loadMyGarage(); 
         }
 
@@ -1581,50 +1432,28 @@
                 const safeId = tor.nazwa.replace(/\s+/g, ''); 
                 window.allMarkers[safeId] = marker;
                 
-                marker.bindPopup(`<div id="popup-content-${safeId}"><div style="padding:20px; text-align:center; font-weight:bold; color:#5a4b41;">⌛ Otwieranie...</div></div>`, {
-                    minWidth: 260, maxWidth: 320, autoPanPaddingTopLeft: [0, 50]
+                marker.bindPopup(`<div id="popup-content-${safeId}"><div style="padding:20px; text-align:center;">Ładowanie...</div></div>`, {
+                    minWidth: 320, maxWidth: 320, autoPanPaddingTopLeft: [0, 100]
                 }); 
                 
-                marker.on('popupopen', async (e) => { 
+                marker.on('popupopen', async () => { 
+                    let trackImgHTML = tor.foto ? `<img src="${tor.foto}" class="track-img-header">` : ''; 
                     
-                    let trackLayoutLink = tor.foto ? `
-                        <div style="margin-top: 12px; text-align: center;">
-                            <a href="${tor.foto}" target="_blank" class="track-action-btn">
-                                <span style="font-size:12px;">🗺️</span> UKŁAD TORU
-                            </a>
-                        </div>` : '';
-                    
-                    let editBtnHTML = (window.userRole === 'admin' || window.userRole === 'mod') ? `
-                        <div style="margin-top: 5px; text-align: center;">
-                            <button class="track-action-btn" style="color:#e74c3c; border-color:#e74c3c; box-shadow: 0 2px 0 #e74c3c;" onclick="window.openTrackEditModal('${safeId}', '${tor.nazwa}')">
-                                <span style="font-size:12px;">🔧</span> USTAWIENIA TORU
-                            </button>
-                        </div>` : '';
-                        
                     const fullHTML = `
+                        ${trackImgHTML}
                         <div class="popup-inner-pad transition-shape">
                             <h2 class="transition-shape uma-pattern-green">${tor.nazwa}</h2>
                             <div id="trackInfoRender-${safeId}" class="track-details-box transition-shape">Ładowanie informacji...</div>
-                            <table class="transition-shape" style="table-layout: fixed; width: 100%;">
-                                <thead>
-                                    <tr>
-                                        <th style="width: 48%; text-align:left; padding-left:8px;">Kierowca</th>
-                                        <th style="width: 27%;">Fura</th>
-                                        <th style="width: 25%;">Czas</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="table-${safeId}"><tr><td colspan='3'>Ładowanie...</td></tr></tbody>
-                            </table>
-                            <hr style="border-color:#ddd; margin:12px 0;">
+                            <table class="transition-shape"><thead><tr><th>Kierowca</th><th>Fura</th><th>Czas</th></tr></thead><tbody id="table-${safeId}"><tr><td colspan='3'>Ładowanie...</td></tr></tbody></table>
+                            <hr style="border-color:#ddd; margin:15px 0;">
                             <div id="carSelectContainer-${safeId}"></div>
-                            <div class="time-inputs-container transition-shape" style="padding: 6px; gap: 4px;">
-                                <input type="number" id="timeM-${safeId}" placeholder="Min" min="0" max="99" style="font-size:14px !important; padding:6px 2px !important;"> <span style="font-size:14px;">:</span> 
-                                <input type="number" id="timeS-${safeId}" placeholder="Sek" min="0" max="59" style="font-size:14px !important; padding:6px 2px !important;"> <span style="font-size:14px;">.</span> 
-                                <input type="number" id="timeMS-${safeId}" placeholder="MS" min="0" max="999" style="font-size:14px !important; padding:6px 2px !important;">
+                            <div class="time-inputs-container transition-shape">
+                                <input type="number" id="timeM-${safeId}" placeholder="Min" min="0" max="99"> <span>:</span> 
+                                <input type="number" id="timeS-${safeId}" placeholder="Sek" min="0" max="59"> <span>.</span> 
+                                <input type="number" id="timeMS-${safeId}" placeholder="MS" min="0" max="999">
                             </div>
-                            <button onclick="window.saveTime('${tor.nazwa}')" class="btn-submit transition-shape" style="padding: 8px; font-size: 14px; margin-top: 5px;">Zapisz wynik</button>
+                            <button onclick="window.saveTime('${tor.nazwa}')" class="btn-submit transition-shape">Zapisz wynik</button>
                         </div>`; 
-
                     document.getElementById(`popup-content-${safeId}`).innerHTML = fullHTML; 
                     
                     let carSelectHTML = `<select id="carSelect-${safeId}" class="transition-shape" style="width:100%; border: 3px solid #ccc; border-radius: 12px; padding: 10px; font-weight: bold;">`; 
@@ -1634,35 +1463,30 @@
                     document.getElementById(`carSelectContainer-${safeId}`).innerHTML = carSelectHTML;
 
                     const infoBox = document.getElementById(`trackInfoRender-${safeId}`);
-                    try {
-                        const infoSnap = await getDoc(doc(db, "tory_detale", safeId));
-                        let infoData = { opis: "Brak opisu.", kontakt: "Brak", email: "Brak", ceny: "Brak info" };
-                        if(infoSnap.exists()) infoData = infoSnap.data();
+                    const infoSnap = await getDoc(doc(db, "tory_detale", safeId));
+                    let infoData = { opis: "Brak opisu.", kontakt: "Brak", email: "Brak", ceny: "Brak info" };
+                    if(infoSnap.exists()) infoData = infoSnap.data();
 
-                        infoBox.innerHTML = `
-                            <div style="margin-bottom: 8px; font-weight: bold; text-align: center; border-bottom: 2px dashed #ddd; padding-bottom: 6px; font-size: 12px;">${infoData.opis}</div>
-                            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px;">
-                                <span style="font-weight: 900; font-size: 11px; text-transform: uppercase;"><span style="font-size:14px;">☎️</span> Kontakt</span>
-                                <span style="font-weight: 900; font-size: 12px; text-align: right; max-width: 60%; word-break: break-word;">${infoData.kontakt}</span>
-                            </div>
-                            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px;">
-                                <span style="font-weight: 900; font-size: 11px; text-transform: uppercase;"><span style="font-size:14px;">📧</span> E-mail</span>
-                                <span style="font-weight: 900; font-size: 12px; text-align: right; max-width: 60%; word-break: break-word;">${infoData.email}</span>
-                            </div>
-                            <div style="display: flex; justify-content: space-between; align-items: flex-start;">
-                                <span style="font-weight: 900; font-size: 11px; text-transform: uppercase;"><span style="font-size:14px;">💲</span> Ceny</span>
-                                <span style="font-weight: 900; font-size: 12px; text-align: right; max-width: 60%; word-break: break-word;">${infoData.ceny}</span>
-                            </div>
-                            <div style="display: flex; justify-content: center; gap: 8px; flex-wrap: wrap;">
-                                ${trackLayoutLink}
-                                ${editBtnHTML}
-                            </div>
-                        `;
-                    } catch (e) {
-                        infoBox.innerHTML = `<span style="color:red; font-size: 11px;">Błąd pobierania info: ${e.message}</span>`;
-                    }
+                    // Nowy, zmodernizowany przycisk "Ustawienia Toru"
+                    let editBtnHTML = (window.userRole === 'admin' || window.userRole === 'mod') ? `<button class="btn-submit transition-shape" style="width:100%; margin-top:15px; background: linear-gradient(180deg, #2bc2ff, #168bd8); box-shadow: 0 4px 0 #0d6299, 0 6px 10px rgba(0,0,0,0.2); text-shadow: 1px 1px 0 #0d6299;" onclick="window.openTrackEditModal('${safeId}', '${tor.nazwa}')">🔧 Ustawienia Toru</button>` : '';
 
-                    // RESTORED STABLE LOAD LEADERBOARD
+                    infoBox.innerHTML = `
+                        <div style="margin-bottom: 10px; font-weight: bold; text-align: center; border-bottom: 2px dashed #ddd; padding-bottom: 8px;">${infoData.opis}</div>
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px;">
+                            <span style="font-weight: 900; font-size: 12px; text-transform: uppercase;"><span style="font-size:16px;">☎️</span> Kontakt</span>
+                            <span style="font-weight: 900; font-size: 13px; text-align: right; max-width: 60%; word-break: break-word;">${infoData.kontakt}</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px;">
+                            <span style="font-weight: 900; font-size: 12px; text-transform: uppercase;"><span style="font-size:16px;">📧</span> E-mail</span>
+                            <span style="font-weight: 900; font-size: 13px; text-align: right; max-width: 60%; word-break: break-word;">${infoData.email}</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                            <span style="font-weight: 900; font-size: 12px; text-transform: uppercase;"><span style="font-size:16px;">💲</span> Ceny</span>
+                            <span style="font-weight: 900; font-size: 13px; text-align: right; max-width: 60%; word-break: break-word;">${infoData.ceny}</span>
+                        </div>
+                        ${editBtnHTML}
+                    `;
+
                     window.loadLeaderboard(tor.nazwa); 
                 }); 
 
@@ -1692,21 +1516,19 @@
             document.getElementById('editTrackNameTitle').innerText = trackName;
             document.getElementById('editTrackSafeId').value = safeId;
             
-            try {
-                const infoSnap = await getDoc(doc(db, "tory_detale", safeId));
-                if(infoSnap.exists()) {
-                    const d = infoSnap.data();
-                    document.getElementById('editTrackDesc').value = d.opis || "";
-                    document.getElementById('editTrackPhone').value = d.kontakt || "";
-                    document.getElementById('editTrackEmail').value = d.email || "";
-                    document.getElementById('editTrackPrice').value = d.ceny || "";
-                } else {
-                    document.getElementById('editTrackDesc').value = ""; 
-                    document.getElementById('editTrackPhone').value = ""; 
-                    document.getElementById('editTrackEmail').value = ""; 
-                    document.getElementById('editTrackPrice').value = "";
-                }
-            } catch(e) { console.error("Edit track modal err:", e); }
+            const infoSnap = await getDoc(doc(db, "tory_detale", safeId));
+            if(infoSnap.exists()) {
+                const d = infoSnap.data();
+                document.getElementById('editTrackDesc').value = d.opis || "";
+                document.getElementById('editTrackPhone').value = d.kontakt || "";
+                document.getElementById('editTrackEmail').value = d.email || "";
+                document.getElementById('editTrackPrice').value = d.ceny || "";
+            } else {
+                document.getElementById('editTrackDesc').value = ""; 
+                document.getElementById('editTrackPhone').value = ""; 
+                document.getElementById('editTrackEmail').value = ""; 
+                document.getElementById('editTrackPrice').value = "";
+            }
         };
 
         window.saveTrackDetails = async () => {
@@ -1716,104 +1538,62 @@
             const e = document.getElementById('editTrackEmail').value;
             const c = document.getElementById('editTrackPrice').value;
             
-            try {
-                await setDoc(doc(db, "tory_detale", safeId), { opis: o, kontakt: k, email: e, ceny: c }, {merge: true});
-                alert("Zapisano info o torze!");
-                closeModal('trackInfoEditModal');
-                if(window.allMarkers[safeId]) window.allMarkers[safeId].closePopup(); 
-            } catch(err) { alert("Błąd: " + err.message); }
+            await setDoc(doc(db, "tory_detale", safeId), { opis: o, kontakt: k, email: e, ceny: c }, {merge: true});
+            alert("Zapisano info o torze!");
+            closeModal('trackInfoEditModal');
+            if(window.allMarkers[safeId]) window.allMarkers[safeId].closePopup(); 
         };
 
         // ==========================================
-        // CZASY I WYNIKI (RESTORED TO OLD WORKING VERSION WITH NEW UI)
+        // CZASY I WYNIKI
         // ==========================================
 
         window.loadLeaderboard = async (trackName) => { 
             const safeId = trackName.replace(/\s+/g, ''); 
             const tbody = document.getElementById(`table-${safeId}`); 
             if(!tbody) return; 
-
-            try {
-                window.debugLog(`[DB] Pobieranie czasow dla: ${trackName}`);
-                // EXACT QUERY FROM OLD WORKING COMMIT
-                const q = query(collection(db, "czasy"), where("track", "==", trackName), orderBy("time", "asc")); 
-                const snapshot = await getDocs(q); 
+            
+            const q = query(collection(db, "czasy"), where("track", "==", trackName), orderBy("time", "asc")); 
+            const snapshot = await getDocs(q); 
+            
+            tbody.innerHTML = ""; 
+            if (snapshot.empty) { 
+                tbody.innerHTML = "<tr><td colspan='3'>Brak czasów. Bądź pierwszy!</td></tr>"; 
+                window.bestTimesForTracks[trackName] = "99:99.999"; 
+                return; 
+            } 
+            
+            let currentRank = 1; 
+            let firstPlaceTime = ""; 
+            
+            snapshot.forEach((doc) => { 
+                const data = doc.data(); 
+                const safeCar = data.car.replace(/'/g, "\\'"); 
                 
-                tbody.innerHTML = ""; 
-                if (snapshot.empty) { 
-                    tbody.innerHTML = "<tr><td colspan='3'>Brak czasów. Bądź pierwszy!</td></tr>"; 
-                    window.bestTimesForTracks[trackName] = "99:99.999"; 
-                    if(window.allMarkers[safeId] && window.allMarkers[safeId].getPopup()) window.allMarkers[safeId].getPopup().update();
-                    return; 
+                if(currentRank === 1) { 
+                    firstPlaceTime = data.time; 
+                    window.bestTimesForTracks[trackName] = firstPlaceTime; 
                 } 
                 
-                let currentRank = 1; 
-                let firstPlaceTime = ""; 
-                let htmlBuffer = "";
+                let rankDisplay = currentRank === 1 ? `<img src="1st.png" style="height: 22px; vertical-align: middle; margin-right: 3px; border-radius: 5px;">` : (currentRank === 2 ? "🥈" : (currentRank === 3 ? "🥉" : currentRank+"."));
+                let rankClass = currentRank === 1 ? "rank-1" : "rank-other"; 
                 
-                snapshot.forEach((doc) => { 
-                    const data = doc.data(); 
-                    const safeCar = (data.car || "Nieznane").replace(/'/g, "\\'"); 
-                    const safeTime = data.time || "??:??.???";
-                    const safeDriver = data.driver || "Ktoś";
-                    
-                    if(currentRank === 1) { 
-                        firstPlaceTime = safeTime; 
-                        window.bestTimesForTracks[trackName] = firstPlaceTime; 
-                    } 
-                    
-                    let rankDisplay = currentRank === 1 ? `<img src="1st.png" style="height: 18px; width: auto; object-fit: contain; display: block;">` : (currentRank === 2 ? "🥈" : (currentRank === 3 ? "🥉" : currentRank+"."));
-                    let rankClass = currentRank === 1 ? "rank-1" : (currentRank === 2 ? "rank-2" : (currentRank === 3 ? "rank-3" : "rank-other")); 
-                    
-                    let adminTag = safeDriver.toLowerCase() === 'pancerny' ? `<span class="admin-badge" style="margin: 2px 0 0 0; display: inline-block;">ADMIN</span>` : ''; 
+                let adminTag = data.driver.toLowerCase() === 'pancerny' ? `<span class="admin-badge">ADMIN</span>` : ''; 
 
-                    let actionBtns = ""; 
-                    if(safeDriver === window.currentUserAlias || window.userRole === 'admin' || window.userRole === 'mod') { 
-                        actionBtns = `<div style="margin-top:4px;"><span onclick="window.deleteLapTime('${doc.id}', '${trackName}')" style="cursor:pointer; font-size:9px; background:#e74c3c; color:#fff; padding:3px 8px; border-radius:10px; font-weight:bold; box-shadow: 0 2px 0 #c0392b;">USUŃ</span></div>`; 
-                    } 
-                    
-                    htmlBuffer += `
-                    <tr>
-                        <td style="text-align: left; padding: 6px 8px;">
-                            <div style="display: flex; align-items: center; gap: 6px;">
-                                <div class="rank-box ${rankClass}">${rankDisplay}</div>
-                                <div style="display: flex; flex-direction: column; align-items: flex-start; justify-content: center;">
-                                    <span class="user-link" style="cursor:pointer; color:#168bd8; line-height: 1.1; font-size: 12px; word-break: break-all;" onclick="window.showUserProfile('${safeDriver}')">${safeDriver.toUpperCase()}</span>
-                                    ${adminTag}
-                                </div>
-                            </div>
-                        </td>
-                        <td style="padding: 6px;">
-                            <span class="car-link" style="cursor:pointer; font-weight:bold; color:#f38815; font-size:11px; word-break: break-word;" onclick="window.showCarCard('${safeCar}', '${safeDriver}')">${data.car || "Brak"}</span>
-                        </td>
-                        <td style="padding: 6px;">
-                            <b style="color:#68cc14; font-size: 13px;">${safeTime}</b>
-                            ${actionBtns}
-                        </td>
-                    </tr>`; 
-                    currentRank++; 
-                }); 
+                let actionBtns = ""; 
+                if(data.driver === window.currentUserAlias || window.userRole === 'admin' || window.userRole === 'mod') { 
+                    actionBtns = `<br><span onclick="window.deleteLapTime('${doc.id}', '${trackName}')" style="cursor:pointer; font-size:10px; background:#e74c3c; color:#fff; padding:2px 6px; border-radius:10px;">USUŃ</span>`; 
+                } 
                 
-                tbody.innerHTML = htmlBuffer;
-                
-                if(window.allMarkers[safeId] && window.allMarkers[safeId].getPopup()) {
-                     window.allMarkers[safeId].getPopup().update();
-                }
-            } catch (error) {
-                window.debugLog(`[BŁĄD FIREBASE] ${error.message}`, error, true);
-                tbody.innerHTML = `<tr><td colspan='3' style='color:red; font-size:11px; font-weight:bold;'>Błąd pobierania wyników:<br>${error.message}</td></tr>`;
-                if(window.allMarkers[safeId] && window.allMarkers[safeId].getPopup()) window.allMarkers[safeId].getPopup().update();
-            }
+                tbody.innerHTML += `<tr><td style="text-align: left; padding-left: 10px;"><span class="${rankClass}" style="margin-right: 5px;">${rankDisplay}</span><span class="user-link" style="cursor:pointer; color:#168bd8;" onclick="window.showUserProfile('${data.driver}')">${data.driver.toUpperCase()}</span><br><div style="text-align: center; margin-top:2px;">${adminTag}</div></td><td><span class="car-link" style="cursor:pointer; font-weight:bold; color:#f38815;" onclick="window.showCarCard('${safeCar}', '${data.driver}')">${data.car}</span></td><td><b style="color:#68cc14; font-size: 16px;">${data.time}</b>${actionBtns}</td></tr>`; 
+                currentRank++; 
+            }); 
         };
 
         window.deleteLapTime = async (docId, trackName) => { 
             if(confirm("Usunąć ten wynik?")) { 
-                try {
-                    await deleteDoc(doc(db, "czasy", docId)); 
-                    window.loadLeaderboard(trackName); 
-                } catch(e) {
-                    alert("Błąd usuwania wyniku z bazy: " + e.message);
-                }
+                await deleteDoc(doc(db, "czasy", docId)); 
+                window.loadLeaderboard(trackName); 
             } 
         };
 
@@ -1830,34 +1610,22 @@
             const formattedTime = `${(m||'0').toString().padStart(2, '0')}:${(s||'0').toString().padStart(2, '0')}.${(ms||'0').toString().padStart(3, '0')}`; 
             const currentBest = window.bestTimesForTracks[trackName] || "99:99.999"; 
             
-            try {
-                // Dodajemy timestamp do starej dzialajacej logiki zapisu
-                await addDoc(collection(db, "czasy"), { 
-                    driver: window.currentUserAlias, 
-                    car: car, 
-                    track: trackName, 
-                    time: formattedTime,
-                    timestamp: Date.now()
-                }); 
-                
-                document.getElementById(`timeM-${safeId}`).value = ''; 
-                document.getElementById(`timeS-${safeId}`).value = ''; 
-                document.getElementById(`timeMS-${safeId}`).value = ''; 
-                
-                if (formattedTime < currentBest) { 
-                    const randomIndex = Math.floor(Math.random() * window.victoryGifs.length); 
-                    document.getElementById('victoryImgRender').src = window.victoryGifs[randomIndex]; 
-                    setTimeout(() => { document.getElementById('victoryModal').classList.add('active'); }, 500); 
-                } 
-                window.loadLeaderboard(trackName); 
-            } catch(e) {
-                console.error("Firebase write error:", e);
-                alert("Błąd zapisu wyniku w Firebase: " + e.message);
-            }
+            await addDoc(collection(db, "czasy"), { driver: window.currentUserAlias, car: car, track: trackName, time: formattedTime }); 
+            
+            document.getElementById(`timeM-${safeId}`).value = ''; 
+            document.getElementById(`timeS-${safeId}`).value = ''; 
+            document.getElementById(`timeMS-${safeId}`).value = ''; 
+            
+            if (formattedTime < currentBest) { 
+                const randomIndex = Math.floor(Math.random() * window.victoryGifs.length); 
+                document.getElementById('victoryImgRender').src = window.victoryGifs[randomIndex]; 
+                setTimeout(() => { document.getElementById('victoryModal').classList.add('active'); }, 500); 
+            } 
+            window.loadLeaderboard(trackName); 
         };
 
         window.closeModal = (modalId) => { document.getElementById(modalId).classList.remove('active'); };
-        const modalsArr = ['garageModal', 'settingsModal', 'userProfileModal', 'allCarsModal', 'usersListModal', 'changelogModal', 'adminModal', 'trophiesModal', 'trackInfoEditModal', 'trackLayoutModal'];
+        const modalsArr = ['garageModal', 'settingsModal', 'userProfileModal', 'allCarsModal', 'usersListModal', 'changelogModal', 'adminModal', 'trophiesModal', 'trackInfoEditModal'];
         modalsArr.forEach(m => { 
             document.getElementById(m).addEventListener('click', (e) => { 
                 if(e.target.id === m) window.closeModal(m); 
@@ -1955,20 +1723,6 @@
             }
         });
 
-        document.getElementById('newAchievFile').addEventListener('change', async (e) => {
-            const file = e.target.files[0];
-            if(!file) return;
-            const status = document.getElementById('uploadStatusAchiev');
-            status.innerText = "⏳ Kompresja i wgrywanie... Proszę czekać.";
-            const url = await uploadToStorage(file);
-            if(url) {
-                document.getElementById('newAchievPhoto').value = url;
-                status.innerText = "✅ Ikona wgrana pomyślnie!";
-            } else {
-                status.innerText = "❌ Wystąpił błąd podczas wgrywania.";
-            }
-        });
-
         // ==========================================
         // AUTHENTICATION LOGIC
         // ==========================================
@@ -1978,12 +1732,10 @@
             const p = document.getElementById('password').value; 
             if(!e || !p) return alert("Wpisz dane!"); 
             try { 
-                await setPersistence(auth, browserSessionPersistence);
                 const user = await signInWithEmailAndPassword(auth, e, p); 
                 if(!user.user.emailVerified) { alert("Potwierdź e-mail!"); signOut(auth); } 
             } catch (err) { 
                 try { 
-                    await setPersistence(auth, browserSessionPersistence);
                     const user = await createUserWithEmailAndPassword(auth, e, p); 
                     await sendEmailVerification(user.user); 
                     alert("Konto założone! Sprawdź mail."); signOut(auth); 
@@ -2003,12 +1755,9 @@
         onAuthStateChanged(auth, async (user) => { 
             if (user && user.emailVerified) { 
                 window.currentUserAlias = user.email.split('@')[0]; 
-                try {
-                    const docSnap = await getDoc(doc(db, "uzytkownicy", window.currentUserAlias));
-                    if(docSnap.exists() && docSnap.data().nick) { window.currentUserNick = docSnap.data().nick; } 
-                    else { window.currentUserNick = window.currentUserAlias; }
-                } catch(err) { console.error(err); window.currentUserNick = window.currentUserAlias; }
-                
+                const docSnap = await getDoc(doc(db, "uzytkownicy", window.currentUserAlias));
+                if(docSnap.exists() && docSnap.data().nick) { window.currentUserNick = docSnap.data().nick; } 
+                else { window.currentUserNick = window.currentUserAlias; }
                 document.getElementById('greetingAlias').innerText = window.currentUserNick.toUpperCase(); 
                 updateAvatarUI(user); 
                 document.getElementById('authOverlay').classList.add('hidden'); 
@@ -2016,50 +1765,50 @@
                 map.invalidateSize(); 
                 await initializeAppAfterLogin();
 
-                try {
-                    const patchSnap = await getDoc(doc(db, "ustawienia", "patchnotes"));
-                    if(patchSnap.exists()) {
-                        const pData = patchSnap.data();
-                        if(localStorage.getItem("trackday_version") !== pData.version) {
-                            document.getElementById("changelogText").innerHTML = pData.text;
-                            document.getElementById("changelogModal").classList.add("active");
-                            localStorage.setItem("trackday_version", pData.version);
-                        }
+                // Obsługa nowości
+                const patchSnap = await getDoc(doc(db, "ustawienia", "patchnotes"));
+                if(patchSnap.exists()) {
+                    const pData = patchSnap.data();
+                    if(localStorage.getItem("trackday_version") !== pData.version) {
+                        document.getElementById("changelogText").innerHTML = pData.text;
+                        document.getElementById("changelogModal").classList.add("active");
+                        localStorage.setItem("trackday_version", pData.version);
                     }
-                } catch(err) { console.error("Patchnotes err:", err); }
+                }
                 
+                // Obsługa radia
                 if(window.ytPlayer && typeof window.ytPlayer.playVideo === 'function') {
                     document.getElementById('radioBtnToggle').innerText = "🎵 Włącz Audio";
                     window.isRadioPlaying = false;
                 } 
 
+                // Aktywacja strumienia Czatu Lobby
                 if(!window.chatUnsubscribe) {
-                    try {
-                        const chatQ = query(collection(db, "czat"), orderBy("timestamp", "desc"), limit(50));
-                        window.chatUnsubscribe = onSnapshot(chatQ, (snapshot) => {
-                            const chatBox = document.getElementById('chatMessages');
-                            chatBox.innerHTML = '';
-                            let msgs = [];
-                            snapshot.forEach(doc => msgs.push({id: doc.id, ...doc.data()}));
-                            msgs.reverse(); 
-                            msgs.forEach(msg => {
-                                const time = msg.timestamp ? new Date(msg.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : '';
-                                
-                                let deleteBtnHTML = '';
-                                if (window.userRole === 'admin' || window.userRole === 'mod') {
-                                    deleteBtnHTML = `<span class="chat-msg-delete" onclick="window.deleteChatMessage('${msg.id}')">×</span>`;
-                                }
+                    const chatQ = query(collection(db, "czat"), orderBy("timestamp", "desc"), limit(50));
+                    window.chatUnsubscribe = onSnapshot(chatQ, (snapshot) => {
+                        const chatBox = document.getElementById('chatMessages');
+                        chatBox.innerHTML = '';
+                        let msgs = [];
+                        snapshot.forEach(doc => msgs.push({id: doc.id, ...doc.data()}));
+                        msgs.reverse(); // Odwracamy, by najnowsze było na dole
+                        msgs.forEach(msg => {
+                            const time = msg.timestamp ? new Date(msg.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : '';
+                            
+                            // Przycisk usuwania dla Admina/Moda
+                            let deleteBtnHTML = '';
+                            if (window.userRole === 'admin' || window.userRole === 'mod') {
+                                deleteBtnHTML = `<span class="chat-msg-delete" onclick="window.deleteChatMessage('${msg.id}')">×</span>`;
+                            }
 
-                                chatBox.innerHTML += `
-                                <div class="chat-msg">
-                                    ${deleteBtnHTML}
-                                    <span class="chat-nick" onclick="window.showUserProfile('${msg.uid}')">[${time}] ${msg.nick.toUpperCase()}:</span>
-                                    <span class="chat-text">${msg.text}</span>
-                                </div>`;
-                            });
-                            chatBox.scrollTop = chatBox.scrollHeight;
+                            chatBox.innerHTML += `
+                            <div class="chat-msg">
+                                ${deleteBtnHTML}
+                                <span class="chat-nick" onclick="window.showUserProfile('${msg.uid}')">[${time}] ${msg.nick.toUpperCase()}:</span>
+                                <span class="chat-text">${msg.text}</span>
+                            </div>`;
                         });
-                    } catch(err) { console.error("Chat init error:", err); }
+                        chatBox.scrollTop = chatBox.scrollHeight;
+                    });
                 }
             } 
             else { 
@@ -2071,6 +1820,7 @@
                     window.isRadioPlaying = false; 
                 } 
 
+                // Zatrzymujemy czat jak wylogujemy
                 if(window.chatUnsubscribe) {
                     window.chatUnsubscribe();
                     window.chatUnsubscribe = null;
@@ -2080,6 +1830,7 @@
 
         // ==========================================
         // EASTER EGG (INITIAL D MODE)
+        // Definiowane wewnątrz modułu by mieć dostęp do "map", "darkMap" itd.
         // ==========================================
         window.activateInitialDMode = () => {
             if(document.body.classList.contains('initial-d-active')) return;
@@ -2103,6 +1854,7 @@
                 document.getElementById('headerTitle').innerText = "INICJALNY GAZ...";
                 document.querySelectorAll('.header-gif').forEach(img => img.style.display = 'none');
 
+                // ZAMIANA HAMBURGERA NA OBRACAJĄCĄ SIĘ AE86
                 document.getElementById('hamburgerBtn').innerHTML = '<img src="secret2.gif" style="width: 100%; height: 100%; object-fit: contain;">';
 
                 map.addLayer(darkMap);
@@ -2170,7 +1922,7 @@
             
             if (keysBuffer.includes("umauma")) {
                 keysBuffer = ""; 
-                window.activateEasterEgg();
+                activateEasterEgg();
             }
 
             if (keysBuffer.includes("wwssadadb")) {
@@ -2181,13 +1933,12 @@
             }
         });
 
-        window.activateEasterEgg = () => {
+        function activateEasterEgg() {
             document.body.classList.add('easter-egg-active');
             document.getElementById('headerTitle').innerText = "UMAPYOI!";
             
             document.querySelectorAll('.header-gif').forEach(img => {
                 img.src = "tachyon.gif";
-                img.style.display = "inline-block";
             });
 
             if(window.ytPlayer && typeof window.ytPlayer.loadVideoById === 'function') {
@@ -2220,6 +1971,7 @@
             let messages = [];
             let imgSrc = "tachyon2.gif";
 
+            // Sprawdzamy czy aktywny jest tryb Initial D
             if (document.body.classList.contains('initial-d-active')) {
                 messages = [
                     "Ściganci nie potrzebują dziewczyn...",
@@ -2227,8 +1979,9 @@
                     "Wow.. zamierza tym latać czy co?",
                     "Co do wała, od kiedy moja 85' jest 86'?!"
                 ];
-                imgSrc = "ryu.gif";
+                imgSrc = "id.gif";
             } else {
+                // Podstawowy tryb Umapyoi (Tachyon)
                 messages = [
                     "Nudzi ci się? a do kiedy masz przegląd?",
                     "Protip! Sprawdzaj po wulkanizatorze czy koło dokręcił jadąc 140 km/h!",
@@ -2239,14 +1992,12 @@
                     "Jak już tu kliknąłeś to rozumiem że auto w warsztacie?",
                     "Opel Asterka ma 1 miejsce w rankingu! Najczęściej złomowanych aut.",
                     "OMODA? Xiaomi? Tesla? telefonem jeździsz? odważnie.",
-                    "W celu zwiększenia ryżu należy ujebać rurę wydechową do zera, niech usłyszą twoją bestię na wysokich.",
-                    "Pamiętaj żeby po zakręcie dodać oleju- Jakiś litr zgubiłem przed chwilą.",
-                    "Francuza kupiłeś że tu klikasz? Gratulacje, wylosuj sobie usterkę teraz",
-                    "Jak jeździsz Volvo w dieslu... to gratuluje zasłony dymnej z urwanego DPFu.",
-                    "Na łysych letnich przynajmniej czujesz, że żyjesz.",
-                    "Im dłużej tu klikasz tym zwiększasz prawdopodobieństwo rudej szmaty."
+                    "W celu zwiększenia ryżu należy ujebać rurę wydechową do zera, niech usłyszą twoją bestię na wysokich",
+                    "Jak zaświeci się kontrolka Check Engine to stuknij w deskę rozdzielczą - to tylko fatamorgana",
+                    "Wpisz sobie Forda T na czas do okrążenia a nie tu klikasz jak jakiś bambik."
                 ];
                 
+                // Sprawdzenie czy gracz ma Diesla
                 let hasDiesel = false;
                 if (window.myFullCars && window.myFullCars.some(car => car.fuel === 'Diesel')) {
                     hasDiesel = true;
@@ -2260,7 +2011,7 @@
             const randomMsg = messages[Math.floor(Math.random() * messages.length)];
 
             document.getElementById('tachyonText').innerText = randomMsg;
-            document.querySelector('#tachyonToast img').src = imgSrc; 
+            document.querySelector('#tachyonToast img').src = imgSrc; // Podmiana gifa w locie
             
             const toast = document.getElementById('tachyonToast');
             toast.classList.add('show');
