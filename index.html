@@ -350,6 +350,19 @@
         #tachyonText { font-size: 14px; font-weight: 900; color: #5a4b41; margin: 0; line-height: 1.4; }
 
         /* ==========================================
+           KONSOLA DEBUG (NOWA)
+           ========================================== */
+        #debugConsole {
+            display: none; position: fixed; bottom: 10px; right: 10px; width: 320px; height: 300px;
+            background: rgba(0,0,0,0.9); color: #0f0; font-family: monospace; font-size: 11px;
+            z-index: 9999; padding: 10px; border-radius: 8px; overflow-y: auto; box-shadow: 0 0 20px rgba(0,0,0,0.8);
+            border: 2px solid #333; pointer-events: none;
+        }
+        #debugConsole.active { display: block; }
+        .debug-msg { border-bottom: 1px dashed #444; padding-bottom: 5px; margin-bottom: 5px; word-wrap: break-word;}
+        .debug-error { color: #ff4c4c; font-weight: bold; }
+
+        /* ==========================================
            EASTER EGG (UMAUMA) ANIMATIONS
            ========================================== */
         body.easter-egg-active { animation: rainbowHue 5s linear infinite !important; }
@@ -601,6 +614,11 @@
             <h2 style="background: linear-gradient(180deg, #ff7675, #c0392b); text-shadow: 1px 1px 0 #900000;">👑 Uma Control Track Panel</h2>
             <div class="modal-body">
                 <div class="garage-form-box">
+                    <h3 style="color:#e74c3c; margin-top:0;">🐛 Opcje Deweloperskie</h3>
+                    <button class="btn-submit" id="debugToggleBtn" onclick="window.toggleDebugMode()" style="background: #34495e; border-color: #2c3e50; box-shadow: 0 4px 0 #2c3e50; margin-top: 5px;">Tryb Debug: WYŁĄCZONY</button>
+                </div>
+
+                <div class="garage-form-box">
                     <h3 style="color:#68cc14; margin-top:0;">📍 Dodaj Nowy Tor</h3>
                     <input type="text" id="newPinName" placeholder="Nazwa Toru (np. Tor Jastrząb)">
                     <div style="display:flex; gap:10px;">
@@ -784,6 +802,9 @@
         <p id="tachyonText"></p>
     </div>
 
+    <!-- KONSOLA DEBUG -->
+    <div id="debugConsole"></div>
+
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
@@ -806,6 +827,45 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
+
+        // --- SYSTEM DEBUGOWANIA ---
+        window.DEBUG_MODE = false;
+        window.toggleDebugMode = () => {
+            window.DEBUG_MODE = !window.DEBUG_MODE;
+            const btn = document.getElementById('debugToggleBtn');
+            const consoleEl = document.getElementById('debugConsole');
+            if(window.DEBUG_MODE) {
+                btn.innerText = "Tryb Debug: WŁĄCZONY";
+                btn.style.background = "#e74c3c";
+                btn.style.borderColor = "#c0392b";
+                btn.style.boxShadow = "0 4px 0 #c0392b";
+                consoleEl.classList.add('active');
+                window.debugLog("Tryb debugowania aktywowany. Otwórz dymek toru, aby sprawdzić komunikację z Firebase.");
+            } else {
+                btn.innerText = "Tryb Debug: WYŁĄCZONY";
+                btn.style.background = "#34495e";
+                btn.style.borderColor = "#2c3e50";
+                btn.style.boxShadow = "0 4px 0 #2c3e50";
+                consoleEl.classList.remove('active');
+            }
+        };
+
+        window.debugLog = (msg, obj = null, isError = false) => {
+            if(!window.DEBUG_MODE) return;
+            const consoleEl = document.getElementById('debugConsole');
+            if(!consoleEl) return;
+            
+            let objStr = "";
+            if(obj) {
+                try { objStr = "<br>" + JSON.stringify(obj).substring(0, 150) + "..."; } catch(e) { objStr = "<br>[Obiekt]"; }
+            }
+            const time = new Date().toLocaleTimeString();
+            const colorClass = isError ? 'debug-error' : '';
+            consoleEl.innerHTML += `<div class="debug-msg ${colorClass}">[${time}] ${msg} ${objStr}</div>`;
+            consoleEl.scrollTop = consoleEl.scrollHeight;
+            console.log(`[TRACKDAY DEBUG] ${msg}`, obj || '');
+        };
+        // -------------------------
 
         window.myCars = []; 
         window.myFullCars = [];
@@ -1684,113 +1744,114 @@
         // CZASY I WYNIKI
         // ==========================================
 
-        window.loadLeaderboard = (trackName) => { 
+        window.loadLeaderboard = async (trackName) => { 
             const safeId = trackName.replace(/[^a-zA-Z0-9]/g, ''); 
             const tbody = document.getElementById(`table-${safeId}`); 
-            if(!tbody) return; 
-
-            // Wyczyszczenie poprzedniego nasłuchu jeśli był
-            if(window.leaderboardUnsub) {
-                window.leaderboardUnsub();
-                window.leaderboardUnsub = null;
+            if(!tbody) {
+                window.debugLog(`BŁĄD UI: Nie znaleziono tabeli dla ${trackName} (ID: table-${safeId})`, null, true);
+                return; 
             }
 
+            window.debugLog(`[START] Pobieranie wyników dla toru: ${trackName}`);
+            tbody.innerHTML = `<tr><td colspan='3' style='text-align:center;'>Ładowanie wyników...</td></tr>`;
+
             try {
-                // Pobieramy całą kolekcję na żywo. Brak "where" omija wymogi jakichkolwiek złożonych indeksów w Firestore!
-                window.leaderboardUnsub = onSnapshot(collection(db, "czasy"), (snapshot) => {
-                    let results = [];
-                    snapshot.forEach((doc) => {
-                        const data = doc.data();
-                        // Filtrowanie po torze odbywa się natychmiast u nas w locie
-                        if(data.track === trackName) {
-                            results.push({ id: doc.id, ...data });
-                        }
-                    });
+                window.debugLog(`[DB] Wywoływanie getDocs() dla całej kolekcji 'czasy'...`);
+                
+                const snapshot = await getDocs(collection(db, "czasy")); 
+                
+                window.debugLog(`[DB] Otrzymano dokumentów ogółem: ${snapshot.size}`);
 
-                    // Sortujemy od najszybszego
-                    results.sort((a, b) => {
-                        if(!a.time) return 1;
-                        if(!b.time) return -1;
-                        return a.time.localeCompare(b.time);
-                    });
-
-                    let htmlBuffer = "";
-                    if (results.length === 0) { 
-                        htmlBuffer = "<tr><td colspan='3'>Brak czasów. Bądź pierwszy!</td></tr>"; 
-                        window.bestTimesForTracks[trackName] = "99:99.999"; 
-                    } else {
-                        let currentRank = 1; 
-                        let firstPlaceTime = ""; 
-                        
-                        results.forEach((data) => { 
-                            const safeCar = (data.car || "Nieznane").replace(/'/g, "\\'"); 
-                            
-                            if(currentRank === 1) { 
-                                firstPlaceTime = data.time; 
-                                window.bestTimesForTracks[trackName] = firstPlaceTime; 
-                            } 
-                            
-                            let rankDisplay = currentRank === 1 ? `<img src="1st.png" style="height: 18px; width: auto; object-fit: contain; display: block;">` : (currentRank === 2 ? "🥈" : (currentRank === 3 ? "🥉" : currentRank+"."));
-                            let rankClass = currentRank === 1 ? "rank-1" : (currentRank === 2 ? "rank-2" : (currentRank === 3 ? "rank-3" : "rank-other")); 
-                            
-                            let driverName = data.driver || "Nieznany";
-                            let adminTag = driverName.toLowerCase() === 'pancerny' ? `<span class="admin-badge" style="margin: 2px 0 0 0; display: inline-block;">ADMIN</span>` : ''; 
-
-                            let actionBtns = ""; 
-                            if(driverName === window.currentUserAlias || window.userRole === 'admin' || window.userRole === 'mod') { 
-                                actionBtns = `<div style="margin-top:4px;"><span onclick="window.deleteLapTime('${data.id}', '${trackName}')" style="cursor:pointer; font-size:9px; background:#e74c3c; color:#fff; padding:3px 8px; border-radius:10px; font-weight:bold; box-shadow: 0 2px 0 #c0392b;">USUŃ</span></div>`; 
-                            } 
-                            
-                            htmlBuffer += `
-                            <tr>
-                                <td style="text-align: left; padding: 6px 8px;">
-                                    <div style="display: flex; align-items: center; gap: 6px;">
-                                        <div class="rank-box ${rankClass}">${rankDisplay}</div>
-                                        <div style="display: flex; flex-direction: column; align-items: flex-start; justify-content: center;">
-                                            <span class="user-link" style="cursor:pointer; color:#168bd8; line-height: 1.1; font-size: 12px; word-break: break-all;" onclick="window.showUserProfile('${driverName}')">${driverName.toUpperCase()}</span>
-                                            ${adminTag}
-                                        </div>
-                                    </div>
-                                </td>
-                                <td style="padding: 6px;">
-                                    <span class="car-link" style="cursor:pointer; font-weight:bold; color:#f38815; font-size:11px; word-break: break-word;" onclick="window.showCarCard('${safeCar}', '${driverName}')">${data.car}</span>
-                                </td>
-                                <td style="padding: 6px;">
-                                    <b style="color:#68cc14; font-size: 13px;">${data.time}</b>
-                                    ${actionBtns}
-                                </td>
-                            </tr>`; 
-                            currentRank++; 
-                        }); 
-                    }
-
-                    const currentTbody = document.getElementById(`table-${safeId}`);
-                    if(currentTbody) {
-                        currentTbody.innerHTML = htmlBuffer;
-                        if(window.allMarkers[safeId] && window.allMarkers[safeId].getPopup()) {
-                             window.allMarkers[safeId].getPopup().update();
-                        }
-                    }
-                }, (error) => {
-                    console.error("Błąd strumienia wyników na żywo:", error);
-                    const currentTbody = document.getElementById(`table-${safeId}`);
-                    if(currentTbody) {
-                        currentTbody.innerHTML = `<tr><td colspan='3' style='color:red; font-size:11px; font-weight:bold;'>Błąd pobierania bazy (Sprawdź reguły Rules)! ${error.message}</td></tr>`;
+                let results = [];
+                snapshot.forEach((doc) => {
+                    const data = doc.data();
+                    if(data.track === trackName) {
+                        results.push({ id: doc.id, ...data });
                     }
                 });
+
+                window.debugLog(`[JS] Pasujące wyniki dla tego toru po przefiltrowaniu: ${results.length}`);
+
+                results.sort((a, b) => {
+                    if(!a.time) return 1;
+                    if(!b.time) return -1;
+                    return a.time.localeCompare(b.time);
+                });
+
+                let htmlBuffer = "";
+                if (results.length === 0) { 
+                    window.debugLog(`[UI] Tabela pusta dla toru ${trackName}.`);
+                    htmlBuffer = "<tr><td colspan='3'>Brak czasów. Bądź pierwszy!</td></tr>"; 
+                    window.bestTimesForTracks[trackName] = "99:99.999"; 
+                } else {
+                    let currentRank = 1; 
+                    let firstPlaceTime = ""; 
+                    
+                    results.forEach((data) => { 
+                        const safeCar = (data.car || "Nieznane").replace(/'/g, "\\'"); 
+                        const safeTime = data.time || "??:??.???";
+                        const safeDriver = data.driver || "Ktoś";
+                        
+                        if(currentRank === 1) { 
+                            firstPlaceTime = safeTime; 
+                            window.bestTimesForTracks[trackName] = firstPlaceTime; 
+                        } 
+                        
+                        let rankDisplay = currentRank === 1 ? `<img src="1st.png" style="height: 18px; width: auto; object-fit: contain; display: block;">` : (currentRank === 2 ? "🥈" : (currentRank === 3 ? "🥉" : currentRank+"."));
+                        let rankClass = currentRank === 1 ? "rank-1" : (currentRank === 2 ? "rank-2" : (currentRank === 3 ? "rank-3" : "rank-other")); 
+                        
+                        let adminTag = safeDriver.toLowerCase() === 'pancerny' ? `<span class="admin-badge" style="margin: 2px 0 0 0; display: inline-block;">ADMIN</span>` : ''; 
+
+                        let actionBtns = ""; 
+                        if(safeDriver === window.currentUserAlias || window.userRole === 'admin' || window.userRole === 'mod') { 
+                            actionBtns = `<div style="margin-top:4px;"><span onclick="window.deleteLapTime('${data.id}', '${trackName}')" style="cursor:pointer; font-size:9px; background:#e74c3c; color:#fff; padding:3px 8px; border-radius:10px; font-weight:bold; box-shadow: 0 2px 0 #c0392b;">USUŃ</span></div>`; 
+                        } 
+                        
+                        htmlBuffer += `
+                        <tr>
+                            <td style="text-align: left; padding: 6px 8px;">
+                                <div style="display: flex; align-items: center; gap: 6px;">
+                                    <div class="rank-box ${rankClass}">${rankDisplay}</div>
+                                    <div style="display: flex; flex-direction: column; align-items: flex-start; justify-content: center;">
+                                        <span class="user-link" style="cursor:pointer; color:#168bd8; line-height: 1.1; font-size: 12px; word-break: break-all;" onclick="window.showUserProfile('${safeDriver}')">${safeDriver.toUpperCase()}</span>
+                                        ${adminTag}
+                                    </div>
+                                </div>
+                            </td>
+                            <td style="padding: 6px;">
+                                <span class="car-link" style="cursor:pointer; font-weight:bold; color:#f38815; font-size:11px; word-break: break-word;" onclick="window.showCarCard('${safeCar}', '${safeDriver}')">${data.car || "Brak"}</span>
+                            </td>
+                            <td style="padding: 6px;">
+                                <b style="color:#68cc14; font-size: 13px;">${safeTime}</b>
+                                ${actionBtns}
+                            </td>
+                        </tr>`; 
+                        currentRank++; 
+                    }); 
+                }
+
+                tbody.innerHTML = htmlBuffer;
+                window.debugLog(`[UI] Zakończono generowanie tabeli HTML.`);
                 
+                if(window.allMarkers[safeId] && window.allMarkers[safeId].getPopup()) {
+                     window.allMarkers[safeId].getPopup().update();
+                }
             } catch (error) {
-                console.error("Błąd podczas konfiguracji na żywo:", error);
-                tbody.innerHTML = `<tr><td colspan='3' style='color:red; font-size:11px; font-weight:bold;'>Błąd: ${error.message}</td></tr>`;
+                window.debugLog(`[BŁĄD FIREBASE] Błąd podczas getDocs(): ${error.message}`, error, true);
+                tbody.innerHTML = `<tr><td colspan='3' style='color:red; font-size:11px; font-weight:bold;'>Błąd pobierania wyników:<br>${error.message}</td></tr>`;
+                if(window.allMarkers[safeId] && window.allMarkers[safeId].getPopup()) window.allMarkers[safeId].getPopup().update();
             }
         };
 
         window.deleteLapTime = async (docId, trackName) => { 
             if(confirm("Usunąć ten wynik?")) { 
                 try {
+                    window.debugLog(`[USUŃ] Żądanie usunięcia rekordu: ${docId}`);
                     await deleteDoc(doc(db, "czasy", docId)); 
-                    // Tabela odświeży się od razu SAMA, bo mamy strumień onSnapshot w loadLeaderboard!
+                    window.debugLog(`[USUŃ] Sukces.`);
+                    await window.loadLeaderboard(trackName); 
                 } catch(e) {
+                    window.debugLog(`[BŁĄD USUŃ] ${e.message}`, e, true);
                     alert("Błąd usuwania wyniku z bazy: " + e.message);
                 }
             } 
@@ -1803,13 +1864,12 @@
             const s = document.getElementById(`timeS-${safeId}`).value; 
             const ms = document.getElementById(`timeMS-${safeId}`).value; 
             
-            if(!car) return alert("Wybierz auto z Garażu!"); 
-            if(!m && !s && !ms) return alert("Wpisz czas!"); 
+            if(!car) { window.debugLog("[ZAPIS] Odrzucono: Brak auta."); return alert("Wybierz auto z Garażu!"); }
+            if(!m && !s && !ms) { window.debugLog("[ZAPIS] Odrzucono: Pusty czas."); return alert("Wpisz czas!"); }
             
             const formattedTime = `${(m||'0').toString().padStart(2, '0')}:${(s||'0').toString().padStart(2, '0')}.${(ms||'0').toString().padStart(3, '0')}`; 
             const currentBest = window.bestTimesForTracks[trackName] || "99:99.999"; 
             
-            // Reakcja wizualna i zablokowanie klikania 20 razy
             let originalText = "Zapisz wynik";
             if (btnElement) {
                 originalText = btnElement.innerText;
@@ -1817,30 +1877,38 @@
                 btnElement.disabled = true;
             }
 
+            const payload = { 
+                driver: window.currentUserAlias, 
+                car: car, 
+                track: trackName, 
+                time: formattedTime,
+                timestamp: Date.now()
+            };
+
+            window.debugLog(`[ZAPIS] Rozpoczynam wysyłanie czasu: ${formattedTime} dla toru ${trackName}...`, payload);
+
             try {
-                await addDoc(collection(db, "czasy"), { 
-                    driver: window.currentUserAlias, 
-                    car: car, 
-                    track: trackName, 
-                    time: formattedTime,
-                    timestamp: Date.now()
-                }); 
+                const docRef = await addDoc(collection(db, "czasy"), payload); 
+                window.debugLog(`[ZAPIS] SUKCES! Utworzono dokument o ID: ${docRef.id}`);
                 
                 document.getElementById(`timeM-${safeId}`).value = ''; 
                 document.getElementById(`timeS-${safeId}`).value = ''; 
                 document.getElementById(`timeMS-${safeId}`).value = ''; 
                 
+                window.debugLog(`[ZAPIS] Trwa przeladowanie tabeli wyników...`);
+                await window.loadLeaderboard(trackName); 
+                window.debugLog(`[ZAPIS] Tabela wyników odświeżona!`);
+                
                 if (formattedTime < currentBest) { 
+                    window.debugLog(`[ZAPIS] Czas to nowy REKORD! Otwieranie powiadomienia.`);
                     const randomIndex = Math.floor(Math.random() * window.victoryGifs.length); 
                     document.getElementById('victoryImgRender').src = window.victoryGifs[randomIndex]; 
                     setTimeout(() => { document.getElementById('victoryModal').classList.add('active'); }, 500); 
                 } 
-                // Zniknęło ładowanie tabeli! Robi to automatycznie, bez zawieszania "onSnapshot" z loadLeaderboard.
             } catch(e) {
-                console.error("Firebase write error:", e);
+                window.debugLog(`[BŁĄD ZAPISU] Firestore odrzuciło polecenie: ${e.message}`, e, true);
                 alert("Błąd zapisu wyniku w Firebase: " + e.message);
             } finally {
-                // Zawsze odblokuj przycisk, nawet jak jebnie błędem
                 if (btnElement) {
                     btnElement.innerText = originalText;
                     btnElement.disabled = false;
