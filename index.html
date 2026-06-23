@@ -809,7 +809,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
         import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, sendEmailVerification, sendPasswordResetEmail, updateProfile, setPersistence, browserSessionPersistence } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
-        // UWAGA: wyrzuciłem orderBy i where. Używamy tylko najbezpieczniejszych funkcji onSnapshot.
+        // UWAGA: wyrzuciliśmy orderBy, where oraz onSnapshot żeby uwolnić Cię od błędów bazy. Używamy prostego, niezawodnego getDocs.
         import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, updateDoc, setDoc, getDoc, arrayUnion, arrayRemove, limit, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
 
         // ==========================================
@@ -875,7 +875,6 @@
 
         window.bestTimesForTracks = {}; 
         window.allMarkers = {};
-        window.leaderboardUnsub = null; // Przechowuje aktualny strumień
 
         window.victoryGifs = ["winanim/daiwa.gif", "winanim/daitaku.gif", "winanim/goldship.gif", "winanim/manhattan.gif", "winanim/mayano.gif", "winanim/seiun.gif"];
 
@@ -996,7 +995,6 @@
             list.innerHTML = "Ładowanie..."; 
             
             try {
-                // Bezpieczne pobranie wszystkich aut z bazy
                 const snapshot = await getDocs(collection(db, "fury")); 
                 list.innerHTML = ""; 
                 
@@ -1056,8 +1054,6 @@
             list.innerHTML = "Ładowanie..."; 
 
             try {
-                // Bezpieczne pobranie aut dla danego gracza z pominięciem blokujących indeksów 
-                // Pobieramy wszystko i filtrujemy w JS by nigdy się nie zawiesiło
                 const snapshot = await getDocs(collection(db, "fury"));
                 let myDocs = [];
                 snapshot.forEach((doc) => {
@@ -1180,7 +1176,6 @@
             });
 
             try {
-                // Bezpieczne pobranie z uniknięciem indeksów
                 const snapshot = await getDocs(collection(db, "fury"));
                 let matchedCar = null;
                 snapshot.forEach((doc) => {
@@ -1585,7 +1580,6 @@
             
             tory.forEach(tor => { 
                 const marker = L.marker([tor.lat, tor.lng]).addTo(map); 
-                // Super bezpieczne ID (bez spacji i bez znaków specjalnych)
                 const safeId = tor.nazwa.replace(/[^a-zA-Z0-9]/g, ''); 
                 window.allMarkers[safeId] = marker;
                 
@@ -1595,7 +1589,6 @@
                 
                 marker.on('popupopen', async (e) => { 
                     const popup = e.popup;
-                    // Bezpieczne informowanie że pobieramy
                     popup.setContent(`<div style="padding:30px; text-align:center;"><div style="font-size: 24px; margin-bottom: 10px;">🏎️</div><div style="font-weight:900; color:#5a4b41;">Pobieranie danych z padoku...</div></div>`);
                     popup.update();
 
@@ -1614,7 +1607,7 @@
                                 <span style="font-size:12px;">🔧</span> USTAWIENIA
                             </button>` : '';
 
-                        let carSelectHTML = `<select id="carSelect-${safeId}" class="transition-shape" style="width:100%; border: 3px solid #ccc; border-radius: 12px; padding: 10px; font-weight: bold;">`; 
+                        let carSelectHTML = `<select class="transition-shape car-select" style="width:100%; border: 3px solid #ccc; border-radius: 12px; padding: 10px; font-weight: bold;">`; 
                         if(window.myCars.length === 0) carSelectHTML += `<option value="" disabled selected>Brak aut!</option>`; 
                         else { window.myCars.forEach(car => { carSelectHTML += `<option value="${car}">${car}</option>`; }); } 
                         carSelectHTML += `</select>`; 
@@ -1649,14 +1642,14 @@
                                             <th style="width: 25%;">Czas</th>
                                         </tr>
                                     </thead>
-                                    <tbody id="table-${safeId}"><tr><td colspan='3'>Ładowanie wyników...</td></tr></tbody>
+                                    <tbody class="leaderboard-tbody"><tr><td colspan='3'>Ładowanie wyników...</td></tr></tbody>
                                 </table>
                                 <hr style="border-color:#ddd; margin:12px 0;">
-                                <div id="carSelectContainer-${safeId}">${carSelectHTML}</div>
+                                <div class="car-select-container">${carSelectHTML}</div>
                                 <div class="time-inputs-container transition-shape" style="padding: 6px; gap: 4px;">
-                                    <input type="number" id="timeM-${safeId}" placeholder="Min" min="0" max="99" style="font-size:14px !important; padding:6px 2px !important;"> <span style="font-size:14px;">:</span> 
-                                    <input type="number" id="timeS-${safeId}" placeholder="Sek" min="0" max="59" style="font-size:14px !important; padding:6px 2px !important;"> <span style="font-size:14px;">.</span> 
-                                    <input type="number" id="timeMS-${safeId}" placeholder="MS" min="0" max="999" style="font-size:14px !important; padding:6px 2px !important;">
+                                    <input type="number" class="time-min" placeholder="Min" min="0" max="99" style="font-size:14px !important; padding:6px 2px !important;"> <span style="font-size:14px;">:</span> 
+                                    <input type="number" class="time-sec" placeholder="Sek" min="0" max="59" style="font-size:14px !important; padding:6px 2px !important;"> <span style="font-size:14px;">.</span> 
+                                    <input type="number" class="time-ms" placeholder="MS" min="0" max="999" style="font-size:14px !important; padding:6px 2px !important;">
                                 </div>
                                 <button onclick="window.saveTime('${tor.nazwa}', this)" class="btn-submit transition-shape" style="padding: 8px; font-size: 14px; margin-top: 5px;">Zapisz wynik</button>
                             </div>`;
@@ -1664,7 +1657,6 @@
                         popup.setContent(fullHTML);
                         popup.update();
 
-                        // Odpalamy nasłuch na tablicę wyników
                         window.loadLeaderboard(tor.nazwa); 
 
                     } catch (error) {
@@ -1673,14 +1665,6 @@
                         popup.update();
                     }
                 }); 
-
-                // Zamykanie i czyszczenie strumienia po zamknięciu okienka
-                marker.on('popupclose', () => {
-                    if (window.leaderboardUnsub) {
-                        window.leaderboardUnsub();
-                        window.leaderboardUnsub = null;
-                    }
-                });
 
                 let listImg = tor.foto ? `<img src="${tor.foto}" class="track-list-icon transition-shape">` : `<div class="track-list-icon transition-shape"></div>`;
                 sideMenuList.innerHTML += `
@@ -1745,21 +1729,17 @@
         // ==========================================
 
         window.loadLeaderboard = async (trackName) => { 
-            const safeId = trackName.replace(/[^a-zA-Z0-9]/g, ''); 
-            const tbody = document.getElementById(`table-${safeId}`); 
-            if(!tbody) {
-                window.debugLog(`BŁĄD UI: Nie znaleziono tabeli dla ${trackName} (ID: table-${safeId})`, null, true);
-                return; 
-            }
+            const popupEl = document.querySelector('.leaflet-popup-content');
+            if(!popupEl) return;
+            const tbody = popupEl.querySelector('.leaderboard-tbody');
+            if(!tbody) return;
 
             window.debugLog(`[START] Pobieranie wyników dla toru: ${trackName}`);
             tbody.innerHTML = `<tr><td colspan='3' style='text-align:center;'>Ładowanie wyników...</td></tr>`;
 
             try {
-                window.debugLog(`[DB] Wywoływanie getDocs() dla całej kolekcji 'czasy'...`);
-                
+                window.debugLog(`[DB] Wywoływanie getDocs() dla kolekcji 'czasy'...`);
                 const snapshot = await getDocs(collection(db, "czasy")); 
-                
                 window.debugLog(`[DB] Otrzymano dokumentów ogółem: ${snapshot.size}`);
 
                 let results = [];
@@ -1833,13 +1813,15 @@
                 tbody.innerHTML = htmlBuffer;
                 window.debugLog(`[UI] Zakończono generowanie tabeli HTML.`);
                 
-                if(window.allMarkers[safeId] && window.allMarkers[safeId].getPopup()) {
-                     window.allMarkers[safeId].getPopup().update();
-                }
+                // Wymuszenie na mapie dostosowania wysokości dymka do nowych danych
+                map.eachLayer((layer) => {
+                    if (layer.getPopup && layer.getPopup() && layer.getPopup().isOpen()) {
+                        layer.getPopup().update();
+                    }
+                });
             } catch (error) {
                 window.debugLog(`[BŁĄD FIREBASE] Błąd podczas getDocs(): ${error.message}`, error, true);
                 tbody.innerHTML = `<tr><td colspan='3' style='color:red; font-size:11px; font-weight:bold;'>Błąd pobierania wyników:<br>${error.message}</td></tr>`;
-                if(window.allMarkers[safeId] && window.allMarkers[safeId].getPopup()) window.allMarkers[safeId].getPopup().update();
             }
         };
 
@@ -1858,11 +1840,14 @@
         };
 
         window.saveTime = async (trackName, btnElement) => { 
-            const safeId = trackName.replace(/[^a-zA-Z0-9]/g, ''); 
-            const car = document.getElementById(`carSelect-${safeId}`)?.value; 
-            const m = document.getElementById(`timeM-${safeId}`).value; 
-            const s = document.getElementById(`timeS-${safeId}`).value; 
-            const ms = document.getElementById(`timeMS-${safeId}`).value; 
+            const popupEl = document.querySelector('.leaflet-popup-content');
+            if(!popupEl) return;
+
+            const carSelect = popupEl.querySelector('.car-select');
+            const car = carSelect ? carSelect.value : null; 
+            const m = popupEl.querySelector('.time-min').value; 
+            const s = popupEl.querySelector('.time-sec').value; 
+            const ms = popupEl.querySelector('.time-ms').value; 
             
             if(!car) { window.debugLog("[ZAPIS] Odrzucono: Brak auta."); return alert("Wybierz auto z Garażu!"); }
             if(!m && !s && !ms) { window.debugLog("[ZAPIS] Odrzucono: Pusty czas."); return alert("Wpisz czas!"); }
@@ -1891,9 +1876,9 @@
                 const docRef = await addDoc(collection(db, "czasy"), payload); 
                 window.debugLog(`[ZAPIS] SUKCES! Utworzono dokument o ID: ${docRef.id}`);
                 
-                document.getElementById(`timeM-${safeId}`).value = ''; 
-                document.getElementById(`timeS-${safeId}`).value = ''; 
-                document.getElementById(`timeMS-${safeId}`).value = ''; 
+                popupEl.querySelector('.time-min').value = ''; 
+                popupEl.querySelector('.time-sec').value = ''; 
+                popupEl.querySelector('.time-ms').value = ''; 
                 
                 window.debugLog(`[ZAPIS] Trwa przeladowanie tabeli wyników...`);
                 await window.loadLeaderboard(trackName); 
