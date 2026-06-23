@@ -585,7 +585,7 @@
 
     <!-- NOWY MODAL DLA UKŁADU TORU -->
     <div class="modal-overlay" id="trackLayoutModal" style="z-index: 7500;">
-        <div class="modal-content" style="max-width: 800px; width: 95vw; background: #f0f3f5; padding: 0;">
+        <div class="modal-content" style="max-width: 800px; width: 95vw; padding: 0;">
             <span class="close-modal" onclick="closeModal('trackLayoutModal')">×</span>
             <h2 class="uma-pattern-green" id="trackLayoutTitle">Układ Toru</h2>
             <div class="modal-body" style="padding: 10px; text-align: center; background: #222;">
@@ -1601,19 +1601,16 @@
             if(!tbody) return; 
             
             try {
-                // Zmieniona logika - pobieramy z bazy i sortujemy lokalnie, 
-                // aby ominąć blokadę brakującego "Indeksu złożonego" w Firebase.
-                const snapshot = await getDocs(collection(db, "czasy")); 
+                // Uproszczone zapytanie by pominąć złożone indeksy Firebase (orderBy psuło układ)
+                const q = query(collection(db, "czasy"), where("track", "==", trackName)); 
+                const snapshot = await getDocs(q); 
                 
                 let results = [];
                 snapshot.forEach((doc) => {
-                    const data = doc.data();
-                    if(data.track === trackName) {
-                        results.push({ id: doc.id, ...data });
-                    }
+                    results.push({ id: doc.id, ...doc.data() });
                 });
 
-                // Sortowanie JS: najmniejszy czas rosnąco
+                // Zastępcze sortowanie JS (od najszybszego do najwolniejszego)
                 results.sort((a, b) => a.time.localeCompare(b.time));
 
                 tbody.innerHTML = ""; 
@@ -1635,6 +1632,7 @@
                         window.bestTimesForTracks[trackName] = firstPlaceTime; 
                     } 
                     
+                    // Poprawka rankDisplay
                     let rankDisplay = currentRank === 1 ? `<img src="1st.png" style="height: 18px; width: auto; object-fit: contain; display: block;">` : (currentRank === 2 ? "🥈" : (currentRank === 3 ? "🥉" : currentRank+"."));
                     let rankClass = currentRank === 1 ? "rank-1" : (currentRank === 2 ? "rank-2" : (currentRank === 3 ? "rank-3" : "rank-other")); 
                     
@@ -1671,16 +1669,21 @@
                 if(window.allMarkers[safeId] && window.allMarkers[safeId].getPopup()) {
                      window.allMarkers[safeId].getPopup().update();
                 }
-            } catch (error) {
-                console.error("Błąd ładowania wyników: ", error);
-                tbody.innerHTML = "<tr><td colspan='3' style='color:#e74c3c;'>Wystąpił błąd odczytu bazy!</td></tr>";
+            } catch (err) {
+                console.error("Firebase read error:", err);
+                tbody.innerHTML = `<tr><td colspan='3' style='color:red; font-size:11px; font-weight:bold;'>Błąd zapisu/odczytu Firebase: ${err.message}</td></tr>`;
+                if(window.allMarkers[safeId] && window.allMarkers[safeId].getPopup()) window.allMarkers[safeId].getPopup().update();
             }
         };
 
         window.deleteLapTime = async (docId, trackName) => { 
             if(confirm("Usunąć ten wynik?")) { 
-                await deleteDoc(doc(db, "czasy", docId)); 
-                window.loadLeaderboard(trackName); 
+                try {
+                    await deleteDoc(doc(db, "czasy", docId)); 
+                    window.loadLeaderboard(trackName); 
+                } catch(e) {
+                    alert("Błąd usuwania wyniku z bazy: " + e.message);
+                }
             } 
         };
 
@@ -1697,18 +1700,29 @@
             const formattedTime = `${(m||'0').toString().padStart(2, '0')}:${(s||'0').toString().padStart(2, '0')}.${(ms||'0').toString().padStart(3, '0')}`; 
             const currentBest = window.bestTimesForTracks[trackName] || "99:99.999"; 
             
-            await addDoc(collection(db, "czasy"), { driver: window.currentUserAlias, car: car, track: trackName, time: formattedTime }); 
-            
-            document.getElementById(`timeM-${safeId}`).value = ''; 
-            document.getElementById(`timeS-${safeId}`).value = ''; 
-            document.getElementById(`timeMS-${safeId}`).value = ''; 
-            
-            if (formattedTime < currentBest) { 
-                const randomIndex = Math.floor(Math.random() * window.victoryGifs.length); 
-                document.getElementById('victoryImgRender').src = window.victoryGifs[randomIndex]; 
-                setTimeout(() => { document.getElementById('victoryModal').classList.add('active'); }, 500); 
-            } 
-            window.loadLeaderboard(trackName); 
+            try {
+                await addDoc(collection(db, "czasy"), { 
+                    driver: window.currentUserAlias, 
+                    car: car, 
+                    track: trackName, 
+                    time: formattedTime,
+                    timestamp: Date.now()
+                }); 
+                
+                document.getElementById(`timeM-${safeId}`).value = ''; 
+                document.getElementById(`timeS-${safeId}`).value = ''; 
+                document.getElementById(`timeMS-${safeId}`).value = ''; 
+                
+                if (formattedTime < currentBest) { 
+                    const randomIndex = Math.floor(Math.random() * window.victoryGifs.length); 
+                    document.getElementById('victoryImgRender').src = window.victoryGifs[randomIndex]; 
+                    setTimeout(() => { document.getElementById('victoryModal').classList.add('active'); }, 500); 
+                } 
+                window.loadLeaderboard(trackName); 
+            } catch(e) {
+                console.error("Firebase write error:", e);
+                alert("Błąd zapisu wyniku w Firebase: " + e.message + "\n\n(Sprawdź Reguły dostępu - Rules w Firestore)");
+            }
         };
 
         window.closeModal = (modalId) => { document.getElementById(modalId).classList.remove('active'); };
