@@ -72,6 +72,7 @@
             box-sizing: border-box;
         }
         .btn-submit:active { transform: translateY(4px); box-shadow: 0 0 0 #3b900b, 0 2px 5px rgba(0,0,0,0.2); }
+        .btn-submit:disabled { filter: grayscale(100%); cursor: not-allowed; }
 
         .btn-auth-submit { 
             background: linear-gradient(180deg, #5865F2 0%, #4752C4 100%); 
@@ -787,7 +788,8 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
         import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, sendEmailVerification, sendPasswordResetEmail, updateProfile, setPersistence, browserSessionPersistence } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
-        import { getFirestore, collection, addDoc, getDocs, query, where, orderBy, deleteDoc, doc, updateDoc, setDoc, getDoc, arrayUnion, arrayRemove, limit } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
+        // UWAGA: wyrzuciłem orderBy i where. Używamy tylko najbezpieczniejszych funkcji onSnapshot.
+        import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, updateDoc, setDoc, getDoc, arrayUnion, arrayRemove, limit, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
 
         // ==========================================
         // KLUCZE FIREBASE
@@ -813,6 +815,7 @@
 
         window.bestTimesForTracks = {}; 
         window.allMarkers = {};
+        window.leaderboardUnsub = null; // Przechowuje aktualny strumień
 
         window.victoryGifs = ["winanim/daiwa.gif", "winanim/daitaku.gif", "winanim/goldship.gif", "winanim/manhattan.gif", "winanim/mayano.gif", "winanim/seiun.gif"];
 
@@ -931,25 +934,31 @@
             document.getElementById('allCarsModal').classList.add('active'); 
             const list = document.getElementById('allCarsListRender'); 
             list.innerHTML = "Ładowanie..."; 
-            const snapshot = await getDocs(collection(db, "fury")); 
-            list.innerHTML = ""; 
             
-            snapshot.forEach(doc => { 
-                const d = doc.data(); 
-                const safeName = d.name.replace(/'/g, "\\'");
-                const safePhoto = d.photo.replace(/'/g, "\\'");
-                const safeEngine = d.engine.replace(/'/g, "\\'");
-                const safeFuel = d.fuel || "";
-                const safeAccel = d.accel.replace(/'/g, "\\'");
-                const safeTires = d.tires.replace(/'/g, "\\'");
+            try {
+                // Bezpieczne pobranie wszystkich aut z bazy
+                const snapshot = await getDocs(collection(db, "fury")); 
+                list.innerHTML = ""; 
                 
-                let actionBtns = `<button class="btn-view" onclick="window.showCarCard('${safeName}', '${d.driver}')">KARTA</button>`; 
-                
-                if(d.driver === window.currentUserAlias) { 
-                    actionBtns += `<button class="btn-edit" onclick="window.closeModal('allCarsModal'); window.openGarage(); setTimeout(()=>window.triggerEditCar('${doc.id}', '${safeName}', '${safePhoto}', '${safeEngine}', '${safeFuel}', '${safeAccel}', '${safeTires}'), 500)">EDYCJA</button><button class="btn-del" onclick="window.deleteCar('${doc.id}'); document.getElementById('allCarsModal').classList.remove('active');">USUŃ</button>`; 
-                } 
-                list.innerHTML += `<li class="list-item"><div><b style="color:#68cc14; font-size:13px;">[${d.driver.toUpperCase()}]</b><br><b style="color:#5a4b41; font-size:15px;">${d.name}</b> <span style="font-size:11px; color:#8a7b71;">(${d.engine})</span></div><div class="list-item-btns">${actionBtns}</div></li>`; 
-            }); 
+                snapshot.forEach(doc => { 
+                    const d = doc.data(); 
+                    const safeName = d.name.replace(/'/g, "\\'");
+                    const safePhoto = d.photo.replace(/'/g, "\\'");
+                    const safeEngine = d.engine.replace(/'/g, "\\'");
+                    const safeFuel = d.fuel || "";
+                    const safeAccel = d.accel.replace(/'/g, "\\'");
+                    const safeTires = d.tires.replace(/'/g, "\\'");
+                    
+                    let actionBtns = `<button class="btn-view" onclick="window.showCarCard('${safeName}', '${d.driver}')">KARTA</button>`; 
+                    
+                    if(d.driver === window.currentUserAlias) { 
+                        actionBtns += `<button class="btn-edit" onclick="window.closeModal('allCarsModal'); window.openGarage(); setTimeout(()=>window.triggerEditCar('${doc.id}', '${safeName}', '${safePhoto}', '${safeEngine}', '${safeFuel}', '${safeAccel}', '${safeTires}'), 500)">EDYCJA</button><button class="btn-del" onclick="window.deleteCar('${doc.id}'); document.getElementById('allCarsModal').classList.remove('active');">USUŃ</button>`; 
+                    } 
+                    list.innerHTML += `<li class="list-item"><div><b style="color:#68cc14; font-size:13px;">[${d.driver.toUpperCase()}]</b><br><b style="color:#5a4b41; font-size:15px;">${d.name}</b> <span style="font-size:11px; color:#8a7b71;">(${d.engine})</span></div><div class="list-item-btns">${actionBtns}</div></li>`; 
+                });
+            } catch(e) {
+                list.innerHTML = `<li style="color:red;">Błąd ładowania aut: ${e.message}</li>`;
+            }
         };
         
         window.openUsersList = async () => { 
@@ -957,59 +966,77 @@
             document.getElementById('usersListModal').classList.add('active'); 
             const list = document.getElementById('usersListRender'); 
             list.innerHTML = "Ładowanie..."; 
-            const snapshot = await getDocs(collection(db, "uzytkownicy")); 
-            list.innerHTML = ""; 
             
-            snapshot.forEach(doc => { 
-                const d = doc.data(); 
-                let rTag = doc.id==='pancerny' ? '<span class="admin-badge">ADMIN</span>' : (d.role==='mod'?'<span class="mod-badge">MOD</span>':''); 
-                let bgImage = d.avatar ? `background-image: url('${d.avatar}')` : '';
+            try {
+                const snapshot = await getDocs(collection(db, "uzytkownicy")); 
+                list.innerHTML = ""; 
                 
-                list.innerHTML += `<li class="list-item" style="cursor:pointer;" onclick="window.showUserProfile('${doc.id}')">
-                    <div style="display:flex; align-items:center;">
-                        <div class="user-list-avatar" style="${bgImage}">${d.avatar ? '' : doc.id.charAt(0).toUpperCase()}</div>
-                        <div><b style="color:#5a4b41; font-size:15px;">${(d.nick||doc.id).toUpperCase()}</b> ${rTag}<br>
-                        <span style="font-size:11px; color:#8a7b71; font-weight:bold;">${d.miejscowosc || 'Nieznane Miasto'}</span></div>
-                    </div>
-                </li>`; 
-            }); 
+                snapshot.forEach(doc => { 
+                    const d = doc.data(); 
+                    let rTag = doc.id==='pancerny' ? '<span class="admin-badge">ADMIN</span>' : (d.role==='mod'?'<span class="mod-badge">MOD</span>':''); 
+                    let bgImage = d.avatar ? `background-image: url('${d.avatar}')` : '';
+                    
+                    list.innerHTML += `<li class="list-item" style="cursor:pointer;" onclick="window.showUserProfile('${doc.id}')">
+                        <div style="display:flex; align-items:center;">
+                            <div class="user-list-avatar" style="${bgImage}">${d.avatar ? '' : doc.id.charAt(0).toUpperCase()}</div>
+                            <div><b style="color:#5a4b41; font-size:15px;">${(d.nick||doc.id).toUpperCase()}</b> ${rTag}<br>
+                            <span style="font-size:11px; color:#8a7b71; font-weight:bold;">${d.miejscowosc || 'Nieznane Miasto'}</span></div>
+                        </div>
+                    </li>`; 
+                });
+            } catch(e) {
+                list.innerHTML = `<li style="color:red;">Błąd ładowania graczy: ${e.message}</li>`;
+            }
         };
 
         async function loadMyGarage() { 
-            const q = query(collection(db, "fury"), where("driver", "==", window.currentUserAlias)); 
-            const snapshot = await getDocs(q); 
             const list = document.getElementById('myCarsList'); 
             window.myCars = []; 
             window.myFullCars = [];
-            list.innerHTML = ""; 
+            list.innerHTML = "Ładowanie..."; 
 
-            if(snapshot.empty) { 
-                list.innerHTML = "Brak aut."; 
-                return; 
-            } 
+            try {
+                // Bezpieczne pobranie aut dla danego gracza z pominięciem blokujących indeksów 
+                // Pobieramy wszystko i filtrujemy w JS by nigdy się nie zawiesiło
+                const snapshot = await getDocs(collection(db, "fury"));
+                let myDocs = [];
+                snapshot.forEach((doc) => {
+                    if (doc.data().driver === window.currentUserAlias) {
+                        myDocs.push(doc);
+                    }
+                });
+                
+                list.innerHTML = "";
+                if(myDocs.length === 0) { 
+                    list.innerHTML = "Brak aut."; 
+                    return; 
+                } 
 
-            snapshot.forEach(doc => { 
-                const d = doc.data(); 
-                window.myCars.push(d.name); 
-                window.myFullCars.push(d); 
+                myDocs.forEach(doc => { 
+                    const d = doc.data(); 
+                    window.myCars.push(d.name); 
+                    window.myFullCars.push(d); 
 
-                const safeName = d.name.replace(/'/g, "\\'"); 
-                const safePhoto = d.photo.replace(/'/g, "\\'"); 
-                const safeEngine = d.engine.replace(/'/g, "\\'"); 
-                const safeFuel = d.fuel || ""; 
-                const safeAccel = d.accel.replace(/'/g, "\\'"); 
-                const safeTires = d.tires.replace(/'/g, "\\'"); 
+                    const safeName = d.name.replace(/'/g, "\\'"); 
+                    const safePhoto = d.photo.replace(/'/g, "\\'"); 
+                    const safeEngine = d.engine.replace(/'/g, "\\'"); 
+                    const safeFuel = d.fuel || ""; 
+                    const safeAccel = d.accel.replace(/'/g, "\\'"); 
+                    const safeTires = d.tires.replace(/'/g, "\\'"); 
 
-                list.innerHTML += `
-                    <li class="list-item">
-                        <div><b style="color:#5a4b41;">${d.name}</b></div>
-                        <div class="list-item-btns">
-                            <button class="btn-view" onclick="window.showCarCard('${safeName}', '${window.currentUserAlias}')">KARTA</button>
-                            <button class="btn-edit" onclick="window.triggerEditCar('${doc.id}', '${safeName}', '${safePhoto}', '${safeEngine}', '${safeFuel}', '${safeAccel}', '${safeTires}')">EDYCJA</button>
-                            <button class="btn-del" onclick="window.deleteCar('${doc.id}')">USUŃ</button>
-                        </div>
-                    </li>`; 
-            }); 
+                    list.innerHTML += `
+                        <li class="list-item">
+                            <div><b style="color:#5a4b41;">${d.name}</b></div>
+                            <div class="list-item-btns">
+                                <button class="btn-view" onclick="window.showCarCard('${safeName}', '${window.currentUserAlias}')">KARTA</button>
+                                <button class="btn-edit" onclick="window.triggerEditCar('${doc.id}', '${safeName}', '${safePhoto}', '${safeEngine}', '${safeFuel}', '${safeAccel}', '${safeTires}')">EDYCJA</button>
+                                <button class="btn-del" onclick="window.deleteCar('${doc.id}')">USUŃ</button>
+                            </div>
+                        </li>`; 
+                }); 
+            } catch(e) {
+                list.innerHTML = `<li style="color:red;">Błąd ładowania garażu: ${e.message}</li>`;
+            }
         }
 
         window.saveNewCar = async () => { 
@@ -1023,14 +1050,18 @@
 
             if(!n) return alert("Podaj nazwę fury!"); 
 
-            if(editId) { 
-                await updateDoc(doc(db, "fury", editId), { name: n, photo: photo, engine: engine, fuel: fuel, accel: accel, tires: tires }); 
-                window.cancelEdit(); 
-            } else { 
-                await addDoc(collection(db, "fury"), { driver: window.currentUserAlias, name: n, photo: photo, engine: engine, fuel: fuel, accel: accel, tires: tires }); 
-                window.cancelEdit(); 
-            } 
-            await loadMyGarage(); 
+            try {
+                if(editId) { 
+                    await updateDoc(doc(db, "fury", editId), { name: n, photo: photo, engine: engine, fuel: fuel, accel: accel, tires: tires }); 
+                    window.cancelEdit(); 
+                } else { 
+                    await addDoc(collection(db, "fury"), { driver: window.currentUserAlias, name: n, photo: photo, engine: engine, fuel: fuel, accel: accel, tires: tires }); 
+                    window.cancelEdit(); 
+                } 
+                await loadMyGarage(); 
+            } catch(e) {
+                alert("Błąd zapisu auta w bazie: " + e.message);
+            }
         };
 
         window.triggerEditCar = (id, name, photo, engine, fuel, accel, tires) => { 
@@ -1069,8 +1100,12 @@
 
         window.deleteCar = async (docId) => { 
             if(confirm("Na pewno chcesz zezłomować?")) { 
-                await deleteDoc(doc(db, "fury", docId)); 
-                await loadMyGarage(); 
+                try {
+                    await deleteDoc(doc(db, "fury", docId)); 
+                    await loadMyGarage(); 
+                } catch(e) {
+                    alert("Błąd przy usuwaniu: " + e.message);
+                }
             } 
         };
 
@@ -1084,49 +1119,64 @@
                 if(e.target.id === 'dynamicUmaModal') { document.getElementById('dynamicUmaModal').remove(); } 
             });
 
-            const q = query(collection(db, "fury"), where("driver", "==", driverName), where("name", "==", carName)); 
-            const snapshot = await getDocs(q); 
-            if(snapshot.empty) return; 
-            
-            const carData = snapshot.docs[0].data(); 
-            const fuelDisplay = carData.fuel ? carData.fuel : "Brak danych";
-            
-            document.getElementById('dynamicUmaInner').innerHTML = `
-                <div class="transition-shape garage-form-box" style="width: 100%; background: #f0f3f5; border-radius: 16px; overflow: hidden; border: 4px solid #fff; box-shadow: 0 10px 25px rgba(0,0,0,0.5); position: relative; padding:0; margin:0;">
-                    <span onclick="document.getElementById('dynamicUmaModal').remove()" style="position: absolute; top: 10px; right: 15px; font-size: 28px; color: #fff; cursor: pointer; z-index: 10; font-weight: 900; text-shadow: 1px 1px 2px rgba(0,0,0,0.5);">×</span>
-                    
-                    <div class="transition-shape uma-pattern-green" style="background: linear-gradient(180deg, #2bc2ff, #168bd8); padding: 15px; text-align: center; border-bottom: 4px solid #fff;">
-                        <div style="color: #fff; font-size: 12px; font-weight: bold; text-transform: uppercase; text-shadow: 1px 1px 0 #0d6299;">Właściciel Maszyny</div>
-                        <div style="color: #fff; font-size: 20px; font-weight: 900; text-transform: uppercase; text-shadow: 2px 2px 0 #0d6299;">${carData.driver.toUpperCase()}</div>
-                    </div>
+            try {
+                // Bezpieczne pobranie z uniknięciem indeksów
+                const snapshot = await getDocs(collection(db, "fury"));
+                let matchedCar = null;
+                snapshot.forEach((doc) => {
+                    const data = doc.data();
+                    if (data.driver === driverName && data.name === carName) {
+                        matchedCar = data;
+                    }
+                });
 
-                    <div style="width: 100%; height: 200px; background-color: #222; background-image: url('${carData.photo}'); background-size: cover; background-position: center; border-bottom: 4px solid #fff;"></div>
+                if(!matchedCar) {
+                    document.getElementById('dynamicUmaInner').innerHTML = `<div style="background:#fff; padding:20px; border-radius:10px; color:red;">Auto nie zostało znalezione!</div>`;
+                    return; 
+                }
+                
+                const carData = matchedCar;
+                const fuelDisplay = carData.fuel ? carData.fuel : "Brak danych";
+                
+                document.getElementById('dynamicUmaInner').innerHTML = `
+                    <div class="transition-shape garage-form-box" style="width: 100%; background: #f0f3f5; border-radius: 16px; overflow: hidden; border: 4px solid #fff; box-shadow: 0 10px 25px rgba(0,0,0,0.5); position: relative; padding:0; margin:0;">
+                        <span onclick="document.getElementById('dynamicUmaModal').remove()" style="position: absolute; top: 10px; right: 15px; font-size: 28px; color: #fff; cursor: pointer; z-index: 10; font-weight: 900; text-shadow: 1px 1px 2px rgba(0,0,0,0.5);">×</span>
+                        
+                        <div class="transition-shape uma-pattern-green" style="background: linear-gradient(180deg, #2bc2ff, #168bd8); padding: 15px; text-align: center; border-bottom: 4px solid #fff;">
+                            <div style="color: #fff; font-size: 12px; font-weight: bold; text-transform: uppercase; text-shadow: 1px 1px 0 #0d6299;">Właściciel Maszyny</div>
+                            <div style="color: #fff; font-size: 20px; font-weight: 900; text-transform: uppercase; text-shadow: 2px 2px 0 #0d6299;">${carData.driver.toUpperCase()}</div>
+                        </div>
 
-                    <div style="padding: 15px 20px 5px 20px; text-align: center;">
-                        <h2 style="margin: 0; color: #f38815; font-size: 24px; font-weight: 900; text-transform: uppercase; text-shadow: 1px 1px 0 #fff, -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff;">${carData.name}</h2>
-                    </div>
+                        <div style="width: 100%; height: 200px; background-color: #222; background-image: url('${carData.photo}'); background-size: cover; background-position: center; border-bottom: 4px solid #fff;"></div>
 
-                    <div style="padding: 15px 20px 25px 20px;">
-                        <div class="transition-shape" style="background: #fff; border-radius: 12px; border: 2px solid #ddd; padding: 15px; display: flex; flex-direction: column; gap: 10px;">
-                            <div style="display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 1px solid #eee; padding-bottom: 8px;">
-                                <span style="color: #8a7b71; font-weight: 900; font-size: 12px; text-transform: uppercase; margin-right: 15px; flex-shrink: 0;">⚙️ Silnik</span>
-                                <span style="color: #5a4b41; font-weight: 900; font-size: 14px; text-align: right; word-break: break-word;">${carData.engine}</span>
-                            </div>
-                            <div style="display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 1px solid #eee; padding-bottom: 8px;">
-                                <span style="color: #8a7b71; font-weight: 900; font-size: 12px; text-transform: uppercase; margin-right: 15px; flex-shrink: 0;">⛽ Paliwo</span>
-                                <span style="color: #4facfe; font-weight: 900; font-size: 14px; text-align: right; word-break: break-word;">${fuelDisplay}</span>
-                            </div>
-                            <div style="display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 1px solid #eee; padding-bottom: 8px;">
-                                <span style="color: #8a7b71; font-weight: 900; font-size: 12px; text-transform: uppercase; margin-right: 15px; flex-shrink: 0;">⏱️ 0-100 km/h</span>
-                                <span style="color: #68cc14; font-weight: 900; font-size: 14px; text-align: right; word-break: break-word;">${carData.accel}</span>
-                            </div>
-                            <div style="display: flex; justify-content: space-between; align-items: flex-start;">
-                                <span style="color: #8a7b71; font-weight: 900; font-size: 12px; text-transform: uppercase; margin-right: 15px; flex-shrink: 0;">🛞 Opony</span>
-                                <span style="color: #e74c3c; font-weight: 900; font-size: 14px; text-align: right; word-break: break-word;">${carData.tires}</span>
+                        <div style="padding: 15px 20px 5px 20px; text-align: center;">
+                            <h2 style="margin: 0; color: #f38815; font-size: 24px; font-weight: 900; text-transform: uppercase; text-shadow: 1px 1px 0 #fff, -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff;">${carData.name}</h2>
+                        </div>
+
+                        <div style="padding: 15px 20px 25px 20px;">
+                            <div class="transition-shape" style="background: #fff; border-radius: 12px; border: 2px solid #ddd; padding: 15px; display: flex; flex-direction: column; gap: 10px;">
+                                <div style="display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 1px solid #eee; padding-bottom: 8px;">
+                                    <span style="color: #8a7b71; font-weight: 900; font-size: 12px; text-transform: uppercase; margin-right: 15px; flex-shrink: 0;">⚙️ Silnik</span>
+                                    <span style="color: #5a4b41; font-weight: 900; font-size: 14px; text-align: right; word-break: break-word;">${carData.engine}</span>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 1px solid #eee; padding-bottom: 8px;">
+                                    <span style="color: #8a7b71; font-weight: 900; font-size: 12px; text-transform: uppercase; margin-right: 15px; flex-shrink: 0;">⛽ Paliwo</span>
+                                    <span style="color: #4facfe; font-weight: 900; font-size: 14px; text-align: right; word-break: break-word;">${fuelDisplay}</span>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 1px solid #eee; padding-bottom: 8px;">
+                                    <span style="color: #8a7b71; font-weight: 900; font-size: 12px; text-transform: uppercase; margin-right: 15px; flex-shrink: 0;">⏱️ 0-100 km/h</span>
+                                    <span style="color: #68cc14; font-weight: 900; font-size: 14px; text-align: right; word-break: break-word;">${carData.accel}</span>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                                    <span style="color: #8a7b71; font-weight: 900; font-size: 12px; text-transform: uppercase; margin-right: 15px; flex-shrink: 0;">🛞 Opony</span>
+                                    <span style="color: #e74c3c; font-weight: 900; font-size: 14px; text-align: right; word-break: break-word;">${carData.tires}</span>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </div>`; 
+                    </div>`; 
+            } catch (err) {
+                document.getElementById('dynamicUmaInner').innerHTML = `<div style="background:#fff; padding:20px; border-radius:10px; color:red;">Błąd bazy: ${err.message}</div>`;
+            }
         };
 
         window.showUserProfile = async (alias) => { 
@@ -1139,56 +1189,62 @@
             document.getElementById('pubProfileDesc').innerText = "Ładowanie...";
             document.getElementById('pubProfileAchievements').innerHTML = "Ładowanie odznak...";
             
-            const docSnap = await getDoc(doc(db, "uzytkownicy", alias)); 
-            const adminB = document.getElementById('pubProfileAdminBadge'); 
-            adminB.style.display='none'; 
-            
-            if(docSnap.exists()) { 
-                const d = docSnap.data(); 
-                document.getElementById('pubProfileAlias').innerText = d.nick||alias; 
+            try {
+                const docSnap = await getDoc(doc(db, "uzytkownicy", alias)); 
+                const adminB = document.getElementById('pubProfileAdminBadge'); 
+                adminB.style.display='none'; 
                 
-                if(d.avatar) { 
-                    document.getElementById('pubProfileAvatar').innerHTML = ""; 
-                    document.getElementById('pubProfileAvatar').style.backgroundImage = `url('${d.avatar}')`; 
-                } 
+                if(docSnap.exists()) { 
+                    const d = docSnap.data(); 
+                    document.getElementById('pubProfileAlias').innerText = d.nick||alias; 
+                    
+                    if(d.avatar) { 
+                        document.getElementById('pubProfileAvatar').innerHTML = ""; 
+                        document.getElementById('pubProfileAvatar').style.backgroundImage = `url('${d.avatar}')`; 
+                    } 
 
-                if(alias==='pancerny') { 
-                    adminB.innerHTML='<span class="admin-badge" style="font-size: 12px; padding: 4px 10px; border-radius: 10px;">ADMINISTRATOR</span>'; 
-                    adminB.style.display='block'; 
-                } 
-                else if (d.role==='mod') { 
-                    adminB.innerHTML='<span class="mod-badge" style="font-size: 12px; padding: 4px 10px; border-radius: 10px;">MODERATOR</span>'; 
-                    adminB.style.display='block'; 
-                } 
-                
-                if(d.dataUrodzenia) { 
-                    const birthDate = new Date(d.dataUrodzenia); 
-                    const today = new Date(); 
-                    let age = today.getFullYear() - birthDate.getFullYear(); 
-                    const m = today.getMonth() - birthDate.getMonth(); 
-                    if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) { age--; } 
-                    document.getElementById('pubProfileAge').innerText = age + " lat"; 
-                } else { 
-                    document.getElementById('pubProfileAge').innerText = "Nie podano"; 
-                } 
-                
-                document.getElementById('pubProfileCity').innerText = d.miejscowosc || "Nie podano"; 
-                document.getElementById('pubProfileDesc').innerText = d.opis || "Brak opisu."; 
-                
-                const achBox = document.getElementById('pubProfileAchievements'); 
-                achBox.innerHTML=''; 
-                if(d.osiagniecia && d.osiagniecia.length > 0) { 
-                    d.osiagniecia.forEach(key => { 
-                        if(window.bazaOsiagniec[key]) achBox.innerHTML += `<img src="${window.bazaOsiagniec[key].img}" class="achievement-icon" title="${window.bazaOsiagniec[key].nazwa}">`; 
-                    }); 
-                } else { 
-                    achBox.innerHTML = `<span style="color:#aaa; font-size:12px; font-weight:bold;">Brak odznak w klaserze.</span>`; 
+                    if(alias==='pancerny') { 
+                        adminB.innerHTML='<span class="admin-badge" style="font-size: 12px; padding: 4px 10px; border-radius: 10px;">ADMINISTRATOR</span>'; 
+                        adminB.style.display='block'; 
+                    } 
+                    else if (d.role==='mod') { 
+                        adminB.innerHTML='<span class="mod-badge" style="font-size: 12px; padding: 4px 10px; border-radius: 10px;">MODERATOR</span>'; 
+                        adminB.style.display='block'; 
+                    } 
+                    
+                    if(d.dataUrodzenia) { 
+                        const birthDate = new Date(d.dataUrodzenia); 
+                        const today = new Date(); 
+                        let age = today.getFullYear() - birthDate.getFullYear(); 
+                        const m = today.getMonth() - birthDate.getMonth(); 
+                        if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) { age--; } 
+                        document.getElementById('pubProfileAge').innerText = age + " lat"; 
+                    } else { 
+                        document.getElementById('pubProfileAge').innerText = "Nie podano"; 
+                    } 
+                    
+                    document.getElementById('pubProfileCity').innerText = d.miejscowosc || "Nie podano"; 
+                    document.getElementById('pubProfileDesc').innerText = d.opis || "Brak opisu."; 
+                    
+                    const achBox = document.getElementById('pubProfileAchievements'); 
+                    achBox.innerHTML=''; 
+                    if(d.osiagniecia && d.osiagniecia.length > 0) { 
+                        d.osiagniecia.forEach(key => { 
+                            if(window.bazaOsiagniec[key]) achBox.innerHTML += `<img src="${window.bazaOsiagniec[key].img}" class="achievement-icon" title="${window.bazaOsiagniec[key].nazwa}">`; 
+                        }); 
+                    } else { 
+                        achBox.innerHTML = `<span style="color:#aaa; font-size:12px; font-weight:bold;">Brak odznak w klaserze.</span>`; 
+                    }
+                } else {
+                     document.getElementById('pubProfileAge').innerText = "Nie podano"; 
+                     document.getElementById('pubProfileCity').innerText = "Nie podano"; 
+                     document.getElementById('pubProfileDesc').innerText = "Konto założone, ale gracz nie zapisał profilu."; 
+                     document.getElementById('pubProfileAchievements').innerHTML = `<span style="color:#aaa; font-size:12px; font-weight:bold;">Brak odznak w klaserze.</span>`;
                 }
-            } else {
-                 document.getElementById('pubProfileAge').innerText = "Nie podano"; 
-                 document.getElementById('pubProfileCity').innerText = "Nie podano"; 
-                 document.getElementById('pubProfileDesc').innerText = "Konto założone, ale gracz nie zapisał profilu."; 
-                 document.getElementById('pubProfileAchievements').innerHTML = `<span style="color:#aaa; font-size:12px; font-weight:bold;">Brak odznak w klaserze.</span>`;
+            } catch (err) {
+                 document.getElementById('pubProfileAge').innerText = "Błąd"; 
+                 document.getElementById('pubProfileCity').innerText = "Błąd"; 
+                 document.getElementById('pubProfileDesc').innerText = `Problem z pobraniem profilu: ${err.message}`;
             }
         };
 
@@ -1207,10 +1263,12 @@
             userMenu.classList.remove('active'); 
             document.getElementById('adminModal').classList.add('active'); 
             
-            const patchSnap = await getDoc(doc(db, "ustawienia", "patchnotes"));
-            if(patchSnap.exists()) { 
-                document.getElementById('adminPatchText').value = patchSnap.data().text || ""; 
-            }
+            try {
+                const patchSnap = await getDoc(doc(db, "ustawienia", "patchnotes"));
+                if(patchSnap.exists()) { 
+                    document.getElementById('adminPatchText').value = patchSnap.data().text || ""; 
+                }
+            } catch(e) { console.error("Admin panel notes err:", e); }
 
             window.loadAdminUsers();
         };
@@ -1223,68 +1281,77 @@
             const f = document.getElementById('newPinFoto').value;
             if(!n || isNaN(lat) || isNaN(lng)) return alert("Wypełnij poprawnie nazwę i współrzędne!");
             
-            await addDoc(collection(db, "tory_custom"), { nazwa: n, lat: lat, lng: lng, foto: f });
-            alert("Dodano tor! Odśwież stronę, żeby go zobaczyć.");
-            closeModal('adminModal');
+            try {
+                await addDoc(collection(db, "tory_custom"), { nazwa: n, lat: lat, lng: lng, foto: f });
+                alert("Dodano tor! Odśwież stronę, żeby go zobaczyć.");
+                closeModal('adminModal');
+            } catch(e) { alert("Błąd dodawania toru: " + e.message); }
         };
 
         window.loadAdminUsers = async () => {
             const render = document.getElementById('adminUsersAchRender');
             render.innerHTML = "Ładowanie graczy...";
-            const snap = await getDocs(collection(db, "uzytkownicy"));
-            render.innerHTML = "";
+            
+            try {
+                const snap = await getDocs(collection(db, "uzytkownicy"));
+                render.innerHTML = "";
 
-            let selectOptions = `<option value="" disabled selected>Wybierz odznakę...</option>`;
-            for (const [key, t] of Object.entries(window.bazaOsiagniec)) { 
-                selectOptions += `<option value="${key}">${t.nazwa}</option>`; 
-            }
-
-            snap.forEach(d => {
-                const uData = d.data(); 
-                const uid = d.id; 
-                const nick = uData.nick || uid;
-                let achHTML = "";
-                
-                if(uData.osiagniecia && uData.osiagniecia.length > 0) {
-                    uData.osiagniecia.forEach(achKey => {
-                        const info = window.bazaOsiagniec[achKey];
-                        if(info) {
-                            achHTML += `<div style="display:inline-block; position:relative; margin:2px;"><img src="${info.img}" style="width:30px; height:30px; border-radius:5px; border:1px solid #ccc; object-fit:contain;"><span onclick="removeAchievement('${uid}', '${achKey}')" style="position:absolute; top:-5px; right:-5px; background:red; color:white; border-radius:50%; width:15px; height:15px; font-size:10px; line-height:15px; text-align:center; cursor:pointer; font-weight:bold;">X</span></div>`;
-                        }
-                    });
+                let selectOptions = `<option value="" disabled selected>Wybierz odznakę...</option>`;
+                for (const [key, t] of Object.entries(window.bazaOsiagniec)) { 
+                    selectOptions += `<option value="${key}">${t.nazwa}</option>`; 
                 }
 
-                let modBtn = "";
-                if(window.userRole === 'admin') {
-                    if(uData.role === 'mod') {
-                        modBtn = `<button class="btn-del" style="font-size:9px; padding:3px 6px; width:auto;" onclick="window.toggleMod('${uid}', false)">Odbierz uprawnienia</button>`;
-                    } else if(uid !== 'pancerny') {
-                        modBtn = `<button class="btn-view" style="font-size:9px; padding:3px 6px; width:auto;" onclick="window.toggleMod('${uid}', true)">Nadaj uprawnienia</button>`;
+                snap.forEach(d => {
+                    const uData = d.data(); 
+                    const uid = d.id; 
+                    const nick = uData.nick || uid;
+                    let achHTML = "";
+                    
+                    if(uData.osiagniecia && uData.osiagniecia.length > 0) {
+                        uData.osiagniecia.forEach(achKey => {
+                            const info = window.bazaOsiagniec[achKey];
+                            if(info) {
+                                achHTML += `<div style="display:inline-block; position:relative; margin:2px;"><img src="${info.img}" style="width:30px; height:30px; border-radius:5px; border:1px solid #ccc; object-fit:contain;"><span onclick="removeAchievement('${uid}', '${achKey}')" style="position:absolute; top:-5px; right:-5px; background:red; color:white; border-radius:50%; width:15px; height:15px; font-size:10px; line-height:15px; text-align:center; cursor:pointer; font-weight:bold;">X</span></div>`;
+                            }
+                        });
                     }
-                }
 
-                let roleTag = uData.role === 'mod' ? `<span class="mod-badge">MOD</span>` : '';
-                if(uid === 'pancerny') roleTag = `<span class="admin-badge">ADMIN</span>`;
+                    let modBtn = "";
+                    if(window.userRole === 'admin') {
+                        if(uData.role === 'mod') {
+                            modBtn = `<button class="btn-del" style="font-size:9px; padding:3px 6px; width:auto;" onclick="window.toggleMod('${uid}', false)">Odbierz uprawnienia</button>`;
+                        } else if(uid !== 'pancerny') {
+                            modBtn = `<button class="btn-view" style="font-size:9px; padding:3px 6px; width:auto;" onclick="window.toggleMod('${uid}', true)">Nadaj uprawnienia</button>`;
+                        }
+                    }
 
-                render.innerHTML += `
-                    <div class="list-item" style="padding:10px; margin-bottom:10px; display:block;">
-                        <div style="display:flex; justify-content:space-between;">
-                            <div><b style="color:#5a4b41;">${nick.toUpperCase()}</b> ${roleTag} <span style="font-size:10px; color:#8a7b71;">(${uid})</span></div>
-                            ${modBtn}
-                        </div>
-                        <div style="margin: 5px 0; min-height: 35px;">${achHTML}</div>
-                        <div style="display:flex; gap:5px;">
-                            <select id="addAchSel_${uid}" style="margin:0 !important; padding:5px !important; font-size:12px !important;">${selectOptions}</select>
-                            <button class="btn-submit" style="width:auto; padding:5px 10px; margin:0;" onclick="addAchievement('${uid}')">DODAJ</button>
-                        </div>
-                    </div>`;
-            });
+                    let roleTag = uData.role === 'mod' ? `<span class="mod-badge">MOD</span>` : '';
+                    if(uid === 'pancerny') roleTag = `<span class="admin-badge">ADMIN</span>`;
+
+                    render.innerHTML += `
+                        <div class="list-item" style="padding:10px; margin-bottom:10px; display:block;">
+                            <div style="display:flex; justify-content:space-between;">
+                                <div><b style="color:#5a4b41;">${nick.toUpperCase()}</b> ${roleTag} <span style="font-size:10px; color:#8a7b71;">(${uid})</span></div>
+                                ${modBtn}
+                            </div>
+                            <div style="margin: 5px 0; min-height: 35px;">${achHTML}</div>
+                            <div style="display:flex; gap:5px;">
+                                <select id="addAchSel_${uid}" style="margin:0 !important; padding:5px !important; font-size:12px !important;">${selectOptions}</select>
+                                <button class="btn-submit" style="width:auto; padding:5px 10px; margin:0;" onclick="addAchievement('${uid}')">DODAJ</button>
+                            </div>
+                        </div>`;
+                });
+            } catch(e) {
+                render.innerHTML = `<div style="color:red; font-weight:bold;">Błąd ładowania graczy: ${e.message}</div>`;
+            }
         };
 
         window.toggleMod = async (uid, makeMod) => {
             if(!confirm(`Czy na pewno chcesz ${makeMod ? 'dać' : 'zabrać'} rangę Moderatora?`)) return;
-            await updateDoc(doc(db, "uzytkownicy", uid), { role: makeMod ? 'mod' : 'user' });
-            window.loadAdminUsers();
+            try {
+                await updateDoc(doc(db, "uzytkownicy", uid), { role: makeMod ? 'mod' : 'user' });
+                window.loadAdminUsers();
+            } catch(e) { alert("Błąd: " + e.message); }
         };
 
         window.addAchievement = async (uid) => {
@@ -1301,10 +1368,13 @@
 
         window.removeAchievement = async (uid, achKey) => {
             if(confirm("Zabrać tę odznakę graczowi?")) {
-                await updateDoc(doc(db, "uzytkownicy", uid), { osiagniecia: arrayRemove(achKey) });
-                window.loadAdminUsers();
+                try {
+                    await updateDoc(doc(db, "uzytkownicy", uid), { osiagniecia: arrayRemove(achKey) });
+                    window.loadAdminUsers();
+                } catch(e) { alert("Błąd: " + e.message); }
             }
         };
+
         window.loadAchievementsFromFirebase = async () => {
             try {
                 const snapshot = await getDocs(collection(db, "osiagniecia_baza"));
@@ -1341,8 +1411,10 @@
             const text = document.getElementById('adminPatchText').value;
             if(!text) return alert("Wpisz treść nowości!");
             const newVersion = Date.now().toString(); 
-            await setDoc(doc(db, "ustawienia", "patchnotes"), { text: text, version: newVersion });
-            alert("Opublikowano! Wszyscy gracze zobaczą to przy logowaniu.");
+            try {
+                await setDoc(doc(db, "ustawienia", "patchnotes"), { text: text, version: newVersion });
+                alert("Opublikowano! Wszyscy gracze zobaczą to przy logowaniu.");
+            } catch(e) { alert("Błąd zapisu nowości: " + e.message); }
         };
 
         // ==========================================
@@ -1417,13 +1489,16 @@
             await window.loadAchievementsFromFirebase();
             window.userRole = "user";
             if(window.currentUserAlias.toLowerCase() === 'pancerny') { window.userRole = "admin"; }
-            const uSnap = await getDoc(doc(db, "uzytkownicy", window.currentUserAlias));
             
-            if(uSnap.exists()) {
-                const ud = uSnap.data();
-                if(ud.nick) window.currentUserNick = ud.nick;
-                if(ud.role === 'mod' && window.userRole !== 'admin') window.userRole = 'mod';
-            }
+            try {
+                const uSnap = await getDoc(doc(db, "uzytkownicy", window.currentUserAlias));
+                if(uSnap.exists()) {
+                    const ud = uSnap.data();
+                    if(ud.nick) window.currentUserNick = ud.nick;
+                    if(ud.role === 'mod' && window.userRole !== 'admin') window.userRole = 'mod';
+                }
+            } catch (err) { console.error("Profile load err:", err); }
+            
             document.getElementById('greetingAlias').innerText = (window.currentUserNick || window.currentUserAlias).toUpperCase(); 
             
             if(window.userRole === 'admin' || window.userRole === 'mod') { 
@@ -1432,11 +1507,13 @@
                 if(clearBtn) clearBtn.classList.remove('hidden');
             }
 
-            const customTracksSnap = await getDocs(collection(db, "tory_custom"));
-            customTracksSnap.forEach(d => {
-                const td = d.data();
-                tory.push({ nazwa: td.nazwa, lat: td.lat, lng: td.lng, foto: td.foto || "" });
-            });
+            try {
+                const customTracksSnap = await getDocs(collection(db, "tory_custom"));
+                customTracksSnap.forEach(d => {
+                    const td = d.data();
+                    tory.push({ nazwa: td.nazwa, lat: td.lat, lng: td.lng, foto: td.foto || "" });
+                });
+            } catch(e) { console.error("Custom tracks err:", e); }
 
             renderTracksOnMapAndMenu();
             await loadMyGarage(); 
@@ -1448,7 +1525,8 @@
             
             tory.forEach(tor => { 
                 const marker = L.marker([tor.lat, tor.lng]).addTo(map); 
-                const safeId = tor.nazwa.replace(/\s+/g, ''); 
+                // Super bezpieczne ID (bez spacji i bez znaków specjalnych)
+                const safeId = tor.nazwa.replace(/[^a-zA-Z0-9]/g, ''); 
                 window.allMarkers[safeId] = marker;
                 
                 marker.bindPopup(`<div style="padding:20px; text-align:center; font-weight:bold; color:#5a4b41;">⌛ Otwieranie...</div>`, {
@@ -1520,14 +1598,13 @@
                                     <input type="number" id="timeS-${safeId}" placeholder="Sek" min="0" max="59" style="font-size:14px !important; padding:6px 2px !important;"> <span style="font-size:14px;">.</span> 
                                     <input type="number" id="timeMS-${safeId}" placeholder="MS" min="0" max="999" style="font-size:14px !important; padding:6px 2px !important;">
                                 </div>
-                                <button onclick="window.saveTime('${tor.nazwa}')" class="btn-submit transition-shape" style="padding: 8px; font-size: 14px; margin-top: 5px;">Zapisz wynik</button>
+                                <button onclick="window.saveTime('${tor.nazwa}', this)" class="btn-submit transition-shape" style="padding: 8px; font-size: 14px; margin-top: 5px;">Zapisz wynik</button>
                             </div>`;
 
-                        // UŻYWAMY SETCONTENT zamiast InnerHTML - To naprawia BŁĄD!
                         popup.setContent(fullHTML);
                         popup.update();
 
-                        // Odpalamy skrypt z leaderboard, on znajdzie zaktualizowaną tabelę po ID
+                        // Odpalamy nasłuch na tablicę wyników
                         window.loadLeaderboard(tor.nazwa); 
 
                     } catch (error) {
@@ -1536,6 +1613,14 @@
                         popup.update();
                     }
                 }); 
+
+                // Zamykanie i czyszczenie strumienia po zamknięciu okienka
+                marker.on('popupclose', () => {
+                    if (window.leaderboardUnsub) {
+                        window.leaderboardUnsub();
+                        window.leaderboardUnsub = null;
+                    }
+                });
 
                 let listImg = tor.foto ? `<img src="${tor.foto}" class="track-list-icon transition-shape">` : `<div class="track-list-icon transition-shape"></div>`;
                 sideMenuList.innerHTML += `
@@ -1563,19 +1648,21 @@
             document.getElementById('editTrackNameTitle').innerText = trackName;
             document.getElementById('editTrackSafeId').value = safeId;
             
-            const infoSnap = await getDoc(doc(db, "tory_detale", safeId));
-            if(infoSnap.exists()) {
-                const d = infoSnap.data();
-                document.getElementById('editTrackDesc').value = d.opis || "";
-                document.getElementById('editTrackPhone').value = d.kontakt || "";
-                document.getElementById('editTrackEmail').value = d.email || "";
-                document.getElementById('editTrackPrice').value = d.ceny || "";
-            } else {
-                document.getElementById('editTrackDesc').value = ""; 
-                document.getElementById('editTrackPhone').value = ""; 
-                document.getElementById('editTrackEmail').value = ""; 
-                document.getElementById('editTrackPrice').value = "";
-            }
+            try {
+                const infoSnap = await getDoc(doc(db, "tory_detale", safeId));
+                if(infoSnap.exists()) {
+                    const d = infoSnap.data();
+                    document.getElementById('editTrackDesc').value = d.opis || "";
+                    document.getElementById('editTrackPhone').value = d.kontakt || "";
+                    document.getElementById('editTrackEmail').value = d.email || "";
+                    document.getElementById('editTrackPrice').value = d.ceny || "";
+                } else {
+                    document.getElementById('editTrackDesc').value = ""; 
+                    document.getElementById('editTrackPhone').value = ""; 
+                    document.getElementById('editTrackEmail').value = ""; 
+                    document.getElementById('editTrackPrice').value = "";
+                }
+            } catch(e) { console.error("Edit track modal err:", e); }
         };
 
         window.saveTrackDetails = async () => {
@@ -1585,102 +1672,116 @@
             const e = document.getElementById('editTrackEmail').value;
             const c = document.getElementById('editTrackPrice').value;
             
-            await setDoc(doc(db, "tory_detale", safeId), { opis: o, kontakt: k, email: e, ceny: c }, {merge: true});
-            alert("Zapisano info o torze!");
-            closeModal('trackInfoEditModal');
-            if(window.allMarkers[safeId]) window.allMarkers[safeId].closePopup(); 
+            try {
+                await setDoc(doc(db, "tory_detale", safeId), { opis: o, kontakt: k, email: e, ceny: c }, {merge: true});
+                alert("Zapisano info o torze!");
+                closeModal('trackInfoEditModal');
+                if(window.allMarkers[safeId]) window.allMarkers[safeId].closePopup(); 
+            } catch(err) { alert("Błąd: " + err.message); }
         };
 
         // ==========================================
         // CZASY I WYNIKI
         // ==========================================
 
-        window.loadLeaderboard = async (trackName) => { 
-            const safeId = trackName.replace(/\s+/g, ''); 
+        window.loadLeaderboard = (trackName) => { 
+            const safeId = trackName.replace(/[^a-zA-Z0-9]/g, ''); 
             const tbody = document.getElementById(`table-${safeId}`); 
             if(!tbody) return; 
 
+            // Wyczyszczenie poprzedniego nasłuchu jeśli był
+            if(window.leaderboardUnsub) {
+                window.leaderboardUnsub();
+                window.leaderboardUnsub = null;
+            }
+
             try {
-                // Uproszczone zapytanie by pominąć złożone indeksy Firebase (orderBy psuło układ)
-                const q = query(collection(db, "czasy"), where("track", "==", trackName)); 
-                const snapshot = await getDocs(q); 
-                
-                let results = [];
-                snapshot.forEach((doc) => {
-                    results.push({ id: doc.id, ...doc.data() });
+                // Pobieramy całą kolekcję na żywo. Brak "where" omija wymogi jakichkolwiek złożonych indeksów w Firestore!
+                window.leaderboardUnsub = onSnapshot(collection(db, "czasy"), (snapshot) => {
+                    let results = [];
+                    snapshot.forEach((doc) => {
+                        const data = doc.data();
+                        // Filtrowanie po torze odbywa się natychmiast u nas w locie
+                        if(data.track === trackName) {
+                            results.push({ id: doc.id, ...data });
+                        }
+                    });
+
+                    // Sortujemy od najszybszego
+                    results.sort((a, b) => {
+                        if(!a.time) return 1;
+                        if(!b.time) return -1;
+                        return a.time.localeCompare(b.time);
+                    });
+
+                    let htmlBuffer = "";
+                    if (results.length === 0) { 
+                        htmlBuffer = "<tr><td colspan='3'>Brak czasów. Bądź pierwszy!</td></tr>"; 
+                        window.bestTimesForTracks[trackName] = "99:99.999"; 
+                    } else {
+                        let currentRank = 1; 
+                        let firstPlaceTime = ""; 
+                        
+                        results.forEach((data) => { 
+                            const safeCar = (data.car || "Nieznane").replace(/'/g, "\\'"); 
+                            
+                            if(currentRank === 1) { 
+                                firstPlaceTime = data.time; 
+                                window.bestTimesForTracks[trackName] = firstPlaceTime; 
+                            } 
+                            
+                            let rankDisplay = currentRank === 1 ? `<img src="1st.png" style="height: 18px; width: auto; object-fit: contain; display: block;">` : (currentRank === 2 ? "🥈" : (currentRank === 3 ? "🥉" : currentRank+"."));
+                            let rankClass = currentRank === 1 ? "rank-1" : (currentRank === 2 ? "rank-2" : (currentRank === 3 ? "rank-3" : "rank-other")); 
+                            
+                            let driverName = data.driver || "Nieznany";
+                            let adminTag = driverName.toLowerCase() === 'pancerny' ? `<span class="admin-badge" style="margin: 2px 0 0 0; display: inline-block;">ADMIN</span>` : ''; 
+
+                            let actionBtns = ""; 
+                            if(driverName === window.currentUserAlias || window.userRole === 'admin' || window.userRole === 'mod') { 
+                                actionBtns = `<div style="margin-top:4px;"><span onclick="window.deleteLapTime('${data.id}', '${trackName}')" style="cursor:pointer; font-size:9px; background:#e74c3c; color:#fff; padding:3px 8px; border-radius:10px; font-weight:bold; box-shadow: 0 2px 0 #c0392b;">USUŃ</span></div>`; 
+                            } 
+                            
+                            htmlBuffer += `
+                            <tr>
+                                <td style="text-align: left; padding: 6px 8px;">
+                                    <div style="display: flex; align-items: center; gap: 6px;">
+                                        <div class="rank-box ${rankClass}">${rankDisplay}</div>
+                                        <div style="display: flex; flex-direction: column; align-items: flex-start; justify-content: center;">
+                                            <span class="user-link" style="cursor:pointer; color:#168bd8; line-height: 1.1; font-size: 12px; word-break: break-all;" onclick="window.showUserProfile('${driverName}')">${driverName.toUpperCase()}</span>
+                                            ${adminTag}
+                                        </div>
+                                    </div>
+                                </td>
+                                <td style="padding: 6px;">
+                                    <span class="car-link" style="cursor:pointer; font-weight:bold; color:#f38815; font-size:11px; word-break: break-word;" onclick="window.showCarCard('${safeCar}', '${driverName}')">${data.car}</span>
+                                </td>
+                                <td style="padding: 6px;">
+                                    <b style="color:#68cc14; font-size: 13px;">${data.time}</b>
+                                    ${actionBtns}
+                                </td>
+                            </tr>`; 
+                            currentRank++; 
+                        }); 
+                    }
+
+                    const currentTbody = document.getElementById(`table-${safeId}`);
+                    if(currentTbody) {
+                        currentTbody.innerHTML = htmlBuffer;
+                        if(window.allMarkers[safeId] && window.allMarkers[safeId].getPopup()) {
+                             window.allMarkers[safeId].getPopup().update();
+                        }
+                    }
+                }, (error) => {
+                    console.error("Błąd strumienia wyników na żywo:", error);
+                    const currentTbody = document.getElementById(`table-${safeId}`);
+                    if(currentTbody) {
+                        currentTbody.innerHTML = `<tr><td colspan='3' style='color:red; font-size:11px; font-weight:bold;'>Błąd pobierania bazy (Sprawdź reguły Rules)! ${error.message}</td></tr>`;
+                    }
                 });
-
-                // Zastępcze sortowanie JS (od najszybszego do najwolniejszego)
-                results.sort((a, b) => {
-                    if(!a.time) return 1;
-                    if(!b.time) return -1;
-                    return a.time.localeCompare(b.time);
-                });
-
-                tbody.innerHTML = ""; 
-                if (results.length === 0) { 
-                    tbody.innerHTML = "<tr><td colspan='3'>Brak czasów. Bądź pierwszy!</td></tr>"; 
-                    window.bestTimesForTracks[trackName] = "99:99.999"; 
-                    if(window.allMarkers[safeId] && window.allMarkers[safeId].getPopup()) window.allMarkers[safeId].getPopup().update();
-                    return; 
-                } 
                 
-                let currentRank = 1; 
-                let firstPlaceTime = ""; 
-                
-                let htmlBuffer = "";
-                
-                results.forEach((data) => { 
-                    const safeCar = (data.car || "Nieznane").replace(/'/g, "\\'"); 
-                    
-                    if(currentRank === 1) { 
-                        firstPlaceTime = data.time; 
-                        window.bestTimesForTracks[trackName] = firstPlaceTime; 
-                    } 
-                    
-                    let rankDisplay = currentRank === 1 ? `<img src="1st.png" style="height: 18px; width: auto; object-fit: contain; display: block;">` : (currentRank === 2 ? "🥈" : (currentRank === 3 ? "🥉" : currentRank+"."));
-                    let rankClass = currentRank === 1 ? "rank-1" : (currentRank === 2 ? "rank-2" : (currentRank === 3 ? "rank-3" : "rank-other")); 
-                    
-                    let driverName = data.driver || "Nieznany";
-                    let adminTag = driverName.toLowerCase() === 'pancerny' ? `<span class="admin-badge" style="margin: 2px 0 0 0; display: inline-block;">ADMIN</span>` : ''; 
-
-                    let actionBtns = ""; 
-                    if(driverName === window.currentUserAlias || window.userRole === 'admin' || window.userRole === 'mod') { 
-                        actionBtns = `<div style="margin-top:4px;"><span onclick="window.deleteLapTime('${data.id}', '${trackName}')" style="cursor:pointer; font-size:9px; background:#e74c3c; color:#fff; padding:3px 8px; border-radius:10px; font-weight:bold; box-shadow: 0 2px 0 #c0392b;">USUŃ</span></div>`; 
-                    } 
-                    
-                    htmlBuffer += `
-                    <tr>
-                        <td style="text-align: left; padding: 6px 8px;">
-                            <div style="display: flex; align-items: center; gap: 6px;">
-                                <div class="rank-box ${rankClass}">${rankDisplay}</div>
-                                <div style="display: flex; flex-direction: column; align-items: flex-start; justify-content: center;">
-                                    <span class="user-link" style="cursor:pointer; color:#168bd8; line-height: 1.1; font-size: 12px; word-break: break-all;" onclick="window.showUserProfile('${driverName}')">${driverName.toUpperCase()}</span>
-                                    ${adminTag}
-                                </div>
-                            </div>
-                        </td>
-                        <td style="padding: 6px;">
-                            <span class="car-link" style="cursor:pointer; font-weight:bold; color:#f38815; font-size:11px; word-break: break-word;" onclick="window.showCarCard('${safeCar}', '${driverName}')">${data.car}</span>
-                        </td>
-                        <td style="padding: 6px;">
-                            <b style="color:#68cc14; font-size: 13px;">${data.time}</b>
-                            ${actionBtns}
-                        </td>
-                    </tr>`; 
-                    currentRank++; 
-                }); 
-                
-                tbody.innerHTML = htmlBuffer;
-                
-                // Odświeżenie wysokości po wrzuceniu wierszy
-                if(window.allMarkers[safeId] && window.allMarkers[safeId].getPopup()) {
-                     window.allMarkers[safeId].getPopup().update();
-                }
             } catch (error) {
-                console.error("Popup Error LoadLeaderboard:", error);
-                tbody.innerHTML = `<tr><td colspan='3' style='color:red; font-size:11px; font-weight:bold;'>Błąd pobierania wyników: ${error.message}</td></tr>`;
-                if(window.allMarkers[safeId] && window.allMarkers[safeId].getPopup()) window.allMarkers[safeId].getPopup().update();
+                console.error("Błąd podczas konfiguracji na żywo:", error);
+                tbody.innerHTML = `<tr><td colspan='3' style='color:red; font-size:11px; font-weight:bold;'>Błąd: ${error.message}</td></tr>`;
             }
         };
 
@@ -1688,15 +1789,15 @@
             if(confirm("Usunąć ten wynik?")) { 
                 try {
                     await deleteDoc(doc(db, "czasy", docId)); 
-                    window.loadLeaderboard(trackName); 
+                    // Tabela odświeży się od razu SAMA, bo mamy strumień onSnapshot w loadLeaderboard!
                 } catch(e) {
                     alert("Błąd usuwania wyniku z bazy: " + e.message);
                 }
             } 
         };
 
-        window.saveTime = async (trackName) => { 
-            const safeId = trackName.replace(/\s+/g, ''); 
+        window.saveTime = async (trackName, btnElement) => { 
+            const safeId = trackName.replace(/[^a-zA-Z0-9]/g, ''); 
             const car = document.getElementById(`carSelect-${safeId}`)?.value; 
             const m = document.getElementById(`timeM-${safeId}`).value; 
             const s = document.getElementById(`timeS-${safeId}`).value; 
@@ -1708,6 +1809,14 @@
             const formattedTime = `${(m||'0').toString().padStart(2, '0')}:${(s||'0').toString().padStart(2, '0')}.${(ms||'0').toString().padStart(3, '0')}`; 
             const currentBest = window.bestTimesForTracks[trackName] || "99:99.999"; 
             
+            // Reakcja wizualna i zablokowanie klikania 20 razy
+            let originalText = "Zapisz wynik";
+            if (btnElement) {
+                originalText = btnElement.innerText;
+                btnElement.innerText = "Zapisywanie...";
+                btnElement.disabled = true;
+            }
+
             try {
                 await addDoc(collection(db, "czasy"), { 
                     driver: window.currentUserAlias, 
@@ -1721,17 +1830,21 @@
                 document.getElementById(`timeS-${safeId}`).value = ''; 
                 document.getElementById(`timeMS-${safeId}`).value = ''; 
                 
-                // FORCE RELOAD EXACTLY HERE
-                await window.loadLeaderboard(trackName); 
-                
                 if (formattedTime < currentBest) { 
                     const randomIndex = Math.floor(Math.random() * window.victoryGifs.length); 
                     document.getElementById('victoryImgRender').src = window.victoryGifs[randomIndex]; 
                     setTimeout(() => { document.getElementById('victoryModal').classList.add('active'); }, 500); 
                 } 
+                // Zniknęło ładowanie tabeli! Robi to automatycznie, bez zawieszania "onSnapshot" z loadLeaderboard.
             } catch(e) {
                 console.error("Firebase write error:", e);
                 alert("Błąd zapisu wyniku w Firebase: " + e.message);
+            } finally {
+                // Zawsze odblokuj przycisk, nawet jak jebnie błędem
+                if (btnElement) {
+                    btnElement.innerText = originalText;
+                    btnElement.disabled = false;
+                }
             }
         };
 
@@ -1882,9 +1995,12 @@
         onAuthStateChanged(auth, async (user) => { 
             if (user && user.emailVerified) { 
                 window.currentUserAlias = user.email.split('@')[0]; 
-                const docSnap = await getDoc(doc(db, "uzytkownicy", window.currentUserAlias));
-                if(docSnap.exists() && docSnap.data().nick) { window.currentUserNick = docSnap.data().nick; } 
-                else { window.currentUserNick = window.currentUserAlias; }
+                try {
+                    const docSnap = await getDoc(doc(db, "uzytkownicy", window.currentUserAlias));
+                    if(docSnap.exists() && docSnap.data().nick) { window.currentUserNick = docSnap.data().nick; } 
+                    else { window.currentUserNick = window.currentUserAlias; }
+                } catch(err) { console.error(err); window.currentUserNick = window.currentUserAlias; }
+                
                 document.getElementById('greetingAlias').innerText = window.currentUserNick.toUpperCase(); 
                 updateAvatarUI(user); 
                 document.getElementById('authOverlay').classList.add('hidden'); 
@@ -1892,15 +2008,17 @@
                 map.invalidateSize(); 
                 await initializeAppAfterLogin();
 
-                const patchSnap = await getDoc(doc(db, "ustawienia", "patchnotes"));
-                if(patchSnap.exists()) {
-                    const pData = patchSnap.data();
-                    if(localStorage.getItem("trackday_version") !== pData.version) {
-                        document.getElementById("changelogText").innerHTML = pData.text;
-                        document.getElementById("changelogModal").classList.add("active");
-                        localStorage.setItem("trackday_version", pData.version);
+                try {
+                    const patchSnap = await getDoc(doc(db, "ustawienia", "patchnotes"));
+                    if(patchSnap.exists()) {
+                        const pData = patchSnap.data();
+                        if(localStorage.getItem("trackday_version") !== pData.version) {
+                            document.getElementById("changelogText").innerHTML = pData.text;
+                            document.getElementById("changelogModal").classList.add("active");
+                            localStorage.setItem("trackday_version", pData.version);
+                        }
                     }
-                }
+                } catch(err) { console.error("Patchnotes err:", err); }
                 
                 if(window.ytPlayer && typeof window.ytPlayer.playVideo === 'function') {
                     document.getElementById('radioBtnToggle').innerText = "🎵 Włącz Audio";
@@ -1908,30 +2026,32 @@
                 } 
 
                 if(!window.chatUnsubscribe) {
-                    const chatQ = query(collection(db, "czat"), orderBy("timestamp", "desc"), limit(50));
-                    window.chatUnsubscribe = onSnapshot(chatQ, (snapshot) => {
-                        const chatBox = document.getElementById('chatMessages');
-                        chatBox.innerHTML = '';
-                        let msgs = [];
-                        snapshot.forEach(doc => msgs.push({id: doc.id, ...doc.data()}));
-                        msgs.reverse(); 
-                        msgs.forEach(msg => {
-                            const time = msg.timestamp ? new Date(msg.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : '';
-                            
-                            let deleteBtnHTML = '';
-                            if (window.userRole === 'admin' || window.userRole === 'mod') {
-                                deleteBtnHTML = `<span class="chat-msg-delete" onclick="window.deleteChatMessage('${msg.id}')">×</span>`;
-                            }
+                    try {
+                        const chatQ = query(collection(db, "czat"), orderBy("timestamp", "desc"), limit(50));
+                        window.chatUnsubscribe = onSnapshot(chatQ, (snapshot) => {
+                            const chatBox = document.getElementById('chatMessages');
+                            chatBox.innerHTML = '';
+                            let msgs = [];
+                            snapshot.forEach(doc => msgs.push({id: doc.id, ...doc.data()}));
+                            msgs.reverse(); 
+                            msgs.forEach(msg => {
+                                const time = msg.timestamp ? new Date(msg.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : '';
+                                
+                                let deleteBtnHTML = '';
+                                if (window.userRole === 'admin' || window.userRole === 'mod') {
+                                    deleteBtnHTML = `<span class="chat-msg-delete" onclick="window.deleteChatMessage('${msg.id}')">×</span>`;
+                                }
 
-                            chatBox.innerHTML += `
-                            <div class="chat-msg">
-                                ${deleteBtnHTML}
-                                <span class="chat-nick" onclick="window.showUserProfile('${msg.uid}')">[${time}] ${msg.nick.toUpperCase()}:</span>
-                                <span class="chat-text">${msg.text}</span>
-                            </div>`;
+                                chatBox.innerHTML += `
+                                <div class="chat-msg">
+                                    ${deleteBtnHTML}
+                                    <span class="chat-nick" onclick="window.showUserProfile('${msg.uid}')">[${time}] ${msg.nick.toUpperCase()}:</span>
+                                    <span class="chat-text">${msg.text}</span>
+                                </div>`;
+                            });
+                            chatBox.scrollTop = chatBox.scrollHeight;
                         });
-                        chatBox.scrollTop = chatBox.scrollHeight;
-                    });
+                    } catch(err) { console.error("Chat init error:", err); }
                 }
             } 
             else { 
