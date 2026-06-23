@@ -177,7 +177,7 @@
            CZAT LOBBY
            ========================================== */
         #chatToggleBtn {
-            position: absolute; bottom: 20px; left: 20px; z-index: 2000;
+            position: absolute; bottom: 20px; left: 20px; z-index: 2000; /* Podniesiony z-index dla mobilki */
             background: linear-gradient(180deg, #fff 0%, #f4f4f4 100%);
             padding: 10px 20px; border-radius: 20px; border: 3px solid #ccc;
             box-shadow: 0 4px 0 #aaa, 0 6px 10px rgba(0,0,0,0.3);
@@ -188,7 +188,7 @@
         #chatWindow {
             position: absolute; bottom: 70px; left: 20px; width: 320px; height: 420px;
             background: #f0f3f5; border: 4px solid #fff; border-radius: 16px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.5); z-index: 2001; 
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5); z-index: 2001; /* Z-index ponad popupami mapy */
             display: flex; flex-direction: column; overflow: hidden;
             transition: 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55); transform-origin: bottom left;
         }
@@ -287,7 +287,9 @@
            ========================================== */
         .leaflet-popup-content-wrapper { background: #f0f3f5; border: 4px solid #fff; border-radius: 16px; box-shadow: 0 0 0 2px #ccc, 0 10px 20px rgba(0,0,0,0.3); padding: 0; overflow: hidden; }
         .leaflet-popup-tip { background: #fff; }
-        .leaflet-popup-content { margin: 0 !important; width: 100% !important; max-width: 260px !important; font-family: 'M PLUS Rounded 1c', sans-serif; font-size: 12px !important; } 
+        
+        /* Zmieniamy max-width na min-width, szerokość dopasuje się do zawartości */
+        .leaflet-popup-content { margin: 0 !important; width: auto !important; min-width: 270px; max-width: 320px; font-family: 'M PLUS Rounded 1c', sans-serif; font-size: 12px !important; } 
         
         .leaflet-popup-close-button { 
             background: rgba(0,0,0,0.6) !important; color: #fff !important; font-size: 20px !important; font-weight: 900 !important; top: 8px !important; right: 8px !important; 
@@ -301,7 +303,7 @@
 
         .track-details-box { background: #fff; border-radius: 10px; padding: 10px; margin-bottom: 10px; border: 2px solid #ddd; font-size: 12px; text-align: left; color:#5a4b41;}
 
-        .track-action-btn { display: inline-flex; align-items: center; justify-content: center; gap: 5px; background: #fff; border: 2px solid #ccc; color: #5a4b41; padding: 5px 12px; border-radius: 12px; text-decoration: none; font-size: 11px; font-weight: 900; transition: 0.2s; box-shadow: 0 2px 0 #ccc; cursor: pointer; text-transform: uppercase; font-family: 'M PLUS Rounded 1c', sans-serif;}
+        .track-action-btn { display: inline-flex; align-items: center; justify-content: center; gap: 5px; background: #fff; border: 2px solid #ccc; color: #5a4b41; padding: 6px 10px; border-radius: 12px; text-decoration: none; font-size: 10px; font-weight: 900; transition: 0.2s; box-shadow: 0 2px 0 #ccc; cursor: pointer; text-transform: uppercase; font-family: 'M PLUS Rounded 1c', sans-serif;}
         .track-action-btn:active { transform: translateY(2px); box-shadow: 0 0 0 #ccc; }
         .track-action-btn:hover { color: #168bd8; border-color: #168bd8; box-shadow: 0 2px 0 #168bd8; }
 
@@ -421,9 +423,10 @@
         body.initial-d-active .leaflet-control-zoom a:hover { background: #e74c3c !important; color: #fff !important; }
 
         /* ==========================================
-           RESPONSYWNOŚĆ (TELEFONY)
+           RESPONSYWNOŚĆ (TELEFONY) - POPRAWIONA
            ========================================== */
         @media screen and (max-width: 600px) {
+            /* Główny header i avatar */
             .floating-header { top: 10px; padding: 5px 15px; flex-direction: row; width: auto; white-space: nowrap;}
             .floating-header h1 { font-size: 20px; letter-spacing: 1px; }
             .floating-header img { height: 50px; margin: 0 -15px; }
@@ -432,36 +435,49 @@
             .greeting { display: none; }
             .user-avatar { width: 35px; height: 35px; font-size: 16px; margin: 0;}
             
+            /* Ekran logowania */
             .auth-card { width: 95%; flex-direction: column; height: auto; }
             .auth-card-image { display: none; }
             
+            /* Modale i formularze - Optycznie mniejsze */
             .modal-content { width: 95%; max-height: 90vh; }
             .modal-content h2 { font-size: 16px; padding: 10px; }
             .modal-body { padding: 12px; }
             .garage-form-box { padding: 15px; margin-bottom: 15px; }
             .garage-form-box h3 { font-size: 14px; }
             
-            input, select, textarea { padding: 10px 12px !important; font-size: 13px !important; margin: 5px 0 !important; }
+            /* Inputy - naprawione ucinanie daty! */
+            input, select, textarea { 
+                padding: 10px 12px !important; 
+                font-size: 13px !important; 
+                margin: 5px 0 !important;
+            }
             
+            /* Przyciski mniejsze i zgrabniejsze */
             .btn-submit, .btn-auth-submit { font-size: 13px; padding: 10px 15px; margin-top: 10px; border-width: 2px; border-radius: 15px;}
             .list-item-btns button { padding: 6px 10px; font-size: 10px; border-width: 1px;}
             .file-upload-btn { padding: 8px; font-size: 11px; }
             
+            /* Menu boczne - węższe */
             #sideMenu { width: 260px; left: -280px; }
             .side-menu-header { font-size: 16px; padding: 15px; }
             .track-list-item { padding: 12px 15px; font-size: 13px; }
             .track-list-icon { width: 25px; height: 25px; }
             
-            #chatToggleBtn { bottom: 15px; left: 10px; padding: 8px 15px; font-size: 12px; border-width: 2px; border-radius: 15px; z-index: 2000; }
-            .leaflet-bottom.leaflet-left { margin-bottom: 55px; } 
-            
-            .leaflet-popup-content { max-width: 240px !important; } /* Jeszcze węższe dymki na telefonach */
+            /* Czat Lobby i map popups - poprawione nachodzenie */
+            #chatToggleBtn { 
+                bottom: 15px; left: 10px; padding: 8px 15px; font-size: 12px; 
+                border-width: 2px; border-radius: 15px; z-index: 2000;
+            }
+            .leaflet-bottom.leaflet-left { margin-bottom: 55px; } /* Przesunięcie kontrolek mapy niżej czatu */
+            .leaflet-popup-content { width: 240px !important; }
             
             #chatWindow { width: 92vw; left: 4vw; bottom: 60px; height: 380px; z-index: 2001;}
             .chat-header { padding: 10px; font-size: 14px; }
             .chat-msg { padding: 6px 10px; font-size: 12px;}
             .chat-text { font-size: 12px; }
             
+            /* Troll Popups */
             .troll-popup { padding: 15px; transform: scale(0.9); }
             .troll-popup h2 { font-size: 24px; }
             .troll-img { max-width: 90%; }
@@ -1428,20 +1444,25 @@
                 const safeId = tor.nazwa.replace(/\s+/g, ''); 
                 window.allMarkers[safeId] = marker;
                 
+                // Modyfikacja minWidth dla popupa aby teksty się nie łamały brzydko
                 marker.bindPopup(`<div id="popup-content-${safeId}"><div style="padding:20px; text-align:center;">Ładowanie...</div></div>`, {
-                    minWidth: 260, maxWidth: 260, autoPanPaddingTopLeft: [0, 50]
+                    minWidth: 280, maxWidth: 350, autoPanPaddingTopLeft: [0, 50]
                 }); 
                 
                 marker.on('popupopen', async () => { 
                     
                     let trackLayoutLink = tor.foto ? `
-                        <div style="margin-top: 12px; text-align: center;">
-                            <a href="${tor.foto}" target="_blank" class="track-layout-link">
+                            <a href="${tor.foto}" target="_blank" class="track-action-btn">
                                 UKŁAD TORU
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
-                            </a>
-                        </div>` : '';
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+                            </a>` : '';
                     
+                    // Definiujemy Edit Button, ale nie jako wielki submit
+                    let editBtnHTML = (window.userRole === 'admin' || window.userRole === 'mod') ? `
+                        <button class="track-action-btn" style="color:#168bd8; border-color:#168bd8; box-shadow: 0 2px 0 #168bd8;" onclick="window.openTrackEditModal('${safeId}', '${tor.nazwa}')">
+                            🔧 Ustawienia
+                        </button>` : '';
+
                     const fullHTML = `
                         <div class="popup-inner-pad transition-shape">
                             <h2 class="transition-shape uma-pattern-green">${tor.nazwa}</h2>
@@ -1478,25 +1499,28 @@
                     let infoData = { opis: "Brak opisu.", kontakt: "Brak", email: "Brak", ceny: "Brak info" };
                     if(infoSnap.exists()) infoData = infoSnap.data();
 
-                    let editBtnHTML = (window.userRole === 'admin' || window.userRole === 'mod') ? `<button class="btn-submit transition-shape" style="width:100%; margin-top:15px; background: linear-gradient(180deg, #2bc2ff, #168bd8); box-shadow: 0 4px 0 #0d6299, 0 6px 10px rgba(0,0,0,0.2); text-shadow: 1px 1px 0 #0d6299;" onclick="window.openTrackEditModal('${safeId}', '${tor.nazwa}')">🔧 Ustawienia Toru</button>` : '';
-
                     infoBox.innerHTML = `
                         <div style="margin-bottom: 8px; font-weight: bold; text-align: center; border-bottom: 2px dashed #ddd; padding-bottom: 6px; font-size: 12px;">${infoData.opis}</div>
                         <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px;">
-                            <span style="font-weight: 900; font-size: 11px; text-transform: uppercase;"><span style="font-size:14px;">☎️</span> Kontakt</span>
-                            <span style="font-weight: 900; font-size: 12px; text-align: right; max-width: 60%; word-break: break-word;">${infoData.kontakt}</span>
+                            <span style="font-weight: 900; font-size: 11px; text-transform: uppercase; flex-shrink: 0;"><span style="font-size:14px;">☎️</span> Kontakt</span>
+                            <span style="font-weight: 900; font-size: 12px; text-align: right; max-width: 65%; word-break: break-word;">${infoData.kontakt}</span>
                         </div>
                         <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px;">
-                            <span style="font-weight: 900; font-size: 11px; text-transform: uppercase;"><span style="font-size:14px;">📧</span> E-mail</span>
-                            <span style="font-weight: 900; font-size: 12px; text-align: right; max-width: 60%; word-break: break-word;">${infoData.email}</span>
+                            <span style="font-weight: 900; font-size: 11px; text-transform: uppercase; flex-shrink: 0;"><span style="font-size:14px;">📧</span> E-mail</span>
+                            <span style="font-weight: 900; font-size: 12px; text-align: right; max-width: 65%; word-break: break-word;">${infoData.email}</span>
                         </div>
-                        <div style="display: flex; justify-content: space-between; align-items: flex-start;">
-                            <span style="font-weight: 900; font-size: 11px; text-transform: uppercase;"><span style="font-size:14px;">💲</span> Ceny</span>
-                            <span style="font-weight: 900; font-size: 12px; text-align: right; max-width: 60%; word-break: break-word;">${infoData.ceny}</span>
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px;">
+                            <span style="font-weight: 900; font-size: 11px; text-transform: uppercase; flex-shrink: 0;"><span style="font-size:14px;">💲</span> Ceny</span>
+                            <span style="font-weight: 900; font-size: 12px; text-align: right; max-width: 65%; word-break: break-word;">${infoData.ceny}</span>
                         </div>
-                        ${trackLayoutLink}
-                        ${editBtnHTML}
+                        <div style="display: flex; justify-content: center; gap: 10px; flex-wrap: wrap;">
+                            ${trackLayoutLink}
+                            ${editBtnHTML}
+                        </div>
                     `;
+
+                    // Wymuś odświeżenie rozmiaru po załadowaniu treści
+                    setTimeout(() => { marker.getPopup().update(); }, 50);
 
                     window.loadLeaderboard(tor.nazwa); 
                 }); 
@@ -1618,6 +1642,10 @@
                 </tr>`; 
                 currentRank++; 
             }); 
+            // Wymuś odświeżenie rozmiaru po załadowaniu tabeli
+            if(window.allMarkers[safeId] && window.allMarkers[safeId].getPopup()) {
+                 window.allMarkers[safeId].getPopup().update();
+            }
         };
 
         window.deleteLapTime = async (docId, trackName) => { 
@@ -1768,7 +1796,7 @@
         });
 
         // ==========================================
-        // AUTHENTICATION LOGIC
+        // AUTHENTICATION LOGIC (POPRAWIONY SESION PERSISTENCE)
         // ==========================================
 
         document.getElementById('loginBtn').addEventListener('click', async () => { 
@@ -1776,6 +1804,7 @@
             const p = document.getElementById('password').value; 
             if(!e || !p) return alert("Wpisz dane!"); 
             try { 
+                // USTAWIAMY KRÓTKĄ SESJĘ PRZED ZALOGOWANIEM (wygasa po zamknięciu przeglądarki)
                 await setPersistence(auth, browserSessionPersistence);
                 const user = await signInWithEmailAndPassword(auth, e, p); 
                 if(!user.user.emailVerified) { alert("Potwierdź e-mail!"); signOut(auth); } 
@@ -1811,6 +1840,7 @@
                 map.invalidateSize(); 
                 await initializeAppAfterLogin();
 
+                // Obsługa nowości
                 const patchSnap = await getDoc(doc(db, "ustawienia", "patchnotes"));
                 if(patchSnap.exists()) {
                     const pData = patchSnap.data();
@@ -1821,11 +1851,13 @@
                     }
                 }
                 
+                // Obsługa radia
                 if(window.ytPlayer && typeof window.ytPlayer.playVideo === 'function') {
                     document.getElementById('radioBtnToggle').innerText = "🎵 Włącz Audio";
                     window.isRadioPlaying = false;
                 } 
 
+                // Aktywacja strumienia Czatu Lobby
                 if(!window.chatUnsubscribe) {
                     const chatQ = query(collection(db, "czat"), orderBy("timestamp", "desc"), limit(50));
                     window.chatUnsubscribe = onSnapshot(chatQ, (snapshot) => {
@@ -1862,6 +1894,7 @@
                     window.isRadioPlaying = false; 
                 } 
 
+                // Zatrzymujemy czat jak wylogujemy
                 if(window.chatUnsubscribe) {
                     window.chatUnsubscribe();
                     window.chatUnsubscribe = null;
@@ -1871,6 +1904,7 @@
 
         // ==========================================
         // EASTER EGG (INITIAL D MODE)
+        // Definiowane wewnątrz modułu by mieć dostęp do "map", "darkMap" itd.
         // ==========================================
         window.activateInitialDMode = () => {
             if(document.body.classList.contains('initial-d-active')) return;
@@ -1894,6 +1928,7 @@
                 document.getElementById('headerTitle').innerText = "INICJALNY GAZ...";
                 document.querySelectorAll('.header-gif').forEach(img => img.style.display = 'none');
 
+                // ZAMIANA HAMBURGERA NA OBRACAJĄCĄ SIĘ AE86
                 document.getElementById('hamburgerBtn').innerHTML = '<img src="secret2.gif" style="width: 100%; height: 100%; object-fit: contain;">';
 
                 map.addLayer(darkMap);
@@ -2010,6 +2045,7 @@
             let messages = [];
             let imgSrc = "tachyon2.gif";
 
+            // Sprawdzamy czy aktywny jest tryb Initial D
             if (document.body.classList.contains('initial-d-active')) {
                 messages = [
                     "Ściganci nie potrzebują dziewczyn...",
@@ -2019,6 +2055,7 @@
                 ];
                 imgSrc = "id.gif";
             } else {
+                // Podstawowy tryb Umapyoi (Tachyon)
                 messages = [
                     "Nudzi ci się? a do kiedy masz przegląd?",
                     "Protip! Sprawdzaj po wulkanizatorze czy koło dokręcił jadąc 140 km/h!",
@@ -2029,14 +2066,12 @@
                     "Jak już tu kliknąłeś to rozumiem że auto w warsztacie?",
                     "Opel Asterka ma 1 miejsce w rankingu! Najczęściej złomowanych aut.",
                     "OMODA? Xiaomi? Tesla? telefonem jeździsz? odważnie.",
-                    "W celu zwiększenia ryżu należy ujebać rurę wydechową do zera, niech usłyszą twoją bestię na wysokich.",
-                    "Pamiętaj żeby po zakręcie dodać oleju- Jakiś litr zgubiłem przed chwilą.",
-                    "Francuza kupiłeś że tu klikasz? Gratulacje, wylosuj sobie usterkę teraz",
-                    "Jak jeździsz Volvo w dieslu... to gratuluje zasłony dymnej z urwanego DPFu.",
-                    "Na łysych letnich przynajmniej czujesz, że żyjesz.",
-                    "Im dłużej tu klikasz tym zwiększasz prawdopodobieństwo rudej szmaty."
+                    "W celu zwiększenia ryżu należy ujebać rurę wydechową do zera, niech usłyszą twoją bestię na wysokich",
+                    "Jak zaświeci się kontrolka Check Engine to stuknij w deskę rozdzielczą - to tylko fatamorgana",
+                    "Wpisz sobie Forda T na czas do okrążenia a nie tu klikasz jak jakiś bambik."
                 ];
                 
+                // Sprawdzenie czy gracz ma Diesla
                 let hasDiesel = false;
                 if (window.myFullCars && window.myFullCars.some(car => car.fuel === 'Diesel')) {
                     hasDiesel = true;
@@ -2050,7 +2085,7 @@
             const randomMsg = messages[Math.floor(Math.random() * messages.length)];
 
             document.getElementById('tachyonText').innerText = randomMsg;
-            document.querySelector('#tachyonToast img').src = imgSrc; 
+            document.querySelector('#tachyonToast img').src = imgSrc; // Podmiana gifa w locie
             
             const toast = document.getElementById('tachyonToast');
             toast.classList.add('show');
