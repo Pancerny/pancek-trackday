@@ -467,7 +467,7 @@
         body.initial-d-active .dropdown-menu { background: #111 !important; border-color: #e74c3c !important; }
         body.initial-d-active .dropdown-item { color: #ccc !important; border-bottom: 1px solid #333; }
         body.initial-d-active .dropdown-item:hover { background: #e74c3c !important; color: #fff !important; padding-left: 20px; }
-        body.initial-d-active .modal-content, body.initial-d-active #chatWindow { background: #222 !important; border-color: #e74c3c !important; color: #ddd !important; }
+        body.initial-d-active .modal-content, body.initial-d-active #chatWindow, body.initial-d-active .troll-popup, body.initial-d-active #tachyonToast { background: #222 !important; border-color: #e74c3c !important; color: #ddd !important; }
         body.initial-d-active .garage-form-box, body.initial-d-active .list-item, body.initial-d-active table, body.initial-d-active .time-inputs-container, body.initial-d-active .track-details-box {
             background: #333 !important;
             border-color: #555 !important;
@@ -628,7 +628,7 @@
     <div class="modal-overlay" id="trackLayoutModal" style="z-index: 7000;">
         <div class="modal-content" style="max-width: 90%; text-align: center; background: transparent; box-shadow: none; border: none;">
             <span class="close-modal" onclick="closeModal('trackLayoutModal')" style="color: #fff; text-shadow: 0 0 5px #000; font-size: 40px; right: 0px; top: -30px;">×</span>
-            <img id="trackLayoutImg" src="" style="max-width: 100%; max-height: 80vh; border-radius: 12px; border: 4px solid #fff; box-shadow: 0 8px 15px rgba(0,0,0,0.5);">
+            <img id="trackLayoutImg" src="" style="max-width: 100%; max-height: 60vh; object-fit: contain; border-radius: 12px; border: 4px solid #fff; box-shadow: 0 8px 15px rgba(0,0,0,0.5);">
         </div>
     </div>
 
@@ -1536,9 +1536,9 @@
                     if(window.myCars.length === 0) carSelectHTML += `<option value="" disabled selected>Brak aut!</option>`; 
                     else { window.myCars.forEach(car => { carSelectHTML += `<option value="${car}">${car}</option>`; }); } 
                     carSelectHTML += `</select>`; 
-                    popupContainer.querySelector(`#carSelectContainer-${safeId}`).innerHTML = carSelectHTML;
+                    popupContainer.querySelector(`[id="carSelectContainer-${safeId}"]`).innerHTML = carSelectHTML;
 
-                    const infoBox = popupContainer.querySelector(`#trackInfoRender-${safeId}`);
+                    const infoBox = popupContainer.querySelector(`[id="trackInfoRender-${safeId}"]`);
                     const infoSnap = await getDoc(doc(db, "tory_detale", safeId));
                     let infoData = { opis: "Brak opisu.", kontakt: "Brak", email: "Brak", ceny: "Brak info" };
                     if(infoSnap.exists()) infoData = infoSnap.data();
@@ -2088,11 +2088,12 @@
                     "ma 4 koła i jeździ w czym problem? drzwi to dodatek.",
                     "Pamiętaj! jak masz dziurawy wydech to masz darmową terapię w kabinie!",
                     "Jak już tu kliknąłeś to rozumiem że auto w warsztacie?",
-                    "Opel Asterka ma 1 miejsce w rankingu! Najczęściej złomowanych aut.",
-                    "OMODA? Xiaomi? Tesla? telefonem jeździsz? odważnie.",
-                    "W celu zwiększenia ryżu należy ujebać rurę wydechową do zera, niech usłyszą twoją bestię na wysokich",
-                    "Jak zaświeci się kontrolka Check Engine to stuknij w deskę rozdzielczą - to tylko fatamorgana",
-                    "Wpisz sobie Forda T na czas do okrążenia a nie tu klikasz jak jakiś bambik."
+                    "W celu zwiększenia ryżu należy ujebać rurę wydechową do zera, niech usłyszą twoją bestię na wysokich.",
+                    "Pamiętaj żeby po zakręcie dodać oleju- Jakiś litr zgubiłem przed chwilą.",
+                    "Francuza kupiłeś że tu klikasz? Gratulacje, wylosuj sobie usterkę teraz",
+                    "Jak jeździsz Volvo w dieslu... to gratuluje zasłony dymnej z urwanego DPFu.",
+                    "Na łysych letnich przynajmniej czujesz, że żyjesz.",
+                    "Im dłużej tu klikasz tym zwiększasz prawdopodobieństwo rudej szmaty."
                 ];
                 
                 // Sprawdzenie czy gracz ma Diesla
