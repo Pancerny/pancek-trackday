@@ -806,8 +806,8 @@
                     
                     <p style="color: #5a4b41; font-size: 13px; font-weight: bold; margin-bottom: 2px; margin-top: 10px;">Easter Eggi / Motywy:</p>
                     <div style="display:flex; gap: 10px; margin-bottom: 15px;">
-                        <button onclick="document.body.classList.toggle('initial-d-active'); document.body.classList.remove('easter-egg-active');" style="flex:1; background: #e74c3c; color: white; border: 2px solid #fff; border-radius: 12px; padding: 8px; font-weight: bold; cursor: pointer; text-transform: uppercase;">Initial D</button>
-                        <button onclick="document.body.classList.toggle('easter-egg-active'); document.body.classList.remove('initial-d-active');" style="flex:1; background: #9ae73a; color: white; border: 2px solid #fff; border-radius: 12px; padding: 8px; font-weight: bold; cursor: pointer; text-transform: uppercase;">Uma Uma</button>
+                        <button onclick="document.body.classList.remove('easter-egg-active'); if(window.activateInitialDMode) window.activateInitialDMode(); else document.body.classList.toggle('initial-d-active');" style="flex:1; background: #e74c3c; color: white; border: 2px solid #fff; border-radius: 12px; padding: 8px; font-weight: bold; cursor: pointer; text-transform: uppercase;">Initial D</button>
+                        <button onclick="document.body.classList.remove('initial-d-active'); if(window.activateEasterEgg) window.activateEasterEgg(); else document.body.classList.toggle('easter-egg-active');" style="flex:1; background: #9ae73a; color: white; border: 2px solid #fff; border-radius: 12px; padding: 8px; font-weight: bold; cursor: pointer; text-transform: uppercase;">Uma Uma</button>
                     </div>
 
                     <button onclick="saveSettings()" class="btn-submit">Zapisz Profil</button>
@@ -1507,7 +1507,11 @@
                 const safeId = tor.nazwa.replace(/\s+/g, ''); 
                 window.allMarkers[safeId] = marker;
                 
-                marker.bindPopup(`<div id="popup-content-${safeId}"><div style="padding:20px; text-align:center;">Ładowanie...</div></div>`, {
+                const popupContainer = document.createElement('div');
+                popupContainer.id = `popup-content-${safeId}`;
+                popupContainer.innerHTML = `<div style="padding:20px; text-align:center;">Ładowanie...</div>`;
+                
+                marker.bindPopup(popupContainer, {
                     minWidth: 320, maxWidth: 320, autoPanPaddingTopLeft: [0, 100]
                 }); 
                 
@@ -1526,15 +1530,15 @@
                             </div>
                             <button onclick="window.saveTime('${tor.nazwa}')" class="btn-submit transition-shape">Zapisz wynik</button>
                         </div>`; 
-                    document.getElementById(`popup-content-${safeId}`).innerHTML = fullHTML; 
+                    popupContainer.innerHTML = fullHTML; 
                     
                     let carSelectHTML = `<select id="carSelect-${safeId}" class="transition-shape" style="width:100%; border: 3px solid #ccc; border-radius: 12px; padding: 10px; font-weight: bold;">`; 
                     if(window.myCars.length === 0) carSelectHTML += `<option value="" disabled selected>Brak aut!</option>`; 
                     else { window.myCars.forEach(car => { carSelectHTML += `<option value="${car}">${car}</option>`; }); } 
                     carSelectHTML += `</select>`; 
-                    document.getElementById(`carSelectContainer-${safeId}`).innerHTML = carSelectHTML;
+                    popupContainer.querySelector(`#carSelectContainer-${safeId}`).innerHTML = carSelectHTML;
 
-                    const infoBox = document.getElementById(`trackInfoRender-${safeId}`);
+                    const infoBox = popupContainer.querySelector(`#trackInfoRender-${safeId}`);
                     const infoSnap = await getDoc(doc(db, "tory_detale", safeId));
                     let infoData = { opis: "Brak opisu.", kontakt: "Brak", email: "Brak", ceny: "Brak info" };
                     if(infoSnap.exists()) infoData = infoSnap.data();
@@ -2026,12 +2030,13 @@
             }
         });
 
-        function activateEasterEgg() {
+        window.activateEasterEgg = function() {
             document.body.classList.add('easter-egg-active');
             document.getElementById('headerTitle').innerText = "UMAPYOI!";
             
             document.querySelectorAll('.header-gif').forEach(img => {
                 img.src = "tachyon.gif";
+                img.style.display = "inline-block";
             });
 
             if(window.ytPlayer && typeof window.ytPlayer.loadVideoById === 'function') {
@@ -2039,9 +2044,9 @@
                 window.ytPlayer.setVolume(40);
                 window.ytPlayer.playVideo();
                 window.isRadioPlaying = true;
-                document.getElementById('radioBtnToggle').innerHTML = "🔇 Wyłącz Umapyoi";
+                document.getElementById('radioBtnToggle').innerHTML = "🔇 Wyłącz Eurobeat";
             }
-        }
+        };
 
         // TACHYON EASTER EGG (KLIKNIĘCIE 3 RAZY W TRACKDAY)
         let tachyonClickCount = 0;
@@ -2072,7 +2077,7 @@
                     "Wow.. zamierza tym latać czy co?",
                     "Co do wała, od kiedy moja 85' jest 86'?!"
                 ];
-                imgSrc = "id.gif";
+                imgSrc = "ryu.gif";
             } else {
                 // Podstawowy tryb Umapyoi (Tachyon)
                 messages = [
