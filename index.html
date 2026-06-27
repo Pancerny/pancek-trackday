@@ -176,7 +176,7 @@
            CZAT LOBBY
            ========================================== */
         #chatToggleBtn {
-            position: absolute; bottom: 20px; left: 20px; z-index: 1000;
+            position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); z-index: 1000;
             background: linear-gradient(180deg, #fff 0%, #f4f4f4 100%);
             padding: 10px 20px; border-radius: 20px; border: 3px solid #ccc;
             box-shadow: 0 4px 0 #aaa, 0 6px 10px rgba(0,0,0,0.3);
@@ -314,14 +314,14 @@
 
         .track-details-box { background: #fff; border-radius: 10px; padding: 10px; margin-bottom: 10px; border: 2px solid #ddd; font-size: 13px; text-align: left; color:#5a4b41;}
 
-        table { width: 100%; border-collapse: separate; border-spacing: 0; margin: 10px 0; background: #fff; border-radius: 10px; border: 2px solid #ddd; overflow: hidden; }
-        th { background: linear-gradient(180deg, #f0f0f0, #e0e0e0); color: #8a7b71; font-weight: 900; padding: 8px; text-transform: uppercase; font-size: 11px; border-bottom: 2px solid #ddd;}
-        td { border-bottom: 1px solid #eee; padding: 8px; color: #5a4b41; font-weight: 900; font-size: 13px; text-align: center; vertical-align: middle;}
+        table { width: 100%; border-collapse: separate; border-spacing: 0; margin: 10px 0; background: #fff; border-radius: 10px; border: 2px solid #ddd; overflow: hidden; font-size: 0.85em;}
+        th { background: linear-gradient(180deg, #f0f0f0, #e0e0e0); color: #8a7b71; font-weight: 900; padding: 6px; text-transform: uppercase; font-size: 10px; border-bottom: 2px solid #ddd;}
+        td { border-bottom: 1px solid #eee; padding: 6px; color: #5a4b41; font-weight: 900; font-size: 11px; text-align: center; vertical-align: middle;}
         tr:last-child td { border-bottom: none; }
         
-        .time-inputs-container { background: #fff; border-radius: 12px; padding: 8px; border: 2px solid #ddd; display: flex; gap: 5px; align-items: center; justify-content: center; margin: 10px 0; }
-        .time-inputs-container input { border: 2px solid #eee !important; background: #f9f9f9 !important; box-shadow: inset 0 2px 4px rgba(0,0,0,0.05) !important; padding: 8px 5px !important; margin: 0 !important; font-size: 16px !important; flex: 1; text-align: center; font-weight: 900;}
-        .time-inputs-container span { font-weight: 900; color: #5a4b41; font-size: 16px; }
+        .time-inputs-container { background: #fff; border-radius: 12px; padding: 6px; border: 2px solid #ddd; display: flex; gap: 5px; align-items: center; justify-content: center; margin: 10px 0; }
+        .time-inputs-container input { border: 2px solid #eee !important; background: #f9f9f9 !important; box-shadow: inset 0 2px 4px rgba(0,0,0,0.05) !important; padding: 6px 4px !important; margin: 0 !important; font-size: 14px !important; flex: 1; text-align: center; font-weight: 900;}
+        .time-inputs-container span { font-weight: 900; color: #5a4b41; font-size: 14px; }
 
         .rank-1 { color: #fff; text-shadow: 1px 1px 0 #b8860b, -1px -1px 0 #b8860b, 1px -1px 0 #b8860b, -1px 1px 0 #b8860b; font-weight: 900; font-size: 16px; background: gold; padding: 2px 6px; border-radius: 10px;}
         .rank-2 { color: #fff; text-shadow: 1px 1px 0 #666; font-weight: 900; font-size: 14px; background: silver; padding: 2px 6px; border-radius: 10px;}
@@ -528,8 +528,8 @@
             .auth-card-image { display: none; }
             .modal-content { width: 98%; margin: 5% auto;}
             .modal-body { padding: 10px; }
-            #chatToggleBtn { bottom: 125px; left: 10px; padding: 8px 15px; font-size: 13px; }
-            .leaflet-popup-content { width: 220px !important; }
+            #chatToggleBtn { bottom: 30px; left: 50%; transform: translateX(-50%); padding: 8px 15px; font-size: 13px; }
+            .leaflet-popup-content { width: 280px !important; }
             #chatWindow { width: 90vw; left: 5vw; bottom: 70px; height: 350px;}
             .troll-popup { padding: 20px; width: 90vw; max-width: 320px; transform: none; box-sizing: border-box; }
             .troll-popup h2 { font-size: 20px; padding: 8px; }
@@ -599,7 +599,7 @@
         </div>
 
         <!-- CHAT WIDGET -->
-        <div id="chatToggleBtn" onclick="toggleChat()">💬 Czat Lobby</div>
+        <div id="chatToggleBtn" onclick="toggleChat()">💬 Czat</div>
         <div id="chatWindow" class="hidden">
             <div class="chat-header uma-pattern-green">
                 <span style="display: flex; align-items: center;">Lobby <button id="clearChatBtn" class="chat-clear-btn hidden" onclick="window.clearEntireChat()">Wyczyść czat</button></span>
@@ -1682,7 +1682,8 @@
                     actionBtns = `<br><span onclick="window.deleteLapTime('${doc.id}', '${trackName}')" style="cursor:pointer; font-size:10px; background:#e74c3c; color:#fff; padding:2px 6px; border-radius:10px;">USUŃ</span>`; 
                 } 
                 
-                tbody.innerHTML += `<tr><td style="text-align: left; padding-left: 10px;"><span class="${rankClass}" style="margin-right: 5px;">${rankDisplay}</span><span class="user-link" style="cursor:pointer; color:#168bd8;" onclick="window.showUserProfile('${data.driver}')">${data.driver.toUpperCase()}</span><br><div style="text-align: center; margin-top:2px;">${adminTag}</div></td><td><span class="car-link" style="cursor:pointer; font-weight:bold; color:#f38815;" onclick="window.showCarCard('${safeCar}', '${data.driver}')">${data.car}</span></td><td><b style="color:#68cc14; font-size: 16px;">${data.time}</b>${actionBtns}</td></tr>`; 
+                let dateHTML = data.date ? `<div style="font-size: 9px; color: #888; margin-top: 2px;">${data.date}</div>` : '';
+                tbody.innerHTML += `<tr><td style="text-align: left; padding-left: 5px;"><span class="${rankClass}" style="margin-right: 3px;">${rankDisplay}</span><span class="user-link" style="cursor:pointer; color:#168bd8;" onclick="window.showUserProfile('${data.driver}')">${data.driver.toUpperCase()}</span><br><div style="text-align: center; margin-top:2px;">${adminTag}</div></td><td><span class="car-link" style="cursor:pointer; font-weight:bold; color:#f38815;" onclick="window.showCarCard('${safeCar}', '${data.driver}')">${data.car}</span></td><td><b style="color:#68cc14; font-size: 14px;">${data.time}</b>${dateHTML}${actionBtns}</td></tr>`; 
                 currentRank++; 
             }); 
         };
@@ -1707,7 +1708,8 @@
             const formattedTime = `${(m||'0').toString().padStart(2, '0')}:${(s||'0').toString().padStart(2, '0')}.${(ms||'0').toString().padStart(3, '0')}`; 
             const currentBest = window.bestTimesForTracks[trackName] || "99:99.999"; 
             
-            await addDoc(collection(db, "czasy"), { driver: window.currentUserAlias, car: car, track: trackName, time: formattedTime }); 
+            const currentDate = new Date().toLocaleDateString('pl-PL');
+            await addDoc(collection(db, "czasy"), { driver: window.currentUserAlias, car: car, track: trackName, time: formattedTime, date: currentDate }); 
             
             document.getElementById(`timeM-${safeId}`).value = ''; 
             document.getElementById(`timeS-${safeId}`).value = ''; 
