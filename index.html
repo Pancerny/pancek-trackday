@@ -56,7 +56,7 @@
             width: 100%; background: #ffffff !important; color: #5a4b41 !important; border: 3px solid #dcdcdc !important;
             border-radius: 12px !important; padding: 12px 15px !important; margin: 8px 0 !important;
             font-weight: bold !important; font-size: 14px !important; box-shadow: inset 0 3px 5px rgba(0,0,0,0.05) !important;
-            box-sizing: border-box; outline: none; transition: 0.2s; font-family: 'M PLUS Rounded 1c', sans-serif;
+            box-sizing: border-box !important; max-width: 100% !important; outline: none; transition: 0.2s; font-family: 'M PLUS Rounded 1c', sans-serif;
         }
         input:focus, select:focus, textarea:focus { border-color: #79d81d !important; box-shadow: inset 0 3px 5px rgba(0,0,0,0.1), 0 0 0 4px rgba(121, 216, 29, 0.3) !important; }
         input[type="number"]::-webkit-inner-spin-button, input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
@@ -264,7 +264,7 @@
         .garage-form-box { background: #fff; padding: 20px; border-radius: 12px; margin-bottom: 20px; border: 2px solid #ddd; }
         .garage-form-box h3 { color: #68cc14; font-weight: 900; margin-top: 0; text-transform: uppercase;}
 
-        .list-item { display: flex; justify-content: flex-start; align-items: center; padding: 12px; background: linear-gradient(180deg, #ffffff 0%, #f4f4f4 100%); margin-bottom: 10px; border-radius: 10px; border: 2px solid #dcdcdc; }
+        .list-item { display: flex; justify-content: flex-start; align-items: center; padding: 8px; background: linear-gradient(180deg, #ffffff 0%, #f4f4f4 100%); margin-bottom: 8px; border-radius: 10px; border: 2px solid #dcdcdc; }
         .list-item b { color: #5a4b41; font-size: 15px; font-weight: 900;}
         .list-item-btns { display: flex; gap: 5px; flex-wrap: wrap; justify-content: flex-end; margin-left: auto;}
         .list-item-btns button { border: 2px solid #fff; border-radius: 12px; padding: 6px 12px; cursor: pointer; color: white; font-weight: 900; font-size: 11px; box-shadow: 0 3px 0 rgba(0,0,0,0.2); transition: 0.1s; text-transform: uppercase; font-family: 'M PLUS Rounded 1c', sans-serif;}
@@ -285,7 +285,7 @@
            ========================================== */
         .leaflet-popup-content-wrapper { background: #f0f3f5; border: 4px solid #fff; border-radius: 16px; box-shadow: 0 0 0 2px #ccc, 0 10px 20px rgba(0,0,0,0.3); padding: 0; overflow: hidden; }
         .leaflet-popup-tip { background: #fff; }
-        .leaflet-popup-content { margin: 0 !important; width: 320px !important; font-family: 'M PLUS Rounded 1c', sans-serif; } 
+        .leaflet-popup-content { margin: 0 !important; width: 280px !important; font-family: 'M PLUS Rounded 1c', sans-serif; } 
         
         .leaflet-popup-close-button { 
             background: rgba(0,0,0,0.6) !important; 
@@ -307,9 +307,9 @@
         }
         .leaflet-popup-close-button:hover { background: #ffe600 !important; color: #333 !important; transform: scale(1.1); }
         
-        .track-img-header { width: 100%; height: 130px; object-fit: cover; background-color: #222; border-bottom: 4px solid #fff; display: block; margin: 0; padding: 0; }
+        .track-img-header { width: 100%; height: 100px; object-fit: cover; background-color: #222; border-bottom: 4px solid #fff; display: block; margin: 0; padding: 0; }
         
-        .popup-inner-pad { padding: 12px; }
+        .popup-inner-pad { padding: 8px; }
         .popup-inner-pad h2 { color: #fff; text-shadow: 1px 1px 0 #3b900b, -1px -1px 0 #3b900b, 1px -1px 0 #3b900b, -1px 1px 0 #3b900b; font-size: 20px; font-weight: 900; text-transform: uppercase; text-align: center; margin-top: 0; margin-bottom: 10px; background: linear-gradient(180deg, #9ae73a 0%, #68cc14 100%); padding: 5px; border-radius: 12px; border: 2px solid #fff;}
 
         .track-details-box { background: #fff; border-radius: 10px; padding: 10px; margin-bottom: 10px; border: 2px solid #ddd; font-size: 13px; text-align: left; color:#5a4b41;}
@@ -524,10 +524,17 @@
             .user-avatar { width: 35px; height: 35px; font-size: 16px; margin: 0;}
             .auth-card { width: 95%; flex-direction: column; height: auto; }
             .auth-card-image { display: none; }
-            .modal-content { width: 95%; }
-            .modal-body { padding: 15px; }
-            .leaflet-popup-content { width: 260px !important; }
+            .modal-content { width: 98%; margin: 5% auto;}
+            .modal-body { padding: 10px; }
+            #chatToggleBtn { bottom: 80px; left: 10px; padding: 8px 15px; font-size: 13px; }
+            .leaflet-popup-content { width: 220px !important; }
             #chatWindow { width: 90vw; left: 5vw; bottom: 70px; height: 350px;}
+            .troll-popup { padding: 15px; transform: scale(0.9); }
+            .troll-popup h2 { font-size: 24px; }
+            .troll-img { max-width: 90%; }
+            #tachyonToast { bottom: -100px; padding: 5px 10px; width: 85%; }
+            #tachyonToast.show { bottom: 10px; }
+            #tachyonToast img { width: 50px; }
         }
     </style>
     <script src="https://www.youtube.com/iframe_api"></script>
@@ -618,6 +625,13 @@
         </div>
     </div>
 
+    <div class="modal-overlay" id="trackLayoutModal" style="z-index: 7000;">
+        <div class="modal-content" style="max-width: 90%; text-align: center; background: transparent; box-shadow: none; border: none;">
+            <span class="close-modal" onclick="closeModal('trackLayoutModal')" style="color: #fff; text-shadow: 0 0 5px #000; font-size: 40px; right: 0px; top: -30px;">×</span>
+            <img id="trackLayoutImg" src="" style="max-width: 100%; max-height: 80vh; border-radius: 12px; border: 4px solid #fff; box-shadow: 0 8px 15px rgba(0,0,0,0.5);">
+        </div>
+    </div>
+
     <div class="modal-overlay" id="trackInfoEditModal" style="z-index: 6500;">
         <div class="modal-content">
             <span class="close-modal" onclick="closeModal('trackInfoEditModal')">×</span>
@@ -654,6 +668,20 @@
                     </div>
                     <input type="text" id="newPinFoto" placeholder="Link do zdjęcia (opcjonalnie)">
                     <button class="btn-submit" onclick="addNewCustomTrack()">Dodaj Tor do Mapy</button>
+                </div>
+
+                <div class="garage-form-box">
+                    <h3 style="color:#68cc14; margin-top:0;">🌟 Stwórz Nowe Osiągnięcie</h3>
+                    <input type="text" id="newAchievId" placeholder="Unikalne ID (np. krol_driftu)">
+                    <input type="text" id="newAchievName" placeholder="Nazwa (np. Król Driftu)">
+                    <textarea id="newAchievDesc" rows="2" placeholder="Opis osiągnięcia..."></textarea>
+                    
+                    <label for="newAchievFile" class="file-upload-btn">📷 WGRAJ IKONĘ (Max 3MB)</label>
+                    <input type="file" id="newAchievFile" accept="image/*" style="display:none;">
+                    <input type="hidden" id="newAchievPhoto"> 
+                    <div id="uploadStatusAchiev" style="font-size:11px; color: #168bd8; font-weight:bold; margin-bottom: 10px;"></div>
+
+                    <button class="btn-submit" onclick="addNewDynamicAchievement()">Zapisz do bazy</button>
                 </div>
 
                 <div class="garage-form-box">
@@ -775,6 +803,13 @@
                     <p style="color: #5a4b41; font-size: 13px; font-weight: bold; margin-bottom: 2px; margin-top: 10px;">Data urodzenia:</p><input type="date" id="settingsDob">
                     <p style="color: #5a4b41; font-size: 13px; font-weight: bold; margin-bottom: 2px; margin-top: 10px;">Miejscowość:</p><input type="text" id="settingsCity" placeholder="Skąd nadajesz?">
                     <p style="color: #5a4b41; font-size: 13px; font-weight: bold; margin-bottom: 2px; margin-top: 10px;">O sobie:</p><textarea id="settingsDesc" rows="3" placeholder="Napisz coś o sobie..."></textarea>
+                    
+                    <p style="color: #5a4b41; font-size: 13px; font-weight: bold; margin-bottom: 2px; margin-top: 10px;">Easter Eggi / Motywy:</p>
+                    <div style="display:flex; gap: 10px; margin-bottom: 15px;">
+                        <button onclick="document.body.classList.toggle('initial-d-active'); document.body.classList.remove('easter-egg-active');" style="flex:1; background: #e74c3c; color: white; border: 2px solid #fff; border-radius: 12px; padding: 8px; font-weight: bold; cursor: pointer; text-transform: uppercase;">Initial D</button>
+                        <button onclick="document.body.classList.toggle('easter-egg-active'); document.body.classList.remove('initial-d-active');" style="flex:1; background: #9ae73a; color: white; border: 2px solid #fff; border-radius: 12px; padding: 8px; font-weight: bold; cursor: pointer; text-transform: uppercase;">Uma Uma</button>
+                    </div>
+
                     <button onclick="saveSettings()" class="btn-submit">Zapisz Profil</button>
                 </div>
             </div>
@@ -862,7 +897,15 @@
             { nazwa: "Autodrom Jastrząb", lat: 51.263, lng: 20.931, foto: "track/autodromjastrzab.webp" },
             { nazwa: "Tor Kielce", lat: 50.963, lng: 20.457, foto: "track/kielce.webp" },
             { nazwa: "Tor Ułęż Moto Park", lat: 51.624, lng: 22.094, foto: "track/ulez.webp" },
-            { nazwa: "Tor Łódź", lat: 51.877, lng: 19.533, foto: "track/torlodz.webp" }
+            { nazwa: "Tor Łódź", lat: 51.877, lng: 19.533, foto: "track/torlodz.webp" },
+            { nazwa: "Tor Poznań", lat: 52.418, lng: 16.818, foto: "track/torbemowo.jpeg" },
+            { nazwa: "Silesia Ring", lat: 50.534, lng: 18.067, foto: "track/torbemowo.jpeg" },
+            { nazwa: "Tor Krzywa", lat: 51.319, lng: 15.759, foto: "track/torbemowo.jpeg" },
+            { nazwa: "Moto Park Kraków", lat: 50.043, lng: 20.089, foto: "track/torkrakow.webp" },
+            { nazwa: "Autodrom Pomorze", lat: 54.195, lng: 18.683, foto: "track/torbemowo.jpeg" },
+            { nazwa: "Tor Bednary", lat: 52.535, lng: 17.227, foto: "track/torbemowo.jpeg" },
+            { nazwa: "Tor Toruń", lat: 53.018, lng: 18.566, foto: "track/torbemowo.jpeg" },
+            { nazwa: "Tor Koszalin", lat: 54.193, lng: 16.182, foto: "track/torbemowo.jpeg" }
         ];
 
         // ZARZĄDZANIE MODALAMI
@@ -1316,6 +1359,37 @@
                 window.loadAdminUsers();
             }
         };
+        window.loadAchievementsFromFirebase = async () => {
+            try {
+                const snapshot = await getDocs(collection(db, "osiagniecia_baza"));
+                snapshot.forEach(doc => {
+                    const data = doc.data();
+                    window.bazaOsiagniec[doc.id] = { nazwa: data.nazwa, opis: data.opis, img: data.img };
+                });
+            } catch(e) { console.error("Błąd pobierania osiągnięć z Firebase:", e); }
+        };
+
+        window.addNewDynamicAchievement = async () => {
+            const id = document.getElementById('newAchievId').value;
+            const name = document.getElementById('newAchievName').value;
+            const desc = document.getElementById('newAchievDesc').value;
+            const photo = document.getElementById('newAchievPhoto').value;
+            
+            if(!id || !name || !photo) return alert("Uzupełnij ID, nazwę i wgraj ikonę!");
+            try {
+                await setDoc(doc(db, "osiagniecia_baza", id), { nazwa: name, opis: desc, img: photo });
+                alert("Osiągnięcie dodane pomyślnie!");
+                document.getElementById('newAchievId').value = "";
+                document.getElementById('newAchievName').value = "";
+                document.getElementById('newAchievDesc').value = "";
+                document.getElementById('newAchievPhoto').value = "";
+                document.getElementById('uploadStatusAchiev').innerText = "";
+                await window.loadAchievementsFromFirebase();
+                if(document.getElementById('adminModal').classList.contains('active')) {
+                    window.loadAdminUsers();
+                }
+            } catch(e) { alert("Błąd: " + e.message); }
+        };
 
         window.publishPatchNotes = async () => {
             const text = document.getElementById('adminPatchText').value;
@@ -1396,6 +1470,7 @@
         };
 
         async function initializeAppAfterLogin() {
+            await window.loadAchievementsFromFirebase();
             window.userRole = "user";
             if(window.currentUserAlias.toLowerCase() === 'pancerny') { window.userRole = "admin"; }
             const uSnap = await getDoc(doc(db, "uzytkownicy", window.currentUserAlias));
@@ -1437,10 +1512,7 @@
                 }); 
                 
                 marker.on('popupopen', async () => { 
-                    let trackImgHTML = tor.foto ? `<img src="${tor.foto}" class="track-img-header">` : ''; 
-                    
                     const fullHTML = `
-                        ${trackImgHTML}
                         <div class="popup-inner-pad transition-shape">
                             <h2 class="transition-shape uma-pattern-green">${tor.nazwa}</h2>
                             <div id="trackInfoRender-${safeId}" class="track-details-box transition-shape">Ładowanie informacji...</div>
@@ -1467,8 +1539,8 @@
                     let infoData = { opis: "Brak opisu.", kontakt: "Brak", email: "Brak", ceny: "Brak info" };
                     if(infoSnap.exists()) infoData = infoSnap.data();
 
-                    // Nowy, zmodernizowany przycisk "Ustawienia Toru"
-                    let editBtnHTML = (window.userRole === 'admin' || window.userRole === 'mod') ? `<button class="btn-submit transition-shape" style="width:100%; margin-top:15px; background: linear-gradient(180deg, #2bc2ff, #168bd8); box-shadow: 0 4px 0 #0d6299, 0 6px 10px rgba(0,0,0,0.2); text-shadow: 1px 1px 0 #0d6299;" onclick="window.openTrackEditModal('${safeId}', '${tor.nazwa}')">🔧 Ustawienia Toru</button>` : '';
+                    let layoutBtnHTML = tor.foto ? `<button class="btn-submit transition-shape" style="width:100%; margin-top:15px; background: #fcfcfc; color: #4a4a4a; border: 2px solid #ccc; box-shadow: 0 4px 0 #bbb; text-shadow: none;" onclick="window.openTrackLayout('${tor.foto}')">🗺️ UKŁAD TORU</button>` : '';
+                    let editBtnHTML = (window.userRole === 'admin' || window.userRole === 'mod') ? `<button class="btn-submit transition-shape" style="width:100%; margin-top:10px; background: #fff; color: #e74c3c; border: 2px solid #e74c3c; box-shadow: 0 4px 0 #c0392b; text-shadow: none;" onclick="window.openTrackEditModal('${safeId}', '${tor.nazwa}')">🦴 USTAWIENIA</button>` : '';
 
                     infoBox.innerHTML = `
                         <div style="margin-bottom: 10px; font-weight: bold; text-align: center; border-bottom: 2px dashed #ddd; padding-bottom: 8px;">${infoData.opis}</div>
@@ -1484,6 +1556,7 @@
                             <span style="font-weight: 900; font-size: 12px; text-transform: uppercase;"><span style="font-size:16px;">💲</span> Ceny</span>
                             <span style="font-weight: 900; font-size: 13px; text-align: right; max-width: 60%; word-break: break-word;">${infoData.ceny}</span>
                         </div>
+                        ${layoutBtnHTML}
                         ${editBtnHTML}
                     `;
 
@@ -1509,6 +1582,11 @@
             document.getElementById('sideMenu').classList.remove('active');
             map.setView([lat, lng], 14, { animate: true });
             setTimeout(() => { if(window.allMarkers[safeId]) window.allMarkers[safeId].openPopup(); }, 500);
+        };
+
+        window.openTrackLayout = (fotoSrc) => {
+            document.getElementById('trackLayoutImg').src = fotoSrc;
+            document.getElementById('trackLayoutModal').classList.add('active');
         };
 
         window.openTrackEditModal = async (safeId, trackName) => {
@@ -1723,6 +1801,20 @@
             }
         });
 
+        document.getElementById('newAchievFile').addEventListener('change', async (e) => {
+            const file = e.target.files[0];
+            if(!file) return;
+            const status = document.getElementById('uploadStatusAchiev');
+            status.innerText = "⏳ Kompresja i wgrywanie... Proszę czekać.";
+            const url = await uploadToStorage(file);
+            if(url) {
+                document.getElementById('newAchievPhoto').value = url;
+                status.innerText = "✅ Ikona wgrana pomyślnie!";
+            } else {
+                status.innerText = "❌ Wystąpił błąd podczas wgrywania.";
+            }
+        });
+
         // ==========================================
         // AUTHENTICATION LOGIC
         // ==========================================
@@ -1732,6 +1824,7 @@
             const p = document.getElementById('password').value; 
             if(!e || !p) return alert("Wpisz dane!"); 
             try { 
+                await setPersistence(auth, browserSessionPersistence);
                 const user = await signInWithEmailAndPassword(auth, e, p); 
                 if(!user.user.emailVerified) { alert("Potwierdź e-mail!"); signOut(auth); } 
             } catch (err) { 
