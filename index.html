@@ -861,7 +861,7 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
-        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, sendEmailVerification, sendPasswordResetEmail, updateProfile } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, sendEmailVerification, sendPasswordResetEmail, updateProfile, setPersistence, browserSessionPersistence } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
         // Dodany import 'onSnapshot' oraz 'limit' do działania czatu!
         import { getFirestore, collection, addDoc, getDocs, query, where, orderBy, deleteDoc, doc, updateDoc, setDoc, getDoc, arrayUnion, arrayRemove, onSnapshot, limit } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
 
@@ -1851,11 +1851,21 @@
                 const user = await signInWithEmailAndPassword(auth, e, p); 
                 if(!user.user.emailVerified) { alert("Potwierdź e-mail!"); signOut(auth); } 
             } catch (err) { 
-                try { 
-                    const user = await createUserWithEmailAndPassword(auth, e, p); 
-                    await sendEmailVerification(user.user); 
-                    alert("Konto założone! Sprawdź mail."); signOut(auth); 
-                } catch(err2) { alert(err2.message); } 
+                if (err.code === 'auth/invalid-credential' || err.code === 'auth/user-not-found' || err.code === 'auth/wrong-password') {
+                    try { 
+                        const user = await createUserWithEmailAndPassword(auth, e, p); 
+                        await sendEmailVerification(user.user); 
+                        alert("Konto założone! Sprawdź mail."); signOut(auth); 
+                    } catch(err2) { 
+                        if (err2.code === 'auth/email-already-in-use') {
+                            alert("Błędne hasło! Spróbuj ponownie lub zresetuj je poniżej.");
+                        } else {
+                            alert(err2.message); 
+                        }
+                    }
+                } else {
+                    alert(err.message);
+                }
             } 
         });
 
